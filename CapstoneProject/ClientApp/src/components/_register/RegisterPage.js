@@ -28,8 +28,31 @@ export class Register extends Component {
     }
 
     handleSubmit(event) {
+        const data = { first_name: this.state.first_name, last_name: this.state.last_name, password: this.state.password, email: this.state.email };  
         event.preventDefault();
+        /*const Http = new XMLHttpRequest();
+        const url = 'api/Users/Create';
+        Http.open("POST", url);
+        Http.send(data);
+        Http.onreadystatechange = (e) => {
+            console.log(Http.responseText)*/
+        fetch('api/Users/Create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
         
+        }
+
+    
+
+    handleRedirect(response) {
+        if (response === 200) {
+            console.log("Successful");
+        }
+        else {
+            console.log("Failed");
+        }
     }
 
     validatePassword() {

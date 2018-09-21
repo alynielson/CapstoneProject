@@ -35,27 +35,36 @@ export class Login extends Component {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }).then(this.handleRedirect);
+        }).then(this.handleRedirect).then(function (response) { return response.json(); }).then(function (jsonData) { return console.log(jsonData); }).catch(function (error) { console.log(error);});
+
 
     }
+
+   
+
 
     handleRedirect(response) {
         if (response.status === 200) {
             console.log("Successful");
-            console.log(response);
+            return response;
         }
-        else if (response.status === 401) {
-            console.log("Password incorrect");
+       else if (response.status === 401) {
+            var statusText = "Password was incorrect";
+            //show stuff
+            throw Error(statusText);
         }
         else if (response.status === 404) {
-            console.log("User not found");
+            var statusText = "User not found";
+            throw Error(statusText);
         }
         else if (response.status === 204) {
-            console.log("No content in request");
+            var statusText = "No content in request";
+            throw Error(statusText);
         }
         else {
-            console.log("Unable to get a response from the server");
+            var statusText = "Unable to get a response from the server";
         }
+        throw Error(statusText);
 
     }
 

@@ -41,7 +41,11 @@ namespace CapstoneProject.Controllers
                         var actualPassword = user.HashedPassword;
                         if (actualPassword == hashedPasswordAttempt)
                         {
-                            return Ok();
+                            LoggedInUserVM viewModel = new LoggedInUserVM();
+                            viewModel.first_name = user.FirstName;
+                            viewModel.last_name = user.LastName;
+                            
+                            return Ok(viewModel);
                         }
                         else
                         {
@@ -64,19 +68,15 @@ namespace CapstoneProject.Controllers
             }
         }
 
-        // GET: api/Users
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("[action]")]
+        public LoggedInUserVM FindUser()
         {
-            return new string[] { "value1", "value2" };
+            LoggedInUserVM viewModel = new LoggedInUserVM();
+            return viewModel;
         }
+        
 
-        // GET: api/Users/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        
 
         // POST: api/Users
         [HttpPost("[action]")]

@@ -7,11 +7,19 @@ namespace CapstoneProject.ViewModels
 {
     public class LoggedInUserVM
     {
-        public string Name { get; set; }
+        public string first_name { get; set; }
 
-        public string Location { get; set; }
+        public string last_name { get; set; }
 
-        public bool IsValid { get; set; }
+        public string location { get; set; }
 
+        public bool isValid { get; set; }
+        public bool isPasswordCorrect { get; set; }
+    }
+
+    public class LogInAttempt
+    {
+        public string email { get; set; }
+        public string password { get; set; }
     }
 }

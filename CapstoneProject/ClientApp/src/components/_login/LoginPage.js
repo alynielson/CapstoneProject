@@ -11,6 +11,8 @@ export class Login extends Component {
         }
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleRedirect = this.handleRedirect.bind(this);
+
     }
 
     handleChange(event) {
@@ -30,10 +32,20 @@ export class Login extends Component {
         const data = { email: this.state.email, password: this.state.password};
         event.preventDefault();
         fetch('api/Users/Login', {
-            method: 'GET',
+            method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         }).then(this.handleRedirect);
+
+    }
+
+    handleRedirect(response) {
+        if (response.status === 200) {
+            console.log("Successful");
+        }
+        else {
+            console.log("Failed");
+        }
 
     }
 

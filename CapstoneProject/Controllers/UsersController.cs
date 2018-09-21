@@ -26,6 +26,53 @@ namespace CapstoneProject.Controllers
         {
             _context = context;
         }
+
+        [HttpPost("[action]")]
+        public LoggedInUserVM Login([FromBody] LogInAttempt data)
+        {
+            if (data.email != null && data.password != null)
+            {
+                try
+                {
+                    var user = _context.Users.FirstOrDefault(a => a.Email == data.email);
+                    LoggedInUserVM viewModel = new LoggedInUserVM();
+                    if (user != null)
+                    {
+                        viewModel.isValid = true;
+                        string hashedPasswordAttempt = PasswordConverter.Encrypt(data.password);
+                        var actualPassword = user.HashedPassword;
+                        if (actualPassword == hashedPasswordAttempt)
+                        {
+                            
+                            viewModel.first_name = user.FirstName;
+                            viewModel.last_name = user.LastName;
+                            return viewModel;
+                        }
+                        else
+                        {
+                            viewModel.isPasswordCorrect = false;
+                            return viewModel;
+                        }
+                    }
+                    else
+                    {
+                        viewModel.isValid = false;
+                        return viewModel;
+
+                    }
+                }
+                catch
+                {
+                    throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.InternalServerError);
+
+                }
+            }
+            else
+            {
+                throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.NoContent);
+            }
+        }
+
         // GET: api/Users
         [HttpGet]
         public IEnumerable<string> Get()
@@ -45,6 +92,7 @@ namespace CapstoneProject.Controllers
         
         public IActionResult Create([FromBody] UserVM data)
         {
+            //DON'T ALLOW MULTIPLE OF THE SAME EMAIL
            if (data != null)
             {
              try   

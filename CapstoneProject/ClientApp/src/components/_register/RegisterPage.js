@@ -1,4 +1,6 @@
 ﻿import React, { Component } from 'react';
+import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row } from 'react-bootstrap';
+
 
 export class Register extends Component {
    
@@ -11,11 +13,10 @@ export class Register extends Component {
             email: '',
             password: '',
             password_confirmation: '',
-            location: '',
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
-        
+        this.handleRedirect = this.handleRedirect.bind(this);
     }
 
     handleChange(event) {
@@ -30,28 +31,28 @@ export class Register extends Component {
     handleSubmit(event) {
         const data = { first_name: this.state.first_name, last_name: this.state.last_name, password: this.state.password, email: this.state.email };  
         event.preventDefault();
-        /*const Http = new XMLHttpRequest();
-        const url = 'api/Users/Create';
-        Http.open("POST", url);
-        Http.send(data);
-        Http.onreadystatechange = (e) => {
-            console.log(Http.responseText)*/
         fetch('api/Users/Create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        });
+        }).then(this.handleRedirect);
         
         }
 
     
 
     handleRedirect(response) {
-        if (response === 200) {
+        if (response.status === 200) {
             console.log("Successful");
         }
         else {
-            console.log("Failed");
+            this.setState = {
+                first_name: '',
+                last_name: '',
+                email: '',
+                password: '',
+                password_confirmation: '',
+            }
         }
     }
 
@@ -72,7 +73,7 @@ export class Register extends Component {
             && this.state.email.split('').includes(".")
             && this.state.first_name !== ''
             && this.state.last_name !== ''
-            && this.state.location !== ''
+      
             && this.state.password !== ''
             && this.state.password_confirmation === this.state.password;
     }
@@ -82,30 +83,31 @@ export class Register extends Component {
         return (
             <div>
             <h1> Register </h1>
-            <div className="row">
-                <div className="col-md-4">
-                        <form>
-                        <div className="form-group">
-                        <label>First Name</label>
-                        <input 
+                <Row>
+                    <Col md={4}>
+                        <Form>
+                        <FormGroup>
+                        <ControlLabel>First Name</ControlLabel>
+                                <FormControl 
+                                
                                 type="text"
                                 name="first_name"
                                 value={this.state.first_name}
                                 onChange={this.handleChange}
                                 />
-                                </div>
-                       <div className="form-group">
-                        <label>Last Name</label>
-                        <input 
+                               </FormGroup>
+                       <FormGroup>
+                        <ControlLabel>Last Name</ControlLabel>
+                        <FormControl 
                                 type="text"
                                 name="last_name"
                                 value={this.state.last_name}
                                 onChange={this.handleChange}
                         />
-                            </div>
-                            <div className="form-group">
-                        <label>Email Address</label>
-                        <input 
+                            </FormGroup>
+                            <FormGroup>
+                        <ControlLabel>Email Address</ControlLabel>
+                        <FormControl
                                 type="text"
                                 name="email"
                                 value={this.state.email}
@@ -113,10 +115,10 @@ export class Register extends Component {
                             <small hidden={this.validateEmail()}className="form-text text-muted">Not a valid email</small>
 
                         
-                            </div>
-                            <div className="form-group">
-                        <label>Password</label>
-                        <input 
+                            </FormGroup>
+                           <FormGroup>
+                        <ControlLabel>Password</ControlLabel>
+                        <FormControl 
                                     type="password"
                                     name="password"
                                     value={this.state.password}
@@ -124,10 +126,11 @@ export class Register extends Component {
                                     
                                 />
                                 <small hidden={this.validatePassword()}className="form-text text-muted">Password not long enough</small>
-                            </div>
-                            <div className="form-group">
-                        <label>Confirm Password</label>
-                        <input
+                            
+                    </FormGroup>
+                    <FormGroup>
+                        <ControlLabel>Confirm Password</ControlLabel>
+                        <FormControl
                                 type="password"
                                 name="password_confirmation"
                                 value={this.state.password_confirmation}
@@ -136,26 +139,20 @@ export class Register extends Component {
                                 />
                                 <small hidden={this.confirmPasswordsMatch()}className="form-text text-muted">Passwords do not match</small>
 
-                            </div>
-                            <div className="form-group">
-                        <label>Location</label>
-                        <input 
-                                type="text"
-                                name="location"
-                                value={this.state.location}
-                                onChange={this.handleChange}
-                        />
-                            </div>
+                            </FormGroup>
+                        
+                    
                              
                             
-                            <button label="Submit" disabled={!this.checkIfCanSubmit()}className="btn btn-primary" onClick={(event) => this.handleSubmit(event)} />
+                            <Button disabled={!this.checkIfCanSubmit()}className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
                            
                             
                             
-                    </form>
+                        </Form>
+                        </Col>
+                    </Row>
                 </div>
-            </div>
-        </div>
+        
         );
     }
 }

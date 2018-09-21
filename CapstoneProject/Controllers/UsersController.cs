@@ -8,6 +8,10 @@ using CapstoneProject.ViewModels;
 using Newtonsoft.Json;
 using CapstoneProject.Models;
 using Microsoft.AspNetCore.Routing;
+using System.Security.Cryptography;
+using Microsoft.IdentityModel.Protocols;
+using CapstoneProject.Operations;
+using IntegrationProject.Data;
 
 
 namespace CapstoneProject.Controllers
@@ -16,6 +20,12 @@ namespace CapstoneProject.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
+        private readonly ApplicationDbContext _context;
+
+        public UsersController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
         // GET: api/Users
         [HttpGet]
         public IEnumerable<string> Get()
@@ -35,18 +45,38 @@ namespace CapstoneProject.Controllers
         
         public IActionResult Create([FromBody] UserVM data)
         {
-           
-                User user = new User();
-                user.FirstName = data.first_name;
-                user.LastName = data.last_name;
-                user.Password = data.password;
-                user.Email = data.email;
+           if (data != null)
+            {
+             try   
+                {
+                    User user = new User();
+                    user.FirstName = data.first_name;
+                    user.LastName = data.last_name;
+                    user.HashedPassword = PasswordConverter.Encrypt(data.password);
+                    user.Email = data.email;
+                    _context.Users.Add(user);
+                    _context.SaveChangesAsync();
                 
+                    return Ok();
+                }
+                catch
+                {
+                    throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.InternalServerError);
+                }
+              
+            }
+            else
+            {
+                throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.NoContent);
+            }
             
-            return Ok();
+            
+                
 
 
         }
+
+        
 
         // PUT: api/Users/5
         [HttpPut("{id}")]

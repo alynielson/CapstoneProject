@@ -1,5 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row } from 'react-bootstrap';
+import { Route } from 'react-router-dom'
+
 
 
 export class Register extends Component {
@@ -44,6 +46,7 @@ export class Register extends Component {
     handleRedirect(response) {
         if (response.status === 200) {
             console.log("Successful");
+           
         }
         else {
             this.setState = {

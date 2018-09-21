@@ -42,9 +42,19 @@ export class Login extends Component {
     handleRedirect(response) {
         if (response.status === 200) {
             console.log("Successful");
+            console.log(response);
+        }
+        else if (response.status === 401) {
+            console.log("Password incorrect");
+        }
+        else if (response.status === 404) {
+            console.log("User not found");
+        }
+        else if (response.status === 204) {
+            console.log("No content in request");
         }
         else {
-            console.log("Failed");
+            console.log("Unable to get a response from the server");
         }
 
     }

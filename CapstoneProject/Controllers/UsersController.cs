@@ -28,48 +28,39 @@ namespace CapstoneProject.Controllers
         }
 
         [HttpPost("[action]")]
-        public LoggedInUserVM Login([FromBody] LogInAttempt data)
+        public IActionResult Login([FromBody] LogInAttempt data)
         {
             if (data.email != null && data.password != null)
             {
                 try
                 {
                     var user = _context.Users.FirstOrDefault(a => a.Email == data.email);
-                    LoggedInUserVM viewModel = new LoggedInUserVM();
                     if (user != null)
                     {
-                        viewModel.isValid = true;
                         string hashedPasswordAttempt = PasswordConverter.Encrypt(data.password);
                         var actualPassword = user.HashedPassword;
                         if (actualPassword == hashedPasswordAttempt)
                         {
-                            
-                            viewModel.first_name = user.FirstName;
-                            viewModel.last_name = user.LastName;
-                            return viewModel;
+                            return Ok();
                         }
                         else
                         {
-                            viewModel.isPasswordCorrect = false;
-                            return viewModel;
+                            return Unauthorized();
                         }
                     }
                     else
                     {
-                        viewModel.isValid = false;
-                        return viewModel;
-
+                        return NotFound();
                     }
                 }
                 catch
                 {
                     throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.InternalServerError);
-
                 }
             }
             else
             {
-                throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.NoContent);
+                return NoContent();
             }
         }
 

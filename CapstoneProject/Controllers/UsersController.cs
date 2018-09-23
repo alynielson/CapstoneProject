@@ -68,12 +68,7 @@ namespace CapstoneProject.Controllers
             }
         }
 
-        [HttpGet("[action]")]
-        public LoggedInUserVM FindUser()
-        {
-            LoggedInUserVM viewModel = new LoggedInUserVM();
-            return viewModel;
-        }
+       
         
 
         
@@ -83,20 +78,30 @@ namespace CapstoneProject.Controllers
         
         public IActionResult Create([FromBody] UserVM data)
         {
-            //DON'T ALLOW MULTIPLE OF THE SAME EMAIL
            if (data != null)
             {
              try   
                 {
-                    User user = new User();
-                    user.FirstName = data.first_name;
-                    user.LastName = data.last_name;
-                    user.HashedPassword = PasswordConverter.Encrypt(data.password);
-                    user.Email = data.email;
-                    _context.Users.Add(user);
-                    _context.SaveChangesAsync();
-                
-                    return Ok();
+                    if (_context.Users.FirstOrDefault(e => data.email == e.Email) != null)
+                    {
+                        return Conflict();
+                    }
+                    else
+                    {
+                        User user = new User();
+                        user.FirstName = data.first_name;
+                        user.LastName = data.last_name;
+                        user.HashedPassword = PasswordConverter.Encrypt(data.password);
+                        user.Email = data.email;
+                        _context.Users.Add(user);
+                        _context.SaveChangesAsync();
+                        LoggedInUserVM viewModel = new LoggedInUserVM();
+                        viewModel.first_name = user.FirstName;
+                        viewModel.last_name = user.LastName;
+
+                        return Ok(viewModel);
+                    }
+                    
                 }
                 catch
                 {
@@ -106,7 +111,7 @@ namespace CapstoneProject.Controllers
             }
             else
             {
-                throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.NoContent);
+                return NoContent();
             }
             
             

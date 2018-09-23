@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row } from 'react-bootstrap';
+import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, Alert } from 'react-bootstrap';
 
 
 export class Login extends Component {
@@ -7,7 +7,8 @@ export class Login extends Component {
         super(props);
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            errorMessage: ''
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -31,6 +32,7 @@ export class Login extends Component {
     handleSubmit(event) {
         const data = { email: this.state.email, password: this.state.password};
         event.preventDefault();
+        
         fetch('api/Users/Login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -40,31 +42,35 @@ export class Login extends Component {
 
     }
 
+    shouldShowErrorMessage() {
+        return this.state.errorMessage !== '';
+    }
+
    
 
 
     handleRedirect(response) {
+        var errorText= '';
         if (response.status === 200) {
             console.log("Successful");
+            this.setState({ errorMessage: errorText });
             return response;
         }
        else if (response.status === 401) {
-            var statusText = "Password was incorrect";
-            //show stuff
-            throw Error(statusText);
+            errorText = "Password was incorrect. Please try again.";
         }
         else if (response.status === 404) {
-            var statusText = "User not found";
-            throw Error(statusText);
+            errorText = "Email was not found. Please try again.";
         }
         else if (response.status === 204) {
-            var statusText = "No content in request";
-            throw Error(statusText);
+            errorText = "An error occurred. Please try again.";
         }
         else {
-            var statusText = "Unable to get a response from the server";
+            errorText = "Unable to get a response from the server.";
         }
-        throw Error(statusText);
+        this.setState({ errorMessage:  errorText}
+        )
+        throw Error(errorText);
 
     }
 
@@ -74,7 +80,10 @@ export class Login extends Component {
             <div>
                 <h1> Log in </h1>
                 <Row>
-                <Col md={4}>
+                    <Col md={4}>
+                        <div hidden={!this.shouldShowErrorMessage()}>
+                            <Alert>{this.state.errorMessage}</Alert>
+                            </div>
                     <Form>
 
 

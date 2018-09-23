@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row } from 'react-bootstrap';
+import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, Alert } from 'react-bootstrap';
 import { Route } from 'react-router-dom'
 
 
@@ -15,6 +15,7 @@ export class Register extends Component {
             email: '',
             password: '',
             password_confirmation: '',
+            errorMessage: ''
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -37,26 +38,33 @@ export class Register extends Component {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }).then(this.handleRedirect);
+        }).then(this.handleRedirect).then(function (response) { return response.json(); }).then(function (jsonData) { return console.log(jsonData); }).catch(function (error) { console.log(error); });
         
         }
 
+    shouldShowErrorMessage() {
+        return this.state.errorMessage !== '';
+    }
     
 
     handleRedirect(response) {
+        var errorText = '';
         if (response.status === 200) {
-            console.log("Successful");
-           
+            this.setState({
+                errorMessage: errorText
+            });
+            return response;
+        }
+        else if (response.status === 409) {
+            errorText = 'The email you entered already exists.';
         }
         else {
-            this.setState = {
-                first_name: '',
-                last_name: '',
-                email: '',
-                password: '',
-                password_confirmation: '',
-            }
+            errorText = 'Unable to get a response from the server.';
         }
+        this.setState({
+            errorMessage: errorText
+        });
+        throw Error(errorText);
     }
 
     validatePassword() {
@@ -76,7 +84,6 @@ export class Register extends Component {
             && this.state.email.split('').includes(".")
             && this.state.first_name !== ''
             && this.state.last_name !== ''
-      
             && this.state.password !== ''
             && this.state.password_confirmation === this.state.password;
     }
@@ -88,6 +95,9 @@ export class Register extends Component {
             <h1> Register </h1>
                 <Row>
                     <Col md={4}>
+                        <div hidden={!this.shouldShowErrorMessage()}>
+                            <Alert>{this.state.errorMessage}</Alert>
+                        </div>
                         <Form>
                         <FormGroup>
                         <ControlLabel>First Name</ControlLabel>

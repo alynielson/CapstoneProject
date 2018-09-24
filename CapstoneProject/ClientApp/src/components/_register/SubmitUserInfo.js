@@ -11,6 +11,8 @@ export class SubmitUserInfo extends Component {
             state: '',
             states: []
         }
+        this.handleChange = this.handleChange.bind(this);
+
     }
 
     componentDidMount() {
@@ -43,7 +45,11 @@ export class SubmitUserInfo extends Component {
                         <Form>
                             <FormGroup>
                                 <FormControl
-                                    componentClass="select">
+                                    componentClass="select"
+                                    name="state"
+                                    value={this.state.state}
+                                    onChange={this.handleChange}
+                                    >
                                         {this.state.states.map((state) => <option key={state.value} value={state.value}>{state.display}</option>)}
                                     
                                     

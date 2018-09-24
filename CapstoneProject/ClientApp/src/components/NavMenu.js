@@ -18,9 +18,9 @@ export class NavMenu extends Component {
         </Navbar.Header>
         <Navbar.Collapse>
           <Nav>
-            <LinkContainer to={'/'} exact>
+            <LinkContainer to={'/submitUserInfo'} exact>
               <NavItem>
-                <Glyphicon glyph='home' /> Home
+                <Glyphicon glyph='home' /> Submit User Info
               </NavItem>
             </LinkContainer>
             <LinkContainer to={'/register'}>

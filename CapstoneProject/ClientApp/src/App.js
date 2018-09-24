@@ -5,6 +5,7 @@ import { Home } from './components/Home';
 import { Register } from './components/_register/RegisterPage';
 import { Login } from './components/_login/LoginPage';
 import { ConnectStrava } from './components/_user/connectStrava';
+import { SubmitUserInfo } from './components/_register/SubmitUserInfo';
 import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 
 
@@ -17,7 +18,8 @@ export default class App extends Component {
         <Route exact path='/' component={Home} />
         <Route path='/register' component={Register} />
             <Route path='/login' component={Login} />
-            <Route path='/connect' component={ConnectStrava} />
+            <Route path='/submitUserInfo' component={SubmitUserInfo} />
+        <Route path='/connect' component={ConnectStrava} />
       </Layout>
     );
   }

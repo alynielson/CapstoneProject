@@ -1,6 +1,8 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, Alert } from 'react-bootstrap';
-import { Route } from 'react-router-dom'
+import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
+import { SubmitUserInfo } from './SubmitUserInfo'
+
 
 
 
@@ -15,11 +17,14 @@ export class Register extends Component {
             email: '',
             password: '',
             password_confirmation: '',
-            errorMessage: ''
+            errorMessage: '',
+            id: null
+            
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleRedirect = this.handleRedirect.bind(this);
+       
     }
 
     handleChange(event) {
@@ -31,20 +36,27 @@ export class Register extends Component {
         });
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
+        var resultId = null;
         const data = { first_name: this.state.first_name, last_name: this.state.last_name, password: this.state.password, email: this.state.email };  
         event.preventDefault();
-        fetch('api/Users/Create', {
+        await fetch('api/Users/Create', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }).then(this.handleRedirect).then(function (response) { return response.json(); }).then(function (jsonData) { return console.log(jsonData); }).catch(function (error) { console.log(error); });
-        
+        }).then(this.handleRedirect).then(function (response) { return response.json(); }).then(function (jsonData) {return resultId = jsonData.id; }).catch(function (error) { console.log(error); });
+        console.log(resultId);
+        if (resultId !== null) {
+            
+            this.setState({ id: resultId });
+        }
         }
 
     shouldShowErrorMessage() {
         return this.state.errorMessage !== '';
     }
+
+   
     
 
     handleRedirect(response) {
@@ -90,82 +102,89 @@ export class Register extends Component {
 
    
     render() {
-        return (
-            <div>
-            <h1> Register </h1>
-                <Row>
-                    <Col md={4}>
-                        <div hidden={!this.shouldShowErrorMessage()}>
-                            <Alert>{this.state.errorMessage}</Alert>
-                        </div>
-                        <Form>
-                        <FormGroup>
-                        <ControlLabel>First Name</ControlLabel>
-                                <FormControl 
-                                
-                                type="text"
-                                name="first_name"
-                                value={this.state.first_name}
-                                onChange={this.handleChange}
-                                />
-                               </FormGroup>
-                       <FormGroup>
-                        <ControlLabel>Last Name</ControlLabel>
-                        <FormControl 
-                                type="text"
-                                name="last_name"
-                                value={this.state.last_name}
-                                onChange={this.handleChange}
-                        />
-                            </FormGroup>
-                            <FormGroup>
-                        <ControlLabel>Email Address</ControlLabel>
-                        <FormControl
-                                type="text"
-                                name="email"
-                                value={this.state.email}
-                                onChange={this.handleChange}/>
-                            <small hidden={this.validateEmail()}className="form-text text-muted">Not a valid email</small>
+        if (this.state.id === null) {
+            return (
+                <div>
+                    <h1> Register </h1>
+                    <Row>
+                        <Col md={4}>
+                            <div hidden={!this.shouldShowErrorMessage()}>
+                                <Alert>{this.state.errorMessage}</Alert>
+                            </div>
+                            <Form>
+                                <FormGroup>
+                                    <ControlLabel>First Name</ControlLabel>
+                                    <FormControl
 
-                        
-                            </FormGroup>
-                           <FormGroup>
-                        <ControlLabel>Password</ControlLabel>
-                        <FormControl 
-                                    type="password"
-                                    name="password"
-                                    value={this.state.password}
-                                    onChange={this.handleChange}
-                                    
-                                />
-                                <small hidden={this.validatePassword()}className="form-text text-muted">Password not long enough</small>
-                            
-                    </FormGroup>
-                    <FormGroup>
-                        <ControlLabel>Confirm Password</ControlLabel>
-                        <FormControl
-                                type="password"
-                                name="password_confirmation"
-                                value={this.state.password_confirmation}
-                                onChange={this.handleChange}
-                                
-                                />
-                                <small hidden={this.confirmPasswordsMatch()}className="form-text text-muted">Passwords do not match</small>
+                                        type="text"
+                                        name="first_name"
+                                        value={this.state.first_name}
+                                        onChange={this.handleChange}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel>Last Name</ControlLabel>
+                                    <FormControl
+                                        type="text"
+                                        name="last_name"
+                                        value={this.state.last_name}
+                                        onChange={this.handleChange}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel>Email Address</ControlLabel>
+                                    <FormControl
+                                        type="text"
+                                        name="email"
+                                        value={this.state.email}
+                                        onChange={this.handleChange} />
+                                    <small hidden={this.validateEmail()} className="form-text text-muted">Not a valid email</small>
 
-                            </FormGroup>
-                        
-                    
-                             
-                            
-                            <Button disabled={!this.checkIfCanSubmit()}className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
-                           
-                            
-                            
-                        </Form>
+
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel>Password</ControlLabel>
+                                    <FormControl
+                                        type="password"
+                                        name="password"
+                                        value={this.state.password}
+                                        onChange={this.handleChange}
+
+                                    />
+                                    <small hidden={this.validatePassword()} className="form-text text-muted">Password not long enough</small>
+
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel>Confirm Password</ControlLabel>
+                                    <FormControl
+                                        type="password"
+                                        name="password_confirmation"
+                                        value={this.state.password_confirmation}
+                                        onChange={this.handleChange}
+
+                                    />
+                                    <small hidden={this.confirmPasswordsMatch()} className="form-text text-muted">Passwords do not match</small>
+
+                                </FormGroup>
+
+
+
+
+                                <Button disabled={!this.checkIfCanSubmit()} className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
+
+
+
+                            </Form>
                         </Col>
                     </Row>
                 </div>
-        
-        );
+
+            );
+        }
+        else {
+            return (
+                <SubmitUserInfo id={this.state.id} first_name={this.state.first_name} last_name={this.state.last_name} />
+            );
+        }
     }
 }

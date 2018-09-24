@@ -10,7 +10,7 @@ export class ConnectStrava extends Component {
     }
     render() {
         return (
-            <div>TEST
+            <div>strava TEST
             </div>
             );
     }

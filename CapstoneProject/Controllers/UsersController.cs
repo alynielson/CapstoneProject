@@ -41,10 +41,7 @@ namespace CapstoneProject.Controllers
                         var actualPassword = user.HashedPassword;
                         if (actualPassword == hashedPasswordAttempt)
                         {
-                            LoggedInUserVM viewModel = new LoggedInUserVM();
-                            viewModel.first_name = user.FirstName;
-                            viewModel.last_name = user.LastName;
-                            
+                            LoggedInUserVM viewModel = GetUserInfoFromUser(user);
                             return Ok(viewModel);
                         }
                         else
@@ -68,15 +65,33 @@ namespace CapstoneProject.Controllers
             }
         }
 
-       
-        
+        [HttpGet("[action]")]
+        public IEnumerable<string> GetStatesList()
+        {
+            return States.states;
+        }
 
-        
+
+       private LoggedInUserVM GetUserInfoFromUser(User user)
+        {
+            LoggedInUserVM viewModel = new LoggedInUserVM();
+            viewModel.first_name = user.FirstName;
+            viewModel.last_name = user.LastName;
+            viewModel.id = user.Id;
+            return viewModel;
+        }
+
+        private LoggedInUserVM GetUserInfoFromEmail(string email)
+        {
+            var user = _context.Users.FirstOrDefault(e => e.Email == email);
+            return GetUserInfoFromUser(user);
+        }
+
 
         // POST: api/Users
         [HttpPost("[action]")]
         
-        public IActionResult Create([FromBody] UserVM data)
+        public async Task<IActionResult> Create([FromBody] UserVM data)
         {
            if (data != null)
             {
@@ -89,15 +104,13 @@ namespace CapstoneProject.Controllers
                     else
                     {
                         User user = new User();
-                        user.FirstName = data.first_name;
-                        user.LastName = data.last_name;
+                        user.FirstName = data.first_name.Trim();
+                        user.LastName = data.last_name.Trim();
                         user.HashedPassword = PasswordConverter.Encrypt(data.password);
-                        user.Email = data.email;
+                        user.Email = data.email.Trim();
                         _context.Users.Add(user);
-                        _context.SaveChangesAsync();
-                        LoggedInUserVM viewModel = new LoggedInUserVM();
-                        viewModel.first_name = user.FirstName;
-                        viewModel.last_name = user.LastName;
+                        await _context.SaveChangesAsync();
+                        LoggedInUserVM viewModel = GetUserInfoFromEmail(data.email);
 
                         return Ok(viewModel);
                     }

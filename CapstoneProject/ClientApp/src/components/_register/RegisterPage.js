@@ -49,6 +49,8 @@ export class Register extends Component {
         if (resultId !== null) {
             
             this.setState({ id: resultId });
+            localStorage.clear();
+            localStorage.setItem('userId', this.state.id);
         }
         }
 

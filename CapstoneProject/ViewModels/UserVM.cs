@@ -19,5 +19,11 @@ namespace CapstoneProject.ViewModels
         public string city { get; set; }
         public string state { get; set; }
     }
+
+    public class StravaAuthCode
+    {
+        public string auth_code { get; set; }
+        public int id { get; set; }
+    }
     
 }

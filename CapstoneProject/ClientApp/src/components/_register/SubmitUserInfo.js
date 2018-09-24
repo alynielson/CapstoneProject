@@ -128,7 +128,7 @@ export class SubmitUserInfo extends Component {
         }
         else {
             return(
-                <ConnectStrava />
+                <ConnectStrava id={this.props.id} first_name={this.props.first_name}/>
             );
         }
     }

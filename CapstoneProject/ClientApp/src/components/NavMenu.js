@@ -22,7 +22,12 @@ export class NavMenu extends Component {
               <NavItem>
                 <Glyphicon glyph='home' /> Submit User Info
               </NavItem>
-            </LinkContainer>
+                    </LinkContainer>
+                    <LinkContainer to={'/connect'} exact>
+                        <NavItem>
+                            <Glyphicon glyph='home' /> Connect Strava
+              </NavItem>
+                    </LinkContainer>
             <LinkContainer to={'/register'}>
               <NavItem>
                 <Glyphicon glyph='education' /> Register

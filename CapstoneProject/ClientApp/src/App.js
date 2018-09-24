@@ -4,7 +4,7 @@ import { Layout } from './components/Layout';
 import { Home } from './components/Home';
 import { Register } from './components/_register/RegisterPage';
 import { Login } from './components/_login/LoginPage';
-import { ConnectStrava } from './components/_user/connectStrava';
+import { ConnectStrava } from './components/_register/connectStrava';
 import { SubmitUserInfo } from './components/_register/SubmitUserInfo';
 import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 

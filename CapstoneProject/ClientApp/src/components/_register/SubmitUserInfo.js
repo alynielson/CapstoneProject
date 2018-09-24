@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, Alert } from 'react-bootstrap';
 import { Route, withRouter } from 'react-router-dom';
+import { ConnectStrava } from './connectStrava';
 
 
 export class SubmitUserInfo extends Component {
@@ -9,10 +10,12 @@ export class SubmitUserInfo extends Component {
         this.state = {
             city: '',
             state: '',
-            states: []
+            states: [],
+            errorMessage: '',
+            finished: false
         }
         this.handleChange = this.handleChange.bind(this);
-
+        this.handleSubmti = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -26,6 +29,42 @@ export class SubmitUserInfo extends Component {
 
     }
 
+    async handleSubmit(event) {
+        event.preventDefault();
+        const data = { id: this.props.id, city: this.state.city, state: this.state.state };
+        await fetch('api/Users/EnterLocation', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(this.handleResponse).catch(error => console.log(error));
+
+        if (this.state.errorMessage === '') {
+            this.setState({ finished: true });
+        }
+    }
+
+    shouldShowErrorMessage() {
+        return this.state.errorMessage !== '';
+    }
+
+    handleResponse(response) {
+        var errorText = '';
+        if (response.status === 200) {
+            this.setState({
+                errorMessage: errorText
+            });
+            return response;
+        }
+        else {
+            errorText = 'Unable to get a response from the server.';
+        }
+        this.setState({
+            errorMessage: errorText
+        });
+        throw Error(errorText);
+    }
+
+
     handleChange(event) {
         const target = event.target;
         const value = target.value;
@@ -35,39 +74,61 @@ export class SubmitUserInfo extends Component {
         });
     }
 
+    checkIfCanSubmit() {
+        return this.state.city !== '' && this.state.state !== '';
+    }
+
     render() {
-        return (
-            <div>
-                <h2> Hello, {this.props.first_name}! </h2>
-                <h4>Tell us a little about yourself. Specifying your location will help us find routes, groups, and events near you.</h4>
-                <Row>
-                    <Col md={4}>
-                        <Form>
-                            <FormGroup>
-                                <FormControl
-                                    componentClass="select"
-                                    name="state"
-                                    value={this.state.state}
-                                    onChange={this.handleChange}
+        if (this.state.finished === false) {
+            return (
+                <div>
+                    <h2> Hello, {this.props.first_name}! </h2>
+                    <h4>Tell us a little about yourself. Specifying your location will help us find routes, groups, and events near you.</h4>
+                    <Row>
+                        <Col md={4}>
+                            <div hidden={!this.shouldShowErrorMessage()}>
+                                <Alert>{this.state.errorMessage}</Alert>
+                            </div>
+                            <Form>
+                                <FormGroup>
+                                    <ControlLabel>City</ControlLabel>
+                                    <FormControl
+                                        type="text"
+                                        name="city"
+                                        value={this.state.city}
+                                        onChange={this.handleChange}
+                                    />
+                                    <ControlLabel>State</ControlLabel>
+                                    <FormControl
+                                        componentClass="select"
+                                        name="state"
+                                        value={this.state.state}
+                                        onChange={this.handleChange}
                                     >
                                         {this.state.states.map((state) => <option key={state.value} value={state.value}>{state.display}</option>)}
-                                    
-                                    
 
 
-                            
 
-                                </FormControl>
-                            </FormGroup>
-                            
-                        </Form>
-                    </Col>
-                </Row>
-            </div>
+
+
+
+                                    </FormControl>
+
+                                </FormGroup>
+                                <Button disabled={!this.checkIfCanSubmit()} className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
+
+                            </Form>
+                        </Col>
+                    </Row>
+                </div>
 
 
 
             );
+        }
+        else {
+            <ConnectStrava />
+        }
     }
     
 }

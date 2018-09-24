@@ -71,6 +71,32 @@ namespace CapstoneProject.Controllers
             return States.states;
         }
 
+        [HttpPost("[action]")]
+        public IActionResult EnterLocation([FromBody] UserLocationVM data)
+        {
+            try
+            {
+                if (data != null)
+                {
+                    var user = _context.Users.Find(data.id);
+                    user.City = data.city;
+                    user.State = data.state;
+                    _context.Users.Update(user);
+                    _context.SaveChanges();
+                    return Ok();
+                }
+                else
+                {
+                    return NoContent();
+                }
+            }
+            catch
+            {
+                throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.InternalServerError);
+
+            }
+        }
+
 
        private LoggedInUserVM GetUserInfoFromUser(User user)
         {

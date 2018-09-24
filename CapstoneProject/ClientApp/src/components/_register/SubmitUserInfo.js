@@ -127,7 +127,9 @@ export class SubmitUserInfo extends Component {
             );
         }
         else {
-            <ConnectStrava />
+            return(
+                <ConnectStrava />
+            );
         }
     }
     

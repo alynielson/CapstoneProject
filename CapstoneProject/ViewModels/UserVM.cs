@@ -25,5 +25,14 @@ namespace CapstoneProject.ViewModels
         public string auth_code { get; set; }
         public int id { get; set; }
     }
+
+    public class UserSearchVM
+    {
+       public string name { get; set; }
+        public string location { get; set; }
+
+        public int id { get; set; }
+    }
+
     
 }

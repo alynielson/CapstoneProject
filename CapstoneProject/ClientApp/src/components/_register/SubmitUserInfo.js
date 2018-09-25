@@ -107,11 +107,6 @@ export class SubmitUserInfo extends Component {
                                     >
                                         {this.state.states.map((state) => <option key={state.value} value={state.value}>{state.display}</option>)}
 
-
-
-
-
-
                                     </FormControl>
 
                                 </FormGroup>

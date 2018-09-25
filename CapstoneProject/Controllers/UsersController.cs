@@ -187,17 +187,78 @@ namespace CapstoneProject.Controllers
             {
                 return NoContent();
             }
-            
-            
-                
-
-
         }
 
-        
+        private IEnumerable<User> SearchByName(string first_name = null, string last_name = null)
+        {
+            IEnumerable<User> firstNameMatches;
 
-        // PUT: api/Users/5
-        [HttpPut("{id}")]
+            IEnumerable<User> matches;
+            
+
+            if (first_name != null)
+            {
+                firstNameMatches = _context.Users.Where(a => a.FirstName.ToLower().Trim() == first_name.ToLower().Trim());
+                if (last_name != null)
+                {
+                    matches = firstNameMatches.Where(a => a.LastName.ToLower().Trim() == last_name.ToLower().Trim());
+                }
+                else
+                {
+                    matches = firstNameMatches;
+                }
+            }
+            else if (last_name != null)
+            {
+                matches = _context.Users.Where(a => a.LastName.ToLower().Trim() == last_name.ToLower().Trim());
+            }
+            else
+            {
+                return null;
+            }
+            return matches;
+        }
+
+        private List<UserSearchVM> GetSearchMatches(IEnumerable<User> matches)
+        {
+            List<UserSearchVM> searchResults = new List<UserSearchVM> { };
+            foreach (User match in matches)
+            {
+                UserSearchVM searchResult = new UserSearchVM();
+                searchResult.name = $"{match.FirstName} {match.LastName}";
+                searchResult.location = $"{match.City}, {match.State}";
+                searchResult.id = match.Id;
+                searchResults.Add(searchResult);
+            }
+            return searchResults;
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<UserSearchVM> SearchUsersByName(string first_name = null, string last_name = null)
+        {
+            IEnumerable<User> matches = SearchByName(first_name, last_name);
+            return GetSearchMatches(matches);
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<UserSearchVM> SearchUsersByLocation(string city, string state)
+        {
+           
+            var matches = _context.Users.Where(a => a.City == city && a.State == state);
+            return GetSearchMatches(matches);
+            
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<UserSearchVM> SearchUsersByAll(string city, string state, string first_name = null, string last_name = null)
+        {
+            IEnumerable<User> nameMatches = SearchByName(first_name, last_name);
+            IEnumerable<User> matches = nameMatches.Where(a => a.City == city && a.State == state);
+            return GetSearchMatches(matches);
+        }
+
+// PUT: api/Users/5
+[HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }

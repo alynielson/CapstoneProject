@@ -3,6 +3,7 @@ import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row,
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { NavMenu } from '../NavMenu';
 import { SearchMembers } from './_groups/SearchMembers';
+import { MemberList } from './_groups/MemberList';
 export class CreateGroup extends Component {
     constructor(props) {
         super(props);
@@ -30,6 +31,14 @@ export class CreateGroup extends Component {
             })
             .catch(error => console.log(error));
         this.setState({ userId:  localStorage.getItem('userId') } );
+    }
+
+    addSelectedMember(selectedMember) {
+        let currentMembers = this.state.members.slice();
+        currentMembers.push(selectedMember);
+        this.setState({
+            members: currentMembers
+        });
     }
 
     handleChange(event) {
@@ -62,13 +71,13 @@ export class CreateGroup extends Component {
 
     render() {
         const memberSearch = ((filter, term1, term2, term3, term4) => this.searchForMember(filter, term1, term2, term3, term4));
-
+        const addMember = ((selectedMember) => this.addSelectedMember(selectedMember));
         if (this.state.groupId === null) {
             return (
                 <div>
                     <h1> New Group </h1>
                     <Row>
-                        <Col md={4}>
+                        <Col md={3}>
                             
                             <Form>
                                 <FormGroup>
@@ -111,10 +120,14 @@ export class CreateGroup extends Component {
 
                             </Form>
                         </Col>
-                        <Col md={4}>
+                        <Col md={3}>
                             
                                 <SearchMembers onSearchEnter={memberSearch}/>
                             
+                        </Col>
+                        <Col md={3}>
+                            <MemberList membersToAdd={this.state.membersToAdd}
+                                onMemberSelect={addMember} />
                         </Col>
                     </Row>
 

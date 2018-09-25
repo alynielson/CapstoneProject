@@ -8,7 +8,10 @@
     background-color: #4189C7;
     color: white;
 }
-
+.navbar-default {
+    box-shadow: none;
+    background-image: none;
+}
 
 .body-content {
     padding-top: 50px;
@@ -16,3 +19,27 @@
     padding-left: 15px;
     padding-right: 15px;
 }
+
+.button-group {
+    margin-top: 10px;
+}
+
+.btn-default {
+    box-shadow: none;
+    background-image: none;
+}
+.btn {
+    border-radius: 0px;
+}
+
+.btn-primary {
+    background-color: hotpink;
+    letter-spacing: 1px;
+    
+}
+
+    .btn-primary[disabled] {
+        background-color: rebeccapurple;
+        letter-spacing: 1px;
+        
+    }

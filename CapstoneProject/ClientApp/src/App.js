@@ -22,12 +22,11 @@ export default class App extends Component {
                     <Route path="/authorize-strava" component={() => window.location = "http://www.strava.com/oauth/authorize?client_id=28837&response_type=code&redirect_uri=https://localhost:44355/users/&approval_prompt=force&scope=view_private"} />
                     <Route path='/users' component={UserHome} />
                     <Route path='/logout' component={Logout} />
-                    <Route path='/submitUserInfo' component={SubmitUserInfo} />
-                    <Route path='/connect' component={ConnectStrava} />
+                    
                     <Route exact path='/home' component={Home} />
                     <Route path='/register' component={Register} />
                     <Route path='/login' component={Login} />
-
+                    
                 </Layout>
                
             );

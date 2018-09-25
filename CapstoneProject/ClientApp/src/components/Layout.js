@@ -11,12 +11,8 @@ export class Layout extends Component {
        
     }
 
-    isUserLoggedIn() {
-        if (!localStorage.getItem("userId")) {
-            return false;
-        }
-        else { return true;}
-    }
+  
+    
     
 
   render() {
@@ -24,7 +20,7 @@ export class Layout extends Component {
       <Grid fluid>
         
           
-                    <NavMenu isLoggedIn={this.isUserLoggedIn()}/>
+          <NavMenu />
           
           <div className="body-content">
             {this.props.children}

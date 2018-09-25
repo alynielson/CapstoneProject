@@ -41,20 +41,23 @@ export class CreateGroup extends Component {
         });
     }
 
-    async searchForMember(filter, term1=null, term2=null, term3=null, term4=null) {
+    async searchForMember(filter, term1 = null, term2 = null, term3 = null, term4 = null) {
+        let url;
         if (filter === 'name') {
-
-            await fetch(`/api/Users/SearchUsersByName?first_name=${term1}&last_name=${term2}`).then(response => response.json()).then(jsonData => console.log(jsonData)).catch(error => console.log(error));
-
+            url = `/api/Users/SearchUsersByName?first_name=${term1}&last_name=${term2}`;
         }
         else if (filter === 'location') {
-            await fetch(`/api/Users/SearchUsersByLocation?city=${term1}&state=${term2}`).then(response => response.json()).then(jsonData => console.log(jsonData)).catch(error => console.log(error));
-
+            url = `/api/Users/SearchUsersByLocation?city=${term1}&state=${term2}`;
         }
         else {
-            await fetch(`/api/Users/SearchUsersByAll?city=${term1}&state=${term2}&first_name=${term3}&last_name=${term4}`).then(response => response.json()).then(jsonData => console.log(jsonData)).catch(error => console.log(error));
-
+            url = `/api/Users/SearchUsersByAll?city=${term1}&state=${term2}&first_name=${term3}&last_name=${term4}`;
         }
+        await fetch(url).then(response => response.json())
+            .then(jsonData => {
+                let membersToSelect = jsonData.map(member => { return { value: member.id, display: `${member.name} - ${member.location}` } });
+                this.setState({ membersToAdd: membersToSelect });
+            })
+            .catch(error => console.log(error));
     }
 
     render() {

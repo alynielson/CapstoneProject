@@ -3,6 +3,7 @@ import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row,
 import { Route, withRouter } from 'react-router-dom';
 
 export class UserHome extends Component {
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -11,6 +12,8 @@ export class UserHome extends Component {
         }
       
     }
+
+
 
     componentDidMount() {
         if (this.props.location.search !== "") {
@@ -26,7 +29,7 @@ export class UserHome extends Component {
         }
     }
 
-
+    
 
     render() {
         return (

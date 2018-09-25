@@ -1,5 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, Alert } from 'react-bootstrap';
+import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
+
 
 
 export class Login extends Component {
@@ -8,7 +10,9 @@ export class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            errorMessage: ''
+            errorMessage: '',
+            isSuccessful: false,
+            id: null
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -29,16 +33,22 @@ export class Login extends Component {
         return this.state.email !== '' && this.state.password !== '';
     }
 
-    handleSubmit(event) {
+    async handleSubmit(event) {
         const data = { email: this.state.email, password: this.state.password};
         event.preventDefault();
-        
-        fetch('api/Users/Login', {
+        var resultId = null;
+        await fetch('api/Users/Login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }).then(this.handleRedirect).then(function (response) { return response.json(); }).then(function (jsonData) { return console.log(jsonData); }).catch(function (error) { console.log(error);});
+        }).then(this.handleRedirect).then(function (response) { return response.json(); }).then(function (jsonData) { return resultId = jsonData.id; }).catch(function (error) { console.log(error);});
+        if (resultId !== null) {
 
+            this.setState({ id: resultId });
+            localStorage.clear();
+            localStorage.setItem('userId', resultId);
+            
+        }
 
     }
 
@@ -53,7 +63,8 @@ export class Login extends Component {
         var errorText= '';
         if (response.status === 200) {
             console.log("Successful");
-            this.setState({ errorMessage: errorText });
+            this.setState({ errorMessage: errorText, isSuccessful: true });
+            
             return response;
         }
        else if (response.status === 401) {
@@ -76,45 +87,51 @@ export class Login extends Component {
 
 
     render() {
-        return (
-            <div>
-                <h1> Log in </h1>
-                <Row>
-                    <Col md={4}>
-                        <div hidden={!this.shouldShowErrorMessage()}>
-                            <Alert>{this.state.errorMessage}</Alert>
+        if (this.state.id !== null) {
+            return (<div><Redirect to={`/users`}/></div>);
+        }
+        else {
+            return (
+
+                <div>
+                    <h1> Log in </h1>
+                    <Row>
+                        <Col md={4}>
+                            <div hidden={!this.shouldShowErrorMessage()}>
+                                <Alert>{this.state.errorMessage}</Alert>
                             </div>
-                    <Form>
+                            <Form>
 
 
-                        <FormGroup>
-                            <ControlLabel>Email Address</ControlLabel>
-                            <FormControl
-                                type="text"
-                                name="email"
-                                value={this.state.email}
-                                onChange={this.handleChange} />
+                                <FormGroup>
+                                    <ControlLabel>Email Address</ControlLabel>
+                                    <FormControl
+                                        type="text"
+                                        name="email"
+                                        value={this.state.email}
+                                        onChange={this.handleChange} />
 
 
 
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>Password</ControlLabel>
-                            <FormControl
-                                type="password"
-                                name="password"
-                                value={this.state.password}
-                                onChange={this.handleChange}
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel>Password</ControlLabel>
+                                    <FormControl
+                                        type="password"
+                                        name="password"
+                                        value={this.state.password}
+                                        onChange={this.handleChange}
 
-                            />
+                                    />
 
 
-                        </FormGroup>
-                        <Button disabled={!this.checkIfCanSubmit()} className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
-                    </Form>
-                </Col>
-            </Row>
-        </div>
-      )
+                                </FormGroup>
+                                <Button disabled={!this.checkIfCanSubmit()} className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
+                            </Form>
+                        </Col>
+                    </Row>
+                </div>
+            );
+        }
     }
 }

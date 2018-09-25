@@ -5,42 +5,68 @@ import { LinkContainer } from 'react-router-bootstrap';
 import './NavMenu.css';
 
 export class NavMenu extends Component {
-  displayName = NavMenu.name
+    displayName = NavMenu.name
+    
+   
+    
 
-  render() {
-    return (
-      <Navbar inverse fixedTop fluid collapseOnSelect>
-        <Navbar.Header>
-          <Navbar.Brand>
-            <Link to={'/'}>CapstoneProject</Link>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
-        <Navbar.Collapse>
-          <Nav>
-            <LinkContainer to={'/submitUserInfo'} exact>
-              <NavItem>
-                <Glyphicon glyph='home' /> Submit User Info
-              </NavItem>
-                    </LinkContainer>
-                    <LinkContainer to={'/connect'} exact>
-                        <NavItem>
-                            <Glyphicon glyph='home' /> Connect Strava
-              </NavItem>
-                    </LinkContainer>
-            <LinkContainer to={'/register'}>
-              <NavItem>
-                <Glyphicon glyph='education' /> Register
-              </NavItem>
-            </LinkContainer>
-            <LinkContainer to={'/login'}>
-              <NavItem>
-                <Glyphicon glyph='th-list' /> Login
-              </NavItem>
-            </LinkContainer>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-    );
-  }
+    render() {
+        if (!localStorage.getItem('userId')) {
+            return (
+                <Navbar fixedTop fluid collapseOnSelect>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <Link to={'/home'}>CapstoneProject</Link>
+                        </Navbar.Brand>
+                        <Navbar.Toggle />
+                    </Navbar.Header>
+                    <Navbar.Collapse>
+                        <Nav>
+                            <LinkContainer to={'/login'}>
+                                <NavItem>
+                                   Login
+                                </NavItem>
+                            </LinkContainer>
+                            <LinkContainer to={'/register'}>
+                                <NavItem>
+                                    Register
+                                </NavItem>
+                            </LinkContainer>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+            );
+        }
+        else {
+            return (
+                <Navbar fixedTop fluid collapseOnSelect>
+                    <Navbar.Header>
+                        <Navbar.Brand>
+                            <Link to={'/home'}>CapstoneProject</Link>
+                        </Navbar.Brand>
+                        <Navbar.Toggle />
+                    </Navbar.Header>
+                    <Navbar.Collapse>
+                        <Nav>
+                            <LinkContainer to={'/users'}> 
+                                <NavItem>
+                                     Home
+                                </NavItem>
+                            </LinkContainer>
+                       
+                            <LinkContainer to={'/logout'}>
+                                <NavItem>
+                                     Log out
+                                </NavItem>
+                            </LinkContainer>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Navbar>
+                
+            );
+        }
+    }
+       
+
+  
 }

@@ -2,7 +2,7 @@
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { NavMenu } from '../NavMenu';
-
+import { SearchMembers } from './_groups/SearchMembers';
 export class CreateGroup extends Component {
     constructor(props) {
         super(props);
@@ -52,12 +52,14 @@ export class CreateGroup extends Component {
 
         }
         else {
-            await fetch(`/api/Users/SearchUsersAll?city=${term1}&state=${term2}first_name=${term3}&last_name=${term4}`).then(response => response.json()).then(jsonData => console.log(jsonData)).catch(error => console.log(error));
+            await fetch(`/api/Users/SearchUsersByAll?city=${term1}&state=${term2}&first_name=${term3}&last_name=${term4}`).then(response => response.json()).then(jsonData => console.log(jsonData)).catch(error => console.log(error));
 
         }
     }
 
     render() {
+        const memberSearch = ((filter, term1, term2, term3, term4) => this.searchForMember(filter, term1, term2, term3, term4));
+
         if (this.state.groupId === null) {
             return (
                 <div>
@@ -107,8 +109,9 @@ export class CreateGroup extends Component {
                             </Form>
                         </Col>
                         <Col md={4}>
-                            <Form>
-                            </Form>
+                            
+                                <SearchMembers onSearchEnter={memberSearch}/>
+                            
                         </Col>
                     </Row>
 

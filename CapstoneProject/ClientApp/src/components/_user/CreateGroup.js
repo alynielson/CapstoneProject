@@ -12,7 +12,7 @@ export class CreateGroup extends Component {
     render() {
         return (
             <div>
-            create group
+            
             
             
             </div>

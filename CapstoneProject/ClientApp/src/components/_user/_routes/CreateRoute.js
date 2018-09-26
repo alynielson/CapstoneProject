@@ -19,13 +19,19 @@ export class CreateRoute extends Component {
     render() {
         return (
             <div>
-                <Col md={8}>
-                        <MapContainer />
-                       
-                </Col> <ButtonToolbar>
-                            <Button onClick={this.props.returnToRouteHome}>Back</Button>
+                <Row>
+                <Col md={8} className="map-container">
+                    <MapContainer />  
+                    </Col>
+                </Row>
+                <Row>
+                    <Col md={3}>
+                        <ButtonToolbar className='map-buttons'>
+                            <Button  onClick={this.props.returnToRouteHome}>Back</Button>
                             <Button>Finish</Button>
                         </ButtonToolbar>
+                        </Col>
+                </Row>
             </div>
             
             

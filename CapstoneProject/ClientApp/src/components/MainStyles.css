@@ -44,6 +44,21 @@
         
 }
 
-#map {
-    height: 100%;
+.map {
+    
+    height: 70vw;
+    width: 70vw;
+    max-width: 600px;
+    max-height: 600px;
+   
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.map-buttons{
+    margin-top:20px;
+}
+
+.map-container{
+    
 }

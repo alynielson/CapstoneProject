@@ -283,8 +283,23 @@ namespace CapstoneProject.Controllers
             return GetSearchMatches(matches);
         }
 
-// PUT: api/Users/5
-[HttpPut("{id}")]
+        [HttpGet("[action]")]
+        public UserLatLong GetDefaultMapCoordinates(int userId)
+        {
+            var user = _context.Users.Find(userId);
+            UserLatLong location = new UserLatLong();
+            if (user.Latitude == null)
+            {
+                return null;
+            }
+            location.lat = user.Latitude;
+            location.lng = user.Longitude;
+            return location;
+        }
+
+
+        // PUT: api/Users/5
+        [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }

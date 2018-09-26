@@ -11,9 +11,16 @@ export class MapContainer extends Component {
         }
         this.initMap = this.initMap.bind(this);
     }
+
+   
+
+
+
     initMap(mapProps, map) {
         var self = this;
         const { google } = mapProps;
+        
+
         const drawingManager = new google.maps.drawing.DrawingManager({
             drawingMode: 'polyline',
             drawingControl: true,
@@ -34,6 +41,7 @@ export class MapContainer extends Component {
             <div className='map'>
                 <Map google={window.google}
                     onReady={this.initMap}
+                    center={{ lat: this.props.lat, lng: this.props.lng }}
                     zoom={14}
                     onClick={this.addPoint}
                 >

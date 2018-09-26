@@ -3,6 +3,7 @@ import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row,
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { CreateGroup } from './CreateGroup';
 
+
 export class UserGroupContent extends Component {
     constructor(props) {
         super(props);
@@ -42,7 +43,7 @@ export class UserGroupContent extends Component {
             return (
                 <div>
                 
-                <Button onClick={(event) => this.addNewGroup(event)}>Create a Group</Button>
+                    <Button onClick={(event) => this.addNewGroup(event)}>Create a Group</Button>
                       
                     
                     <div> Your Groups </div>

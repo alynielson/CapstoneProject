@@ -3,6 +3,7 @@ import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row 
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { UserHome } from '../_user/UserHome';
 
+
 export class ConnectStrava extends Component {
     constructor(props) {
         super(props);

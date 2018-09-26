@@ -5,6 +5,7 @@ import { NavMenu } from '../NavMenu';
 import { SearchMembers } from './_groups/SearchMembers';
 import { MemberList } from './_groups/MemberList';
 import _ from 'lodash';
+
 export class CreateGroup extends Component {
     constructor(props) {
         super(props);

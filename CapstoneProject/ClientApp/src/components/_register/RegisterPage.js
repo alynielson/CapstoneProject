@@ -1,8 +1,7 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, Alert } from 'react-bootstrap';
-import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
+import { Button, Form, FormGroup, FormControl, ControlLabel, Col, Row, Alert } from 'react-bootstrap';
 import { SubmitUserInfo } from './SubmitUserInfo'
-
+import '../MainStyles.css'
 
 
 

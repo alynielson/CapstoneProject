@@ -38,8 +38,12 @@
     
 }
 
-    .btn-primary[disabled] {
-        background-color: rebeccapurple;
-        letter-spacing: 1px;
+.btn-primary[disabled] {
+    background-color: rebeccapurple;
+    letter-spacing: 1px;
         
-    }
+}
+
+#map {
+    height: 100%;
+}

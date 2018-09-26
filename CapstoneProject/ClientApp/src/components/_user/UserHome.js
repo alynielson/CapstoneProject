@@ -6,6 +6,7 @@ import { UserHomeContent } from './UserHomeContent';
 import { UserGroupContent } from './UserGroupContent';
 import { UserRouteContent } from './UserRouteContent';
 import { UserEventContent } from './UserEventContent';
+import '../MainStyles.css'
 
 
 export class UserHome extends Component {

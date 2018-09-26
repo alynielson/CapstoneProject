@@ -81,6 +81,9 @@ namespace CapstoneProject.Controllers
                     var user = _context.Users.Find(data.id);
                     user.City = data.city;
                     user.State = data.state;
+                    string[] latLong = Geocoder.RunGeocoder(data.city, data.state);
+                    user.Latitude = latLong[0];
+                    user.Longitude = latLong[1];
                     _context.Users.Update(user);
                     _context.SaveChanges();
                     return Ok();

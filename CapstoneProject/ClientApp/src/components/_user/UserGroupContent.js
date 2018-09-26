@@ -20,8 +20,8 @@ export class UserGroupContent extends Component {
         })
     }
 
-    backToAllGroups(event) {
-        event.preventDefault();
+    backToAllGroups() {
+       
         this.setState({
              createGroup: false,
         })
@@ -30,17 +30,21 @@ export class UserGroupContent extends Component {
 
 
     render() {
+        const returnToEvents = this.backToAllGroups;
         if (this.state.createGroup) {
             return (
                 <div>
-                    <CreateGroup />
-                    <Button onClick={(event) => this.backToAllGroups(event)}>Back</Button>
+                    <CreateGroup returnToEventHome={returnToEvents}/>
+                    
                     </div>);
         }
         else {
             return (
                 <div>
+                
                 <Button onClick={(event) => this.addNewGroup(event)}>Create a Group</Button>
+                      
+                    
                     <div> Your Groups </div>
                     </div>
 

@@ -9,8 +9,6 @@ export class CreateGroup extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            groupId: null,
-            userId: null,
             name: '',
             city: '',
             state: '',
@@ -20,10 +18,25 @@ export class CreateGroup extends Component {
             membersToAdd: []
         }
         this.handleChange = this.handleChange.bind(this);
-        
+        this.submitGroup = this.submitGroup.bind(this);
 
     }
-  
+
+    submitGroup(event) {
+        event.preventDefault();
+        var userId = localStorage.getItem('userId');
+        var members = this.state.members.map(a => Number(a.value));
+        const data = {
+            name: this.state.name, city: this.state.city, state: this.state.state, description: this.state.description,
+            members: members, userId: userId
+        };
+        fetch('api/Groups/Create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).catch(function (error) { console.log(error); });
+        this.props.returnToEventHome();
+    }
 
     addSelectedMember(selectedMember) {
         let currentMembers = this.state.members.map(a => a.value).slice();
@@ -43,6 +56,10 @@ export class CreateGroup extends Component {
             })
         }
         
+    }
+
+    canSubmit() {
+        return this.state.name !== '' && this.state.description !== '';
     }
 
     handleChange(event) {
@@ -80,7 +97,7 @@ export class CreateGroup extends Component {
         const membersAdded = this.state.members.map((member) => <ListGroupItem key={member.value} bsStyle='success'>{member.display}</ListGroupItem>)
         const memberSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
         const addMember = ((selectedMember) => { this.addSelectedMember(selectedMember) });
-        if (this.state.groupId === null) {
+      
             return (
                 <div>
                     <h1> New Group </h1>
@@ -127,6 +144,10 @@ export class CreateGroup extends Component {
                                 </FormGroup>
 
                             </Form>
+                            <ButtonToolbar>
+                                <Button onClick={this.props.returnToEventHome}>Back</Button>
+                                <Button disabled={!this.canSubmit()} onClick={(event) => this.submitGroup(event)}>Finish</Button>
+                    </ButtonToolbar>
                         </Col>
                         <Col md={3}>
                             
@@ -147,21 +168,14 @@ export class CreateGroup extends Component {
 
 
         }
-        else {
-            return (
-                <div>
-                created
-                
-                </div>
-                );
-        }
+      
 
 
        
 
 
 
-    }
+    
 
 
 }

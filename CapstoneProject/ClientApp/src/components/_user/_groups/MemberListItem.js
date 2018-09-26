@@ -10,11 +10,22 @@ export class MemberListItem extends Component {
 
     }
 
+    isActive() {
+        const existingMembers = this.props.existingMembers.map(a => a.value);
+        const thisMember = this.props.value;
+        if (existingMembers.includes(thisMember)) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 
     render() {
-        const memberToAdd = this.props.value;
+        const memberToAdd = { key: this.props.value, value: this.props.value, display: this.props.display };
         return (
-            <ListGroupItem onClick={() => this.props.onMemberSelect(memberToAdd)}>
+            <ListGroupItem active={this.isActive()} onClick={() => this.props.onMemberSelect(memberToAdd)}>
                 
                         {this.props.display}
                    

@@ -1,9 +1,10 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
+import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ListGroupItem, ListGroup, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { NavMenu } from '../NavMenu';
 import { SearchMembers } from './_groups/SearchMembers';
 import { MemberList } from './_groups/MemberList';
+import _ from 'lodash';
 export class CreateGroup extends Component {
     constructor(props) {
         super(props);
@@ -19,26 +20,29 @@ export class CreateGroup extends Component {
             membersToAdd: []
         }
         this.handleChange = this.handleChange.bind(this);
-
+        
 
     }
-    componentDidMount() {
-        fetch("api/Users/GetStatesList")
-            .then(response => { return response.json(); })
-            .then(data => {
-                let statesToSelect = data.map(state => { return { value: state, display: state } });
-                this.setState({ states: [{ value: '', display: '' }].concat(statesToSelect) });
-            })
-            .catch(error => console.log(error));
-        this.setState({ userId:  localStorage.getItem('userId') } );
-    }
+  
 
     addSelectedMember(selectedMember) {
-        let currentMembers = this.state.members.slice();
-        currentMembers.push(selectedMember);
-        this.setState({
-            members: currentMembers
-        });
+        let currentMembers = this.state.members.map(a => a.value).slice();
+        let selectedExist = currentMembers.indexOf(selectedMember.value);
+        if (selectedExist === -1) {
+            let editableMembers = this.state.members.slice();
+            editableMembers.push(selectedMember);
+            this.setState({
+                members: editableMembers
+            });
+        }
+        else {
+            let editableMembers = this.state.members.slice();
+            editableMembers.splice(selectedExist, 1);
+            this.setState({
+                members: editableMembers
+            })
+        }
+        
     }
 
     handleChange(event) {
@@ -49,19 +53,22 @@ export class CreateGroup extends Component {
             [name]: value
         });
     }
+    componentDidMount() {
+        fetch("api/Users/GetStatesList")
+            .then(response => { return response.json(); })
+            .then(data => {
+                let statesToSelect = data.map(state => { return { value: state, display: state } });
+                this.setState({ states: [{ value: '', display: '' }].concat(statesToSelect) });
+            })
+            .catch(error => console.log(error));
 
-    async searchForMember(filter, term1 = null, term2 = null, term3 = null, term4 = null) {
-        let url;
-        if (filter === 'name') {
-            url = `/api/Users/SearchUsersByName?first_name=${term1}&last_name=${term2}`;
-        }
-        else if (filter === 'location') {
-            url = `/api/Users/SearchUsersByLocation?city=${term1}&state=${term2}`;
-        }
-        else {
-            url = `/api/Users/SearchUsersByAll?city=${term1}&state=${term2}&first_name=${term3}&last_name=${term4}`;
-        }
-        await fetch(url).then(response => response.json())
+    }
+   
+
+    searchTest(term2) {
+        let terms = term2.toString().trim().toLowerCase().replace(/[^A-Za-z0-9\s]/g, "");
+        let url = `/api/Users/UniversalUserSearch?term1=${terms}`;
+        fetch(url).then(response => response.json())
             .then(jsonData => {
                 let membersToSelect = jsonData.map(member => { return { value: member.id, display: `${member.name} - ${member.location}` } });
                 this.setState({ membersToAdd: membersToSelect });
@@ -70,8 +77,9 @@ export class CreateGroup extends Component {
     }
 
     render() {
-        const memberSearch = ((filter, term1, term2, term3, term4) => this.searchForMember(filter, term1, term2, term3, term4));
-        const addMember = ((selectedMember) => this.addSelectedMember(selectedMember));
+        const membersAdded = this.state.members.map((member) => <ListGroupItem key={member.value} bsStyle='success'>{member.display}</ListGroupItem>)
+        const memberSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
+        const addMember = ((selectedMember) => { this.addSelectedMember(selectedMember) });
         if (this.state.groupId === null) {
             return (
                 <div>
@@ -123,11 +131,14 @@ export class CreateGroup extends Component {
                         <Col md={3}>
                             
                                 <SearchMembers onSearchEnter={memberSearch}/>
-                            
+                            <MemberList membersToAdd={this.state.membersToAdd}
+                                onMemberSelect={addMember} existingMembers={this.state.members} />
                         </Col>
                         <Col md={3}>
-                            <MemberList membersToAdd={this.state.membersToAdd}
-                                onMemberSelect={addMember} />
+                            <ControlLabel>Added Members </ControlLabel>
+                            <ListGroup>
+                                {membersAdded}
+                                </ListGroup>
                         </Col>
                     </Row>
 

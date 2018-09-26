@@ -257,6 +257,29 @@ namespace CapstoneProject.Controllers
             return GetSearchMatches(matches);
         }
 
+        [HttpGet("[action]")]
+        public IEnumerable<UserSearchVM> UniversalUserSearch(string term1)
+        {
+            if (term1 == null)
+            {
+                return null;
+            }
+            string[] terms = term1.Split(' ');
+            List<User> matches = new List<User> { };
+            foreach (String item in terms)
+            {
+                var nameMatches = _context.Users.Where(a => 
+                    $"{a.FirstName.ToLower()} {a.LastName.ToLower()}".Contains(item));
+                matches.AddRange(nameMatches);
+                var cityMatches = _context.Users.Where(a =>
+                    a.City.Contains(item));
+                matches.AddRange(cityMatches);
+            }
+            matches = matches.Distinct().ToList();
+
+            return GetSearchMatches(matches);
+        }
+
 // PUT: api/Users/5
 [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

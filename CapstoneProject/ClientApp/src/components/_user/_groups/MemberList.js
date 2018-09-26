@@ -14,7 +14,7 @@ export class MemberList extends Component {
 
     render() {
         const listItems = this.props.membersToAdd.map((member) => {
-            return (<MemberListItem onMemberSelect={this.props.onMemberSelect} key={member.value} value={member.value} display={member.display}></MemberListItem>
+            return (<MemberListItem existingMembers={this.props.existingMembers} onMemberSelect={this.props.onMemberSelect} key={member.value} value={member.value} display={member.display}></MemberListItem>
         )} );
         return (
             <ListGroup>

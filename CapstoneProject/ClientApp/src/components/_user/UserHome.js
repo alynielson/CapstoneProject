@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, ButtonGroup, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, Alert } from 'react-bootstrap';
 import { Route, withRouter } from 'react-router-dom';
-import { NavMenu } from '../NavMenu';
+
 import { UserHomeContent } from './UserHomeContent';
 import { UserGroupContent } from './UserGroupContent';
 import { UserRouteContent } from './UserRouteContent';

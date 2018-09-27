@@ -39,8 +39,27 @@ export class MapContainer extends Component {
         })
     }
 
-    handleSubmit(name, description, city, state) {
-        fetch
+    handleSubmit(name, description) {
+        let data = {
+            name: name,
+            description: description,
+            
+            totalDistance: this.state.totalDistance,
+            totalElevationGain: this.state.totalElevationGain,
+            totalElevationLoss: this.state.totalElevationLoss,
+            userId: localStorage.getItem('userId'),
+            coordinates: this.state.coordinates,
+            distances: this.state.distances,
+            elevations: this.state.elevations
+
+        }
+        let id;
+        fetch('/api/Routes/Create',{
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then(response => response.json()).then(data =>
+            console.log(data)).catch(error => console.log(error));
         this.setState({
             isSavingNew: false,
             isRouteCreated: true
@@ -230,7 +249,7 @@ export class MapContainer extends Component {
     }
 
     render() {
-        const submitRoute = ((name,description,city,state) => { this.handleSubmit(name,description,city,state) });
+        const submitRoute = ((name,description) => { this.handleSubmit(name,description) });
 
         var polyline;
         if (this.state.hasClicked == false) {

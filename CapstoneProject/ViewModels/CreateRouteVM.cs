@@ -11,35 +11,33 @@ namespace CapstoneProject.ViewModels
 
         public string description { get; set; }
 
-        public string city { get; set; }
+       
 
-        public string state { get; set; }
+        public string  totalDistance { get; set; }
 
-        public decimal  totalDistance { get; set; }
+        public string totalElevationGain { get; set; }
 
-        public decimal totalElevationGain { get; set; }
+        public string totalElevationLoss { get; set; }
 
-        public decimal totalElevationLoss { get; set; }
+        public string userId { get; set; }
 
-        public int userId { get; set; }
-
-        public RouteCoords coordinates { get; set; }
-        public decimal[] distances { get; set; }
-        public ElevationVals elevations { get; set; }
+        public RouteCoords[] coordinates { get; set; }
+        public string[] distances { get; set; }
+        public ElevationVals[] elevations { get; set; }
 
 
     }
 
     public class RouteCoords
     {
-        public decimal lat { get; set; }
+        public string lat { get; set; }
 
-        public decimal lng { get; set; }
+        public string lng { get; set; }
     }
 
     public class ElevationVals
     {
-        public decimal up { get; set; }
-        public decimal down { get; set; }
+        public string up { get; set; }
+        public string down { get; set; }
     }
 }

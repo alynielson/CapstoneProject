@@ -14,21 +14,11 @@ export class SaveRouteModal extends Component {
             states: [],
             name: '',
             description: '',
-            city: '',
-            state: ''
+            
         }
-      
+        this.handleChange = this.handleChange.bind(this);
     }
-    componentDidMount() {
-        fetch("api/Users/GetStatesList")
-            .then(response => { return response.json(); })
-            .then(data => {
-                let statesToSelect = data.map(state => { return { value: state, display: state } });
-                this.setState({ states: [{ value: '', display: '' }].concat(statesToSelect) });
-            })
-            .catch(error => console.log(error));
-
-    }
+   
     handleChange(event) {
         const target = event.target;
         const value = target.value;
@@ -68,25 +58,7 @@ export class SaveRouteModal extends Component {
                                     value={this.state.description}
                                     onChange={this.handleChange} />
                             </FormGroup>
-                            <FormGroup>
-                                <ControlLabel>Location</ControlLabel>
-                                <FormControl
-                                    type="text"
-                                    name="city"
-                                    value={this.state.city}
-                                    onChange={this.handleChange} />
                             
-                            
-                            <FormControl
-                                componentClass="select"
-                                name="state"
-                                value={this.state.state}
-                                onChange={this.handleChange}
-                            >
-                                {this.state.states.map((state) => <option key={state.value} value={state.value}>{state.display}</option>)}
-
-                                </FormControl>
-                            </FormGroup>
                             </Form>
                             </Modal.Body>
                         <Modal.Footer>

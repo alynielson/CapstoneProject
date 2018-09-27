@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Well, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonGroup } from 'react-bootstrap';
-import { GoogleApiWrapper, Map, Polyline, DrawingManager } from 'google-maps-react'
-
+import { GoogleApiWrapper, Map, Polyline, DrawingManager } from 'google-maps-react';
+import { SaveRouteModal } from './SaveRouteModal';
 
 export class MapContainer extends Component {
     constructor(props) {
@@ -15,14 +15,28 @@ export class MapContainer extends Component {
             elevations: [{up: 0, down: 0}],
             totalElevationGain: 0,
             totalElevationLoss: 0,
-            hasElevation: false
+            hasElevation: false,
+            isRouteCreated: false,
+            isSavingNew: false
         }
 
         this.deleteLast = this.deleteLast.bind(this);
         this.deleteAll = this.deleteAll.bind(this);
-        this.calculateElevationValues = this.calculateElevationValues.bind(this);   
+        this.calculateElevationValues = this.calculateElevationValues.bind(this); 
+        this.saveRoute = this.saveRoute.bind(this);
+        this.handleModalHide = this.handleModalHide.bind(this);
     }
 
+    saveRoute() {
+        this.setState({
+            isSavingNew: true
+        })
+    }
+    handleModalHide() {
+        this.setState({
+            isSavingNew: false
+        })
+    }
     calculateDistanceOnAdd(newCoord, currentPath) {
         var lastCoord = currentPath[currentPath.length - 1];
         let coord1 = new window.google.maps.LatLng(newCoord.lat, newCoord.lng);
@@ -228,10 +242,12 @@ export class MapContainer extends Component {
             uphill = 0;
             downhill = 0;
         }
-
+        
         return (    
             <Row>
                 <Col md={7}>
+                    <SaveRouteModal show={this.state.isSavingNew} hiding={this.handleModalHide} />
+
             <div className='map'>
                         <Map google={window.google}
                             center={{ lat: this.props.lat, lng: this.props.lng }}
@@ -246,8 +262,10 @@ export class MapContainer extends Component {
                 <Col md={2}>
             <ButtonGroup vertical>
                                 <Button onClick={this.deleteLast}>Undo</Button>
-                                <Button onClick={this.deleteAll}>Clear All</Button>
-                            </ButtonGroup>
+                        <Button onClick={this.deleteAll}>Clear All</Button>
+                        <Button onClick={this.saveRoute}>Save</Button>
+                    </ButtonGroup>
+                    
                 </Col>
                 <Col md={3}>
                     <FormGroup>

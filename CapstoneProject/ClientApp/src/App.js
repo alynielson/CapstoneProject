@@ -14,19 +14,31 @@ import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 
 
 export default class App extends Component {
-    displayName = App.name
-    
+    //displayName = App.name
+    constructor(props) {
+        super(props);
+        this.state = {
+            tryLogout: false
+        }
+
+    }
+  
+
+
+
     render() {
+       
+
+
         return (
-                <Layout>
+            <Layout onLogout={this.onClickingLogout}>
                     <Route path="/authorize-strava" component={() => window.location = "http://www.strava.com/oauth/authorize?client_id=28837&response_type=code&redirect_uri=https://localhost:44355/users/&approval_prompt=force&scope=view_private"} />
                     <Route path='/users' component={UserHome} />
-                    <Route path='/logout' component={Logout} />
                     
                     <Route exact path='/home' component={Home} />
                     <Route path='/register' component={Register} />
                     <Route path='/login' component={Login} />
-                    
+                <Route path='/logout' component={Logout} />
                 </Layout>
                
             );

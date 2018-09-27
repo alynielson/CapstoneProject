@@ -20,7 +20,7 @@ export class Layout extends Component {
       <Grid fluid>
         
           
-          <NavMenu />
+            <NavMenu />
           
           <div className="body-content">
             {this.props.children}

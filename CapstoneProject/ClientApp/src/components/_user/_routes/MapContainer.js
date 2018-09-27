@@ -25,6 +25,7 @@ export class MapContainer extends Component {
         this.calculateElevationValues = this.calculateElevationValues.bind(this); 
         this.saveRoute = this.saveRoute.bind(this);
         this.handleModalHide = this.handleModalHide.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     saveRoute() {
@@ -35,6 +36,14 @@ export class MapContainer extends Component {
     handleModalHide() {
         this.setState({
             isSavingNew: false
+        })
+    }
+
+    handleSubmit(name, description, city, state) {
+        fetch
+        this.setState({
+            isSavingNew: false,
+            isRouteCreated: true
         })
     }
     calculateDistanceOnAdd(newCoord, currentPath) {
@@ -221,6 +230,8 @@ export class MapContainer extends Component {
     }
 
     render() {
+        const submitRoute = ((name,description,city,state) => { this.handleSubmit(name,description,city,state) });
+
         var polyline;
         if (this.state.hasClicked == false) {
             polyline = null
@@ -246,7 +257,7 @@ export class MapContainer extends Component {
         return (    
             <Row>
                 <Col md={7}>
-                    <SaveRouteModal show={this.state.isSavingNew} hiding={this.handleModalHide} />
+                    <SaveRouteModal show={this.state.isSavingNew} hiding={this.handleModalHide} submitting={submitRoute}/>
 
             <div className='map'>
                         <Map google={window.google}
@@ -263,7 +274,7 @@ export class MapContainer extends Component {
             <ButtonGroup vertical>
                                 <Button onClick={this.deleteLast}>Undo</Button>
                         <Button onClick={this.deleteAll}>Clear All</Button>
-                        <Button onClick={this.saveRoute}>Save</Button>
+                        <Button onClick={this.saveRoute} disabled={!(this.state.totalDistance > 0)}>Save</Button>
                     </ButtonGroup>
                     
                 </Col>

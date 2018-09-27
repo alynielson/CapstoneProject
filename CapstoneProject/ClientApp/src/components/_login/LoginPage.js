@@ -111,9 +111,6 @@ export class Login extends Component {
                                         name="email"
                                         value={this.state.email}
                                         onChange={this.handleChange} />
-
-
-
                                 </FormGroup>
                                 <FormGroup>
                                     <ControlLabel>Password</ControlLabel>

@@ -64,6 +64,10 @@
 }
 
 .modal{
-    height: 200px;
+    height: 600px;
       
+}
+
+.modal-form-custom{
+    width: 40%;
 }

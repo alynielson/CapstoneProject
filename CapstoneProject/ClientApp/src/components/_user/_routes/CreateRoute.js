@@ -39,17 +39,17 @@ export class CreateRoute extends Component {
         return (
             <div>
                 <Row>
-                <Col md={8} className="map-container">
+                <Col md={12} className="map-container">
                         <MapContainer lat={this.state.defaultLat} lng={this.state.defaultLong}/>  
                     </Col>
                 </Row>
                 <Row>
-                    <Col md={3}>
+                    
                         <ButtonToolbar className='map-buttons'>
                             <Button  onClick={this.props.returnToRouteHome}>Back</Button>
                             <Button>Finish</Button>
                         </ButtonToolbar>
-                        </Col>
+                        
                 </Row>
             </div>
             

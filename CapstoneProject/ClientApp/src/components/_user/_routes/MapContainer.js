@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonGroup } from 'react-bootstrap';
+import { Button, Well, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonGroup } from 'react-bootstrap';
 import { GoogleApiWrapper, Map, Polyline, DrawingManager } from 'google-maps-react'
 
 
@@ -9,11 +9,21 @@ export class MapContainer extends Component {
         this.state = {
             coordinates: [{}],
             hasClicked: false,
-            updateLine: false
+            updateLine: false,
+            distances: [],
+            totalDistance: 0
         }
 
         this.deleteLast = this.deleteLast.bind(this);
         this.deleteAll = this.deleteAll.bind(this);
+    }
+
+    calculateDistanceOnAdd(newCoord, currentPath) {
+        var lastCoord = currentPath[currentPath.length - 1];
+        let coord1 = new window.google.maps.LatLng(newCoord.lat, newCoord.lng);
+        let coord2 = new window.google.maps.LatLng(lastCoord.lat, lastCoord.lng);
+        var distance = window.google.maps.geometry.spherical.computeDistanceBetween(coord1, coord2);
+        return distance/1609.344;
     }
 
     addCoordinate(t, map, coord) {
@@ -22,18 +32,25 @@ export class MapContainer extends Component {
         const lng = latLng.lng();
         const newCoord = { lat: lat, lng: lng };
         var currentPath = this.state.coordinates;
+        var distance = this.calculateDistanceOnAdd(newCoord, currentPath );
         if (this.state.hasClicked === false) {
             this.setState({
                 coordinates: [newCoord],
                 hasClicked: true,
-                updateLine: false
+                updateLine: false,
+               
             });
         }
         else {
+            var currentDistanceArray = this.state.distances;
+            var currentTotal = this.state.totalDistance + distance;
+            currentDistanceArray.push(distance);
             var newPath = currentPath.concat(newCoord);
             this.setState({
                 coordinates: newPath,
-               updateLine: false
+                updateLine: false,
+                distances: currentDistanceArray,
+                totalDistance: currentTotal
             })
         }
     }
@@ -46,16 +63,25 @@ export class MapContainer extends Component {
                 this.setState({
                     coordinates: [{}],
                     hasClicked: false,
-                    
-                    
+                    distances: [],
+                    totalDistance: 0
+
                 });
             }
-            var currentPath = this.state.coordinates;
-            currentPath.pop();
-            this.setState({
-                coordinates: currentPath,
-                updateLine: true
-            });
+            else {
+                var currentPath = this.state.coordinates;
+                currentPath.pop();
+                let currentDistance = this.state.totalDistance;
+                let currentDistanceArray = this.state.distances;
+                let removed = currentDistanceArray.pop();
+                let newDistance = currentDistance - removed;
+                this.setState({
+                    coordinates: currentPath,
+                    updateLine: true,
+                    totalDistance: newDistance,
+                    distances: currentDistanceArray
+                });
+            }
         }
     }
 
@@ -65,6 +91,8 @@ export class MapContainer extends Component {
             this.setState({
                 coordinates: [{}],
                 hasClicked: false,
+                totalDistance: 0,
+                distances: []
             });
             
         }
@@ -84,7 +112,7 @@ export class MapContainer extends Component {
         
         return (    
             <Row>
-                <Col md={10}>
+                <Col md={7}>
             <div className='map'>
                         <Map google={window.google}
                             center={{ lat: this.props.lat, lng: this.props.lng }}
@@ -101,6 +129,12 @@ export class MapContainer extends Component {
                                 <Button onClick={this.deleteLast}>Undo</Button>
                                 <Button onClick={this.deleteAll}>Clear All</Button>
                             </ButtonGroup>
+                </Col>
+                <Col md={3}>
+                    <FormGroup>
+                        <ControlLabel>Distance</ControlLabel>
+                        <Well>{this.state.totalDistance.toFixed(3)} miles</Well>
+                    </FormGroup>
                     </Col>
                 </Row>
             );

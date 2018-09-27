@@ -15,7 +15,7 @@ namespace CapstoneProject.Models
 
         public string Down { get; set; }
 
-        public string SortOrder { get; set; }
+        public int SortOrder { get; set; }
         [ForeignKey("Route")]
         public int RouteId { get; set; }
         public Route Route { get; set; }

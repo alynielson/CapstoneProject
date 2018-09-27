@@ -17,11 +17,11 @@ namespace IntegrationProject.Data
 
         public DbSet<GroupMember> GroupMembers { get; set; }
 
-        DbSet<Route> Routes { get; set; }
+        public DbSet<Route> Routes { get; set; }
 
-        DbSet<RouteCoordinate> RouteCoordinates { get; set; } 
-        DbSet<RouteDistance> RouteDistances { get; set; }
-        DbSet<RouteElevation> RouteElevations { get; set; }
+        public DbSet<RouteCoordinate> RouteCoordinates { get; set; } 
+        public DbSet<RouteDistance> RouteDistances { get; set; }
+        public DbSet<RouteElevation> RouteElevations { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

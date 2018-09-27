@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CapstoneProject.Models;
 using CapstoneProject.Operations;
 using CapstoneProject.ViewModels;
+using IntegrationProject.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,12 +14,15 @@ namespace CapstoneProject.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class RoutesController : ControllerBase
-    {
-        // GET: api/Routes
+    { private readonly ApplicationDbContext _context;
+        public RoutesController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
       
         // POST: api/Routes
         [HttpPost("[action]")]
-        public IActionResult Create([FromBody] CreateRouteVM data)
+        public async Task<IActionResult> Create([FromBody] CreateRouteVM data)
         {
             if (data != null)
             {
@@ -31,6 +35,15 @@ namespace CapstoneProject.Controllers
                     route.TotalElevationGain = data.totalElevationGain;
                     route.TotalElevationLoss = data.totalElevationLoss;
                     string[] cityState = ReverseGeocodeCoordinates(data.coordinates[0]);
+                    route.City = cityState[0];
+                    route.State = cityState[1];
+                    route.UserId = int.Parse(data.userId);
+                    _context.Routes.Add(route);
+                    await _context.SaveChangesAsync();
+                    int routeId = FindRouteId(route.Name);
+                    CreateCoordinatesRows(data.coordinates, routeId);
+                    CreateDistancesRows(data.distances, routeId);
+                    CreateElevationsRows(data.elevations, routeId);
                     return Ok();
                 }
                 catch
@@ -44,6 +57,65 @@ namespace CapstoneProject.Controllers
                 return NoContent();
             }
            
+        }
+
+        private int FindRouteId(string name)
+        {
+            int routeId;
+            var routesFound = _context.Routes.Where(a => name == a.Name).ToList();
+            
+                if (routesFound.Count() > 1)
+                {
+                    var routesOrdered = _context.Routes.OrderByDescending(a => a.Id).ToList();
+                    return routeId = routesOrdered[0].Id;
+                }
+                else 
+                {
+                    return routesFound[0].Id;
+                }
+           
+        }
+
+        private void CreateCoordinatesRows(RouteCoords[] coordinates, int id)
+        {
+            for (int i = 0; i < coordinates.Length; i++)
+            {
+                RouteCoordinate coord = new RouteCoordinate();
+                coord.Latitude = coordinates[i].lat;
+                coord.Longitude = coordinates[i].lng;
+                coord.RouteId = id;
+                coord.SortOrder = i;
+                _context.Add(coord);
+            }
+            _context.SaveChangesAsync();
+        }
+
+        private void CreateDistancesRows(string[] distances, int id)
+        {
+            for (int i = 0; i < distances.Length; i++)
+            {
+                RouteDistance routeDistance = new RouteDistance();
+                routeDistance.Distance = distances[i];
+                routeDistance.RouteId = id;
+                routeDistance.SortOrder = i;
+                _context.Add(routeDistance);
+            }
+            _context.SaveChangesAsync();
+        }
+
+        private void CreateElevationsRows(ElevationVals[] elevations, int id)
+        {
+            for (int i = 0; i < elevations.Length; i++)
+            {
+                RouteElevation routeElevation = new RouteElevation();
+                routeElevation.Up = elevations[i].up;
+                routeElevation.Down = elevations[i].down;
+                routeElevation.RouteId = id;
+                routeElevation.SortOrder = i;
+                _context.Add(routeElevation);
+
+            }
+            _context.SaveChangesAsync();
         }
 
         private string[] ReverseGeocodeCoordinates(RouteCoords latLngVals)

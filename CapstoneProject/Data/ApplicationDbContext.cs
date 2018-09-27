@@ -17,7 +17,7 @@ namespace IntegrationProject.Data
 
         public DbSet<GroupMember> GroupMembers { get; set; }
 
-        
+        DbSet<Route> Routes { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

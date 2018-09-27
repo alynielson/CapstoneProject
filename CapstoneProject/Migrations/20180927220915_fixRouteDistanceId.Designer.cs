@@ -3,14 +3,16 @@ using IntegrationProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CapstoneProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180927220915_fixRouteDistanceId")]
+    partial class fixRouteDistanceId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -133,27 +135,6 @@ namespace CapstoneProject.Migrations
                     b.ToTable("RouteDistances");
                 });
 
-            modelBuilder.Entity("CapstoneProject.Models.RouteElevation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Down");
-
-                    b.Property<int>("RouteId");
-
-                    b.Property<string>("SortOrder");
-
-                    b.Property<string>("Up");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RouteId");
-
-                    b.ToTable("RouteElevations");
-                });
-
             modelBuilder.Entity("CapstoneProject.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -221,14 +202,6 @@ namespace CapstoneProject.Migrations
                 });
 
             modelBuilder.Entity("CapstoneProject.Models.RouteDistance", b =>
-                {
-                    b.HasOne("CapstoneProject.Models.Route", "Route")
-                        .WithMany()
-                        .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("CapstoneProject.Models.RouteElevation", b =>
                 {
                     b.HasOne("CapstoneProject.Models.Route", "Route")
                         .WithMany()

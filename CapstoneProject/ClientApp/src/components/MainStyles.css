@@ -14,10 +14,8 @@
 }
 
 .body-content {
-    padding-top: 50px;
-    padding-bottom: 20px;
-    padding-left: 15px;
-    padding-right: 15px;
+   
+    padding: 50px 15px 20px 15px;
 }
 
 .button-group {
@@ -59,9 +57,7 @@
     margin-top:20px;
 }
 
-.map-container{
-    
-}
+
 
 .modal{
     height: 600px;

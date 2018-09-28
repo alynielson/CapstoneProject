@@ -9,7 +9,7 @@ export class CreateRoute extends Component {
         super(props);
         this.state = {
             defaultLat: 43.0362012,
-            defaultLong: -87.98582829999999
+            defaultLong: -87.98582829999999,
             
         }
     }
@@ -40,14 +40,14 @@ export class CreateRoute extends Component {
             <div>
                 <Row>
                 <Col md={12} className="map-container">
-                        <MapContainer lat={this.state.defaultLat} lng={this.state.defaultLong}/>  
+                        <MapContainer onFinishing={this.props.onFinishing} lat={this.state.defaultLat} lng={this.state.defaultLong}/>  
                     </Col>
                 </Row>
                 <Row>
                     
                         <ButtonToolbar className='map-buttons'>
                             <Button  onClick={this.props.returnToRouteHome}>Back</Button>
-                            <Button>Finish</Button>
+                            
                         </ButtonToolbar>
                         
                 </Row>

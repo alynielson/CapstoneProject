@@ -8,6 +8,7 @@ using CapstoneProject.ViewModels;
 using IntegrationProject.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CapstoneProject.Controllers
 {
@@ -18,6 +19,34 @@ namespace CapstoneProject.Controllers
         public RoutesController(ApplicationDbContext context)
         {
             _context = context;
+        }
+
+        [HttpGet("[action]")]
+        public EditRouteVM GetRoute(int id)
+        {
+            var route = _context.Routes.Find(id);
+            EditRouteVM data = new EditRouteVM();
+            data.city = route.City;
+            data.state = route.State;
+            data.name = route.Name;
+            data.description = route.Description;
+            data.totalDistance = route.TotalDistance;
+            data.totalElevationGain = route.TotalElevationGain;
+            data.totalElevationLoss = route.TotalElevationLoss;
+            var owner = _context.Users.Find(route.UserId);
+            data.ownerName = $"{owner.FirstName} {owner.LastName}";
+            var points = _context.RouteCoordinates.Where(a => a.RouteId == id).OrderBy(a => a.SortOrder).ToList();
+            RouteCoords[] coords = new RouteCoords[points.Count()];
+            for (int i= 0; i < coords.Length; i ++)
+            {
+                RouteCoords routeCoord = new RouteCoords();
+                routeCoord.lat = points[i].Latitude;
+                routeCoord.lng = points[i].Longitude;
+                coords[i] = routeCoord;
+                
+            }
+            data.coordinates = coords;
+            return data;
         }
       
         // POST: api/Routes
@@ -44,7 +73,10 @@ namespace CapstoneProject.Controllers
                     CreateCoordinatesRows(data.coordinates, routeId);
                     CreateDistancesRows(data.distances, routeId);
                     CreateElevationsRows(data.elevations, routeId);
-                    return Ok();
+                    RouteVM routeVM = new RouteVM();
+                    routeVM.id = routeId;
+                    return Ok(routeVM
+                    );
                 }
                 catch
                 {
@@ -87,7 +119,7 @@ namespace CapstoneProject.Controllers
                 coord.SortOrder = i;
                 _context.Add(coord);
             }
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         private void CreateDistancesRows(string[] distances, int id)
@@ -100,7 +132,7 @@ namespace CapstoneProject.Controllers
                 routeDistance.SortOrder = i;
                 _context.Add(routeDistance);
             }
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         private void CreateElevationsRows(ElevationVals[] elevations, int id)
@@ -115,7 +147,7 @@ namespace CapstoneProject.Controllers
                 _context.Add(routeElevation);
 
             }
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         private string[] ReverseGeocodeCoordinates(RouteCoords latLngVals)

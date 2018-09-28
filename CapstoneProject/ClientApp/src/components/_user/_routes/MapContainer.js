@@ -16,7 +16,7 @@ export class MapContainer extends Component {
             totalElevationGain: 0,
             totalElevationLoss: 0,
             hasElevation: false,
-            isRouteCreated: false,
+            routeId: null,
             isSavingNew: false
         }
 
@@ -39,7 +39,7 @@ export class MapContainer extends Component {
         })
     }
 
-    handleSubmit(name, description) {
+    async handleSubmit(name, description) {
         let data = {
             name: name,
             description: description,
@@ -53,17 +53,20 @@ export class MapContainer extends Component {
             elevations: this.state.elevations
 
         }
-        let id;
-        fetch('/api/Routes/Create',{
+      
+       await fetch('/api/Routes/Create',{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }).then(response => response.json()).then(data =>
-            console.log(data)).catch(error => console.log(error));
-        this.setState({
-            isSavingNew: false,
-            isRouteCreated: true
-        })
+        }).then(response => response.json()).then(data => {
+            let id = data.id;
+            this.setState({
+                isSavingNew: false,
+                routeId: id
+            });
+            }).catch(error => console.log(error));
+        let idToSend = this.state.routeId;
+        this.props.onFinishing(idToSend);
     }
     calculateDistanceOnAdd(newCoord, currentPath) {
         var lastCoord = currentPath[currentPath.length - 1];
@@ -273,47 +276,49 @@ export class MapContainer extends Component {
             downhill = 0;
         }
         
-        return (    
-            <Row>
-                <Col md={7}>
-                    <SaveRouteModal show={this.state.isSavingNew} hiding={this.handleModalHide} submitting={submitRoute}/>
+            return (
+                <Row>
+                    <Col md={7}>
+                        <SaveRouteModal show={this.state.isSavingNew} hiding={this.handleModalHide} submitting={submitRoute} />
 
-            <div className='map'>
-                        <Map google={window.google}
-                            center={{ lat: this.props.lat, lng: this.props.lng }}
-                            zoom={14}
-                            onClick={(t, map, coord) => this.addCoordinate(t, map, coord)}
-                >
-                            {polyline}
-                            
-                </Map>
-                    </div>
-                </Col>
-                <Col md={2}>
-            <ButtonGroup vertical>
-                                <Button onClick={this.deleteLast}>Undo</Button>
-                        <Button onClick={this.deleteAll}>Clear All</Button>
-                        <Button onClick={this.saveRoute} disabled={!(this.state.totalDistance > 0)}>Save</Button>
-                    </ButtonGroup>
-                    
-                </Col>
-                <Col md={3}>
-                    <FormGroup>
-                        <ControlLabel>Total Distance</ControlLabel>
-                        <Well>{this.state.totalDistance.toFixed(3)} miles</Well>
-                        <ControlLabel>Total Elevation Gain</ControlLabel>
-                        <Well>{this.state.totalElevationGain.toFixed(2)} meters</Well>
-                        <ControlLabel>Total Elevation Loss</ControlLabel>
-                        <Well>{this.state.totalElevationLoss.toFixed(2)} meters</Well>
-                        <ControlLabel>Uphill on Last Stretch</ControlLabel>
-                        <Well>{uphill} meters</Well>
-                        <ControlLabel>Downhill on Last Stretch</ControlLabel>
-                        <Well>{downhill} meters</Well>
-                    </FormGroup>
+                        <div className='map'>
+                            <Map google={window.google}
+                                initialCenter={{ lat: this.props.lat, lng: this.props.lng }}
+                                zoom={14}
+                                onClick={(t, map, coord) => this.addCoordinate(t, map, coord)}
+                            >
+                                {polyline}
+
+                            </Map>
+                        </div>
+                    </Col>
+                    <Col md={2}>
+                        <ButtonGroup vertical>
+                            <Button onClick={this.deleteLast}>Undo</Button>
+                            <Button onClick={this.deleteAll}>Clear All</Button>
+                            <Button onClick={this.saveRoute} disabled={!(this.state.totalDistance > 0)}>Save</Button>
+                        </ButtonGroup>
+
+                    </Col>
+                    <Col md={3}>
+                        <FormGroup>
+                            <ControlLabel>Total Distance</ControlLabel>
+                            <Well>{this.state.totalDistance.toFixed(3)} miles</Well>
+                            <ControlLabel>Total Elevation Gain</ControlLabel>
+                            <Well>{this.state.totalElevationGain.toFixed(2)} meters</Well>
+                            <ControlLabel>Total Elevation Loss</ControlLabel>
+                            <Well>{this.state.totalElevationLoss.toFixed(2)} meters</Well>
+                            <ControlLabel>Uphill on Last Stretch</ControlLabel>
+                            <Well>{uphill} meters</Well>
+                            <ControlLabel>Downhill on Last Stretch</ControlLabel>
+                            <Well>{downhill} meters</Well>
+                        </FormGroup>
                     </Col>
                 </Row>
             );
-    }
+        }
+       
+    
 }
 export default GoogleApiWrapper({
 })(MapContainer)

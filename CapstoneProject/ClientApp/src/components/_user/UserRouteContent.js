@@ -12,7 +12,10 @@ export class UserRouteContent extends Component {
         this.state = {
             createRoute: false,
             editRoute: false,
-            currentRouteId: null
+            currentRouteId: null,
+            coordinates: [{}],
+            defaultLat: 43.0362012,
+            defaultLng: -87.98582829999999
         }
         this.addNewRoute = this.addNewRoute.bind(this);
         this.backToAllRoutes = this.backToAllRoutes.bind(this);
@@ -42,17 +45,20 @@ export class UserRouteContent extends Component {
         })
     }
 
-    doneCreatingNew(id) {
+    doneCreatingNew(id, coordinates) {
         this.setState({
             currentRouteId: id,
             editRoute: true,
-            createRoute: false
+            createRoute: false,
+            coordinates: coordinates,
+            defaultLat: Number(coordinates[0].lat),
+            defaultLng: Number(coordinates[0].lng)
         })
     }
 
     render() {
         const returnToRoutes = this.backToAllRoutes;
-        const moveFromCreateToEdit = ((id) => { this.doneCreatingNew(id) });
+        const moveFromCreateToEdit = ((id, coordinates) => { this.doneCreatingNew(id, coordinates) });
         if (this.state.createRoute) {
             return (
                 <div>
@@ -62,7 +68,12 @@ export class UserRouteContent extends Component {
         else if (this.state.editRoute) {
             return (
                 <div>
-                    <EditRoute id={this.state.currentRouteId} returnToRouteHome={returnToRoutes} />
+                    <EditRoute routeId={this.state.currentRouteId} coordinates={this.state.coordinates}
+                        returnToRouteHome={returnToRoutes}
+                        lat={this.state.defaultLat}
+                        lng={this.state.defaultLng}
+                        returnToRouteHome={returnToRoutes}
+                        />
                 </div>
                 );
                 

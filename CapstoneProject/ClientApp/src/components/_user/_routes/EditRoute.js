@@ -10,7 +10,8 @@ export class EditRoute extends Component {
             allowComment: false,
             commentCoords: [{}],
             hasComments: false,
-            showCommentModal: false
+            showCommentModal: false,
+            pointComments: []
         }
         this.allowComment = this.allowComment.bind(this);
         this.handleModalHide = this.handleModalHide.bind(this);
@@ -24,8 +25,11 @@ export class EditRoute extends Component {
     }
 
     handleCommentSubmit(comment) {
+        var currentComments = this.state.pointComments;
+        currentComments.push(comment);
         this.setState({
-            showCommentModal: false
+            showCommentModal: false,
+            pointComments: currentComments
         });
     }
 

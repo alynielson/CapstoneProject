@@ -44,7 +44,7 @@ export class CommentModal extends Component {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button onClick={this.props.hiding}>Back</Button>
-                    <Button bsStyle="primary" onClick={() => this.props.submitting(this.state.name, this.state.description, this.state.city, this.state.state)}>Save</Button>
+                    <Button bsStyle="primary" onClick={() => this.props.submitting(this.state.comment)}>Save</Button>
                 </Modal.Footer>
 
             </Modal>

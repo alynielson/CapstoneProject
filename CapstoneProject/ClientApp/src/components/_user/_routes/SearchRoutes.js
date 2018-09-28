@@ -34,7 +34,7 @@ export class SearchRoutes extends Component {
     render() {
         return (
             <FormGroup>
-                <ControlLabel>Search for  routes</ControlLabel>
+                <ControlLabel>Search for routes by location</ControlLabel>
                 <FormControl
                     type="text"
                     name="term2"

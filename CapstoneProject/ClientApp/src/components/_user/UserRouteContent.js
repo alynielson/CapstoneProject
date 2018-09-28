@@ -5,6 +5,7 @@ import { CreateRoute } from './_routes/CreateRoute';
 import { EditRoute } from './_routes/EditRoute';
 import { SearchRoutes } from './_routes/SearchRoutes';
 import { RouteList } from './_routes/RouteList';
+import { DistanceButtons } from './_routes/DistanceButtons';
 import _ from 'lodash';
 
 
@@ -18,13 +19,24 @@ export class UserRouteContent extends Component {
             coordinates: [{}],
             defaultLat: 43.0362012,
             defaultLng: -87.98582829999999,
-            routesToAdd: []
+            routeToAdd: [],
+            distanceFilter: [],
+            hillFilter: []
         }
         this.addNewRoute = this.addNewRoute.bind(this);
         this.backToAllRoutes = this.backToAllRoutes.bind(this);
         this.editRoute = this.editRoute.bind(this);
         this.doneCreatingNew = this.doneCreatingNew.bind(this);
+        this.setDistanceFilter = this.setDistanceFilter.bind(this);
     }
+
+    setDistanceFilter(array) {
+        this.setState({
+
+            distanceFilter: array
+        });
+    }
+
 
     addNewRoute(event) {
         event.preventDefault();
@@ -85,6 +97,7 @@ export class UserRouteContent extends Component {
         const addRoute = ((selectedRoute) => { this.addSelectedRoute(selectedRoute) });
         const returnToRoutes = this.backToAllRoutes;
         const moveFromCreateToEdit = ((id, coordinates) => { this.doneCreatingNew(id, coordinates) });
+        const selectDistanceFilter = ((activeButtonArray) => { this.setDistanceFilter(activeButtonArray) });
         if (this.state.createRoute) {
             return (
                 <div>
@@ -107,13 +120,40 @@ export class UserRouteContent extends Component {
         else {
             return (
                 <div>
-                    <Button onClick={(event) => this.addNewRoute(event)}>Create a Route</Button>
-                    <Col md={3}>
+                    <Row>
+                        <Col md={3}>
+                            <Button onClick={(event) => this.addNewRoute(event)}>Create a Route</Button>
+                            </Col>
+                    </Row>
+                    <Row>
+                    <Col md={4}>
 
                         <SearchRoutes onSearchEnter={routeSearch} />
-                        <RouteList routesToAdd={this.state.routesToAdd}
+                        <RouteList routesToAdd={this.state.routeToAdd}
                             onRouteSelect={addRoute}  />
-                    </Col>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <DistanceButtons sendDistanceArray={selectDistanceFilter}/>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12}>
+                            <FormGroup>
+                                <ControlLabel>Filter by amount of climbing (in meters):</ControlLabel>
+                                <ButtonToolbar>
+                                    <Button >200 or less</Button>
+                                    <Button >200-500</Button>
+                                    <Button >500-1000</Button>
+                                    <Button>1000-1500</Button>
+                                    <Button >1500+</Button>
+                                    <Button>more downhill than uphill</Button>
+                                  
+                                </ButtonToolbar>
+                            </FormGroup>
+                        </Col>
+                        </Row>
                 </div>
                 
             );

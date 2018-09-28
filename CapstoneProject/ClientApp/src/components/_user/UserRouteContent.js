@@ -21,8 +21,8 @@ export class UserRouteContent extends Component {
             defaultLat: 43.0362012,
             defaultLng: -87.98582829999999,
             routeToAdd: [],
-            distanceFilter: [],
-            hillFilter: []
+            distanceFilter: '',
+            hillFilter: ''
         }
         this.addNewRoute = this.addNewRoute.bind(this);
         this.backToAllRoutes = this.backToAllRoutes.bind(this);
@@ -31,16 +31,16 @@ export class UserRouteContent extends Component {
         this.setDistanceFilter = this.setDistanceFilter.bind(this);
     }
 
-    setDistanceFilter(array) {
+    setDistanceFilter(value) {
         this.setState({
 
-            distanceFilter: array
+            distanceFilter: value
         });
     }
 
-    setHillFilter(array) {
+    setHillFilter(value) {
         this.setState({
-            hillFilter: array
+            hillFilter: value
         });
     }
 
@@ -90,7 +90,9 @@ export class UserRouteContent extends Component {
 
     searchTest(term2) {
         let terms = term2.toString().trim().toLowerCase().replace(/[^A-Za-z0-9\s]/g, "");
-        let url = `/api/Users/UniversalUserSearch?term1=${terms}`;
+        let distance = `&distanceFilter=${this.state.distanceFilter}`;
+        let hills = `&hills=${this.state.hillFilter}`;
+        let url = `/api/Routes/RouteSearch?term1=${terms}${distance}${hills}`;
         fetch(url).then(response => response.json())
             .then(jsonData => {
                 let routeToSelect = jsonData.map(route => { return { value: route.id, display: `${route.name} - ${route.description}` } });
@@ -99,13 +101,15 @@ export class UserRouteContent extends Component {
             .catch(error => console.log(error));
     }
 
+   
+
     render() {
         const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
         const addRoute = ((selectedRoute) => { this.addSelectedRoute(selectedRoute) });
         const returnToRoutes = this.backToAllRoutes;
         const moveFromCreateToEdit = ((id, coordinates) => { this.doneCreatingNew(id, coordinates) });
-        const selectDistanceFilter = ((activeButtonArray) => { this.setDistanceFilter(activeButtonArray) });
-        const selectHillFilter = ((activeButtonArray) => { this.setHillFilter(activeButtonArray) });
+        const selectDistanceFilter = ((value) => { this.setDistanceFilter(value) });
+        const selectHillFilter = ((value) => { this.setHillFilter(value) });
         if (this.state.createRoute) {
             return (
                 <div>

@@ -19,11 +19,21 @@ export class HillButtons extends Component {
         this.onClick = this.onClick.bind(this);
     }
 
-    onClick(index) {
+    async onClick(index) {
         let tmp = this.state.buttons;
-        tmp[index].isActive = !tmp[index].isActive;
-        this.setState({ buttons: tmp });
-        this.props.sendHillArray(this.state.buttons.filter(a => a.isActive === true).map(a => a.name));
+        let newTmp = tmp.map(a => { return { name: a.name, isActive: false } });
+        newTmp[index].isActive = !newTmp[index].isActive;
+
+        await this.setState({ buttons: newTmp });
+        let activeButton = this.state.buttons.filter(a => a.isActive === true);
+        let valueToSend;
+        if (activeButton.length === 0) {
+            valueToSend = '';
+        }
+        else {
+            valueToSend = activeButton[0].name;
+        }
+        this.props.sendHillArray(valueToSend);
     }
 
     render() {

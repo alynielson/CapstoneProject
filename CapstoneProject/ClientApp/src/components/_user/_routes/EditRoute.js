@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ButtonGroup, Row, ButtonToolbar } from 'react-bootstrap';
-import { GoogleApiWrapper, Map, Polyline, Marker} from 'google-maps-react';
+import { GoogleApiWrapper, Map, Polyline, Marker } from 'google-maps-react';
+import { CommentModal } from './CommentModal';
 
 export class EditRoute extends Component {
     constructor(props) {
@@ -9,9 +10,23 @@ export class EditRoute extends Component {
             allowComment: false,
             commentCoords: [{}],
             hasComments: false,
-           
+            showCommentModal: false
         }
         this.allowComment = this.allowComment.bind(this);
+        this.handleModalHide = this.handleModalHide.bind(this);
+        this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
+    }
+
+    handleModalHide() {
+        this.setState({
+            showCommentModal: false
+        })
+    }
+
+    handleCommentSubmit(comment) {
+        this.setState({
+            showCommentModal: false
+        });
     }
 
     clickOnPath(t, map, c) {
@@ -26,6 +41,7 @@ export class EditRoute extends Component {
                     allowComment: false,
                     commentCoords: [newCoord],
                     hasComments: true,
+                    showCommentModal: true
                     
                 })
             }
@@ -34,8 +50,10 @@ export class EditRoute extends Component {
                 currentCommentLocations.push(newCoord);
                 this.setState({
                     allowComment: false,
-                    commentCoords: currentCommentLocations
+                    commentCoords: currentCommentLocations,
+                    showCommentModal: true
                 });
+
             }
         }
     }
@@ -47,7 +65,8 @@ export class EditRoute extends Component {
     }
 
     render() {
-   
+        const submitComment = ((comment) => { this.handleCommentSubmit(comment) });
+
         return (
             <div>
                 <Row>
@@ -57,6 +76,7 @@ export class EditRoute extends Component {
                     <h6>Created by {this.props.owner}</h6>
                 </Row><Row>
                     <Col md={7}>
+                        <CommentModal show={this.state.showCommentModal} hiding={this.handleModalHide} submitting={submitComment}/>
                     <div className="map">
                         <Map google={window.google}
                             initialCenter={{ lat: this.props.lat, lng: this.props.lng }}

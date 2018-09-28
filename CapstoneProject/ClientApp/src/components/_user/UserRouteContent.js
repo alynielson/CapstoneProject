@@ -3,7 +3,9 @@ import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row,
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { CreateRoute } from './_routes/CreateRoute';
 import { EditRoute } from './_routes/EditRoute';
-
+import { SearchRoutes } from './_routes/SearchRoutes';
+import { RouteList } from './_routes/RouteList';
+import _ from 'lodash';
 
 
 export class UserRouteContent extends Component {
@@ -15,7 +17,8 @@ export class UserRouteContent extends Component {
             currentRouteId: null,
             coordinates: [{}],
             defaultLat: 43.0362012,
-            defaultLng: -87.98582829999999
+            defaultLng: -87.98582829999999,
+            routesToAdd: []
         }
         this.addNewRoute = this.addNewRoute.bind(this);
         this.backToAllRoutes = this.backToAllRoutes.bind(this);
@@ -56,7 +59,30 @@ export class UserRouteContent extends Component {
         })
     }
 
+    addSelectedRoute(selectedRoute) {
+       
+        this.setState({
+            editRoute: true,
+            
+        });
+
+    }
+
+
+    searchTest(term2) {
+        let terms = term2.toString().trim().toLowerCase().replace(/[^A-Za-z0-9\s]/g, "");
+        let url = `/api/Users/UniversalUserSearch?term1=${terms}`;
+        fetch(url).then(response => response.json())
+            .then(jsonData => {
+                let routeToSelect = jsonData.map(route => { return { value: route.id, display: `${route.name} - ${route.description}` } });
+                this.setState({ routeToAdd: routeToSelect });
+            })
+            .catch(error => console.log(error));
+    }
+
     render() {
+        const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
+        const addRoute = ((selectedRoute) => { this.addSelectedRoute(selectedRoute) });
         const returnToRoutes = this.backToAllRoutes;
         const moveFromCreateToEdit = ((id, coordinates) => { this.doneCreatingNew(id, coordinates) });
         if (this.state.createRoute) {
@@ -82,7 +108,12 @@ export class UserRouteContent extends Component {
             return (
                 <div>
                     <Button onClick={(event) => this.addNewRoute(event)}>Create a Route</Button>
-                    <div> Your Routes </div>
+                    <Col md={3}>
+
+                        <SearchRoutes onSearchEnter={routeSearch} />
+                        <RouteList routesToAdd={this.state.routesToAdd}
+                            onRouteSelect={addRoute}  />
+                    </Col>
                 </div>
                 
             );

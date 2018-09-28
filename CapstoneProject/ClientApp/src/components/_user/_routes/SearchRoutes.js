@@ -3,8 +3,8 @@ import { Button, Checkbox, Form, FormGroup, FormControl, ControlLabel, Col, ColP
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 
 
-export class SearchMembers extends Component {
-    constructor(props){
+export class SearchRoutes extends Component {
+    constructor(props) {
         super(props);
         this.state = {
             term2: '',
@@ -13,7 +13,7 @@ export class SearchMembers extends Component {
         this.onInputChange = this.onInputChange.bind(this);
     }
 
-   
+
     handleChange(event) {
         const target = event.target;
         const value = target.value;
@@ -22,19 +22,19 @@ export class SearchMembers extends Component {
             [name]: value
         });
     }
-   
 
-   
+
+
     onInputChange(term) {
         this.setState({ term2: term });
-        this.props.onSearchEnter( this.state.term2 );
+        this.props.onSearchEnter(this.state.term2);
     }
 
 
     render() {
         return (
             <FormGroup>
-                <ControlLabel>Search for members to add</ControlLabel>
+                <ControlLabel>Search for  routes</ControlLabel>
                 <FormControl
                     type="text"
                     name="term2"
@@ -42,7 +42,7 @@ export class SearchMembers extends Component {
                     onChange={(event) => this.onInputChange(event.target.value)}
                 />
             </FormGroup>
-            );
+        );
 
     }
 

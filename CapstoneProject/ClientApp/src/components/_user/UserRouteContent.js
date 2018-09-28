@@ -6,6 +6,7 @@ import { EditRoute } from './_routes/EditRoute';
 import { SearchRoutes } from './_routes/SearchRoutes';
 import { RouteList } from './_routes/RouteList';
 import { DistanceButtons } from './_routes/DistanceButtons';
+import { HillButtons } from './_routes/HillButtons';
 import _ from 'lodash';
 
 
@@ -34,6 +35,12 @@ export class UserRouteContent extends Component {
         this.setState({
 
             distanceFilter: array
+        });
+    }
+
+    setHillFilter(array) {
+        this.setState({
+            hillFilter: array
         });
     }
 
@@ -98,6 +105,7 @@ export class UserRouteContent extends Component {
         const returnToRoutes = this.backToAllRoutes;
         const moveFromCreateToEdit = ((id, coordinates) => { this.doneCreatingNew(id, coordinates) });
         const selectDistanceFilter = ((activeButtonArray) => { this.setDistanceFilter(activeButtonArray) });
+        const selectHillFilter = ((activeButtonArray) => { this.setHillFilter(activeButtonArray) });
         if (this.state.createRoute) {
             return (
                 <div>
@@ -140,18 +148,7 @@ export class UserRouteContent extends Component {
                     </Row>
                     <Row>
                         <Col md={12}>
-                            <FormGroup>
-                                <ControlLabel>Filter by amount of climbing (in meters):</ControlLabel>
-                                <ButtonToolbar>
-                                    <Button >200 or less</Button>
-                                    <Button >200-500</Button>
-                                    <Button >500-1000</Button>
-                                    <Button>1000-1500</Button>
-                                    <Button >1500+</Button>
-                                    <Button>more downhill than uphill</Button>
-                                  
-                                </ButtonToolbar>
-                            </FormGroup>
+                            <HillButtons sendHillArray={selectHillFilter}/>
                         </Col>
                         </Row>
                 </div>

@@ -66,7 +66,7 @@ export class MapContainer extends Component {
             });
             }).catch(error => console.log(error));
         let idToSend = this.state.routeId;
-        this.props.onFinishing(idToSend, this.state.coordinates);
+        this.props.onFinishing(idToSend);
     }
     calculateDistanceOnAdd(newCoord, currentPath) {
         var lastCoord = currentPath[currentPath.length - 1];

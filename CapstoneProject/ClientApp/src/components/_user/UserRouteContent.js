@@ -22,7 +22,15 @@ export class UserRouteContent extends Component {
             defaultLng: -87.98582829999999,
             routeToAdd: [],
             distanceFilter: '',
-            hillFilter: ''
+            hillFilter: '',
+            name: '',
+            city: '',
+            state:'',
+            description: '',
+            owner: '',
+            totalDistance: '',
+            totalElevationGain: '',
+            totalElevationLoss: ''
         }
         this.addNewRoute = this.addNewRoute.bind(this);
         this.backToAllRoutes = this.backToAllRoutes.bind(this);
@@ -67,23 +75,55 @@ export class UserRouteContent extends Component {
         })
     }
 
-    doneCreatingNew(id, coordinates) {
-        this.setState({
-            currentRouteId: id,
-            editRoute: true,
-            createRoute: false,
-            coordinates: coordinates,
-            defaultLat: Number(coordinates[0].lat),
-            defaultLng: Number(coordinates[0].lng)
-        })
+    doneCreatingNew(id) {
+        this.getRouteToEdit(id);
     }
 
-    addSelectedRoute(selectedRoute) {
-       
-        this.setState({
-            editRoute: true,
-            
-        });
+
+    getRouteToEdit(id) {
+        let name;
+        let city;
+        let state;
+        let description;
+        let owner;
+        let totalDistance;
+        let totalElevationGain;
+        let totalElevationLoss;
+        let coordinates;
+         fetch(`api/Routes/GetRoute?id=${id}`).then(response => response.json()).then(data => {
+            name = data.name;
+            city = data.city;
+            state = data.state;
+            description = data.description;
+            owner = data.ownerName;
+            totalDistance = data.totalDistance;
+            totalElevationGain = data.totalElevationGain;
+            totalElevationLoss = data.totalElevationLoss;
+            coordinates = data.coordinates.map(a => { return { lat: parseFloat(a.lat), lng: parseFloat(a.lng) } });
+            this.setState({
+                name: name,
+                city: city,
+                state: state,
+                description: description,
+                owner: owner,
+                totalDistance: totalDistance,
+                totalElevationGain: totalElevationGain,
+                totalElevationLoss: totalElevationLoss,
+                coordinates: coordinates,
+                defaultLat: Number(coordinates[0].lat),
+                defaultLng: Number(coordinates[1].lng),
+                editRoute: true,
+                createRoute: false,
+                currentRouteId: id
+            });
+        }
+        ).catch(error => console.log(error));
+
+    }
+
+    async addSelectedRoute(selectedRoute) {
+        let id = selectedRoute.value;
+        await this.getRouteToEdit(id);
 
     }
 
@@ -107,7 +147,7 @@ export class UserRouteContent extends Component {
         const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
         const addRoute = ((selectedRoute) => { this.addSelectedRoute(selectedRoute) });
         const returnToRoutes = this.backToAllRoutes;
-        const moveFromCreateToEdit = ((id, coordinates) => { this.doneCreatingNew(id, coordinates) });
+        const moveFromCreateToEdit = ((id) => { this.doneCreatingNew(id) });
         const selectDistanceFilter = ((value) => { this.setDistanceFilter(value) });
         const selectHillFilter = ((value) => { this.setHillFilter(value) });
         if (this.state.createRoute) {
@@ -124,6 +164,14 @@ export class UserRouteContent extends Component {
                         lat={this.state.defaultLat}
                         lng={this.state.defaultLng}
                         returnToRouteHome={returnToRoutes}
+                        city={this.state.city}
+                        description={this.state.description}
+                        name={this.state.name}
+                        owner={this.state.owner}
+                        state={this.state.state}
+                        totalDistance={this.state.totalDistance}
+                        totalElevationGain={this.state.totalElevationGain}
+                        totalElevationLoss={this.state.totalElevationLoss}
                         />
                 </div>
                 );
@@ -141,8 +189,7 @@ export class UserRouteContent extends Component {
                     <Col md={4}>
 
                         <SearchRoutes onSearchEnter={routeSearch} />
-                        <RouteList routesToAdd={this.state.routeToAdd}
-                            onRouteSelect={addRoute}  />
+                        
                         </Col>
                     </Row>
                     <Row>
@@ -154,6 +201,12 @@ export class UserRouteContent extends Component {
                         <Col md={12}>
                             <HillButtons sendHillArray={selectHillFilter}/>
                         </Col>
+                    </Row>
+                    <Row>
+                        <Col md={6}>
+                            <RouteList routesToAdd={this.state.routeToAdd}
+                                onRouteSelect={addRoute} />
+                            </Col>
                         </Row>
                 </div>
                 

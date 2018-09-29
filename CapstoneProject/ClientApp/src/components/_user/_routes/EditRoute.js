@@ -88,10 +88,14 @@ export class EditRoute extends Component {
     }
 
     sendPointCommentToDb(comment, author) {
+        let routeId = this.props.routeId;
+        let userId = localStorage.getItem('userId');
         var data = {
             note: comment,
             pointCoordinates: this.state.commentCoords[this.state.commentCoords.length - 1],
             author: author,
+            routeId: routeId,
+            userId: userId
         };
         fetch('api/Routes/SavePointComment', {
             method: 'POST',

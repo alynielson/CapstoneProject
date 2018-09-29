@@ -239,8 +239,33 @@ namespace CapstoneProject.Controllers
 
 
         [HttpPost("[action]")]
-        public void SavePointComment([FromBody] PointCommentVM data)
+        public IActionResult SavePointComment([FromBody] PointCommentVM data)
         {
+            try
+            {
+                if (data == null)
+                {
+                    return NoContent();
+                }
+                else
+                {
+                    PointComment comment = new PointComment();
+                    comment.Note = data.note;
+                    comment.Latitude = data.pointCoordinates.lat;
+                    comment.Longitude = data.pointCoordinates.lng;
+                    comment.Writer = data.author;
+                    comment.RouteId = data.routeId;
+                    comment.UserId = data.userId;
+                    _context.PointComments.Add(comment);
+                    _context.SaveChanges();
+                    return Ok();
+                }
+            }
+            catch
+            {
+                throw new Exception("Unable to save to database");
+            }
+            
 
         }
 

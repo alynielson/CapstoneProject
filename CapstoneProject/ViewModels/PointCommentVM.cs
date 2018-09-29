@@ -12,6 +12,8 @@ namespace CapstoneProject.ViewModels
         public PointCoord pointCoordinates { get; set; }
 
         public string author { get; set; }
+        public int routeId { get; set; }
+        public int userId { get; set; }
     }
 
     public class PointCoord

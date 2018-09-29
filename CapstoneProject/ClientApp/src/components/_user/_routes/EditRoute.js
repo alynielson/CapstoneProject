@@ -2,6 +2,8 @@
 import { Button, Form, FormGroup, FormControl, Alert, Col, ButtonGroup, Row, ButtonToolbar } from 'react-bootstrap';
 import { GoogleApiWrapper, Map, Polyline, Marker } from 'google-maps-react';
 import { CommentModal } from './CommentModal';
+import img1 from './icons/not_clicked_marker.png';
+import img2 from './icons/_clicked_marker.png'
 
 export class EditRoute extends Component {
     constructor(props) {
@@ -12,7 +14,8 @@ export class EditRoute extends Component {
             hasComments: false,
             showCommentModal: false,
             pointComments: [],
-            commentShowing: null
+            commentShowing: null,
+            commentPosition: null
         }
         this.allowComment = this.allowComment.bind(this);
         this.handleModalHide = this.handleModalHide.bind(this);
@@ -28,12 +31,16 @@ export class EditRoute extends Component {
         let commentArray = this.state.commentCoords;
         let commentPosition = commentArray.findIndex(a => a.lat == latitude && a.lng == longitude);
         let commentToShow = this.state.pointComments[commentPosition];
-        this.setState({ commentShowing: commentToShow });
+        this.setState({
+            commentShowing: commentToShow,
+            commentPosition: commentPosition
+        });
     }
 
     dismissComment(){
         this.setState({
-            commentShowing: null
+            commentShowing: null,
+            commentPosition: null
         })
 }
 
@@ -90,6 +97,7 @@ export class EditRoute extends Component {
     render() {
         const submitComment = ((comment) => { this.handleCommentSubmit(comment) });
         var alert = null;
+        
         if (this.state.commentShowing != null) {
             alert = <Alert bsStyle="info" onDismiss={this.dismissComment}> 
                 <p> {this.state.commentShowing} </p> </Alert>
@@ -111,13 +119,27 @@ export class EditRoute extends Component {
 
                             >
                                 {this.state.commentCoords.map((coord, index) => {
-                                    return (
-                                        <Marker key={index}
-                                            onMouseover={(data) => this.onMarkerHover(data)}
-                                            google={window.google}
-                                            position={coord}
-                                        />
-                                    );
+                                    if (this.state.commentPosition === index) {
+                                        return (
+                                            <Marker key={index}
+                                                icon={img2}
+                                                onMouseover={(data) => this.onMarkerHover(data)}
+                                                google={window.google}
+                                                position={coord}
+                                            />
+                                        );
+                                    }
+                                    else {
+                                        return (
+                                            <Marker key={index}
+                                                icon={img1}
+                                                onMouseover={(data) => this.onMarkerHover(data)}
+                                                google={window.google}
+                                                position={coord}
+                                            />
+                                            
+                                            );
+                                    }
                                 })}
 
                                 <Polyline

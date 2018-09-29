@@ -10,7 +10,7 @@ export class CommentModal extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
     }
-
+    
     handleChange(event) {
         const target = event.target;
         const value = target.value;

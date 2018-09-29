@@ -79,13 +79,13 @@ export class EditRoute extends Component {
                     
                     this.setState({
                         hasPathComments: true,
-                        pathCommentCoords: [{ point1ToAdd, point2ToAdd }],
+                        pathCommentCoords: [[ point1ToAdd, point2ToAdd ]],
                         pathTempSpot: null,
                         allowPathComment: false
                     });
                 }
                 else {
-                    var newPath = { point1ToAdd, point2ToAdd };
+                    var newPath = [ point1ToAdd, point2ToAdd ];
                     var currentPaths = this.state.pathCommentCoords;
                     currentPaths.push(newPath);
                     this.setState({
@@ -192,7 +192,21 @@ export class EditRoute extends Component {
                                     path={this.props.coordinates} onClick={(t, map, c) => this.clickOnPath(t, map, c)}
                                 >
                                     
-                                    </Polyline>
+                                </Polyline>
+                                {this.state.pathCommentCoords.map((path, index) => {
+                                    if (this.state.hasPathComments) {
+                                        return (
+                                            <Polyline strokeWeight={6}
+                                                key={index}
+                                                path={path}
+                                                strokeColor='#ff3333'
+                                            />
+                                        );
+                                    }
+                                    }
+                                    
+                                )}
+
                             </Map>
                             
                         </div>

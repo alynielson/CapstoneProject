@@ -77,12 +77,27 @@ export class EditRoute extends Component {
         var currentComments = this.state.pointComments;
         currentComments.push(comment);
         var currentAuthors = this.state.commentUserNames;
-        currentAuthors.push(`${localStorage.getItem('firstname')} ${localStorage.getItem('lastname')}`);
+        var author = `${localStorage.getItem('firstname')} ${localStorage.getItem('lastname')}`;
+        currentAuthors.push(author);
+        this.sendPointCommentToDb(comment, author);
         this.setState({
             showCommentModal: false,
             pointComments: currentComments,
             commentUserNames: currentAuthors
         });
+    }
+
+    sendPointCommentToDb(comment, author) {
+        var data = {
+            note: comment,
+            pointCoordinates: this.state.commentCoords[this.state.commentCoords.length - 1],
+            author: author,
+        };
+        fetch('api/Routes/SavePointComment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).catch(error => console.log(error));
     }
 
     handlePathCommentSubmit(pathComment) {

@@ -237,6 +237,14 @@ namespace CapstoneProject.Controllers
             }
         }
 
+
+        [HttpPost("[action]")]
+        public void SavePointComment([FromBody] PointCommentVM data)
+        {
+
+        }
+
+
         // PUT: api/Routes/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

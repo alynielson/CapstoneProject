@@ -21,7 +21,6 @@ namespace CapstoneProject.Models
         public string Latitude2 { get; set; }
 
         public string Longitude2 { get; set; }
-        public int SortOrder { get; set; }
 
         public string Writer { get; set; }
 

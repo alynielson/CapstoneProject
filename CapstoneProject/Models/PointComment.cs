@@ -17,7 +17,7 @@ namespace CapstoneProject.Models
         public string Latitude { get; set; }
 
         public string Longitude { get; set; }
-        public int SortOrder { get; set; }
+        
 
         public string Writer { get; set; }
 

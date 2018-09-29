@@ -40,6 +40,38 @@ export class EditRoute extends Component {
         this.onPathHover = this.onPathHover.bind(this);
     }
 
+    componentWillMount() {
+        if (this.props.pointComments.length > 0 && this.props.pathComments.length > 0) {
+            this.setState({
+                commentCoords: this.props.pointCoordinates,
+                hasComments: true,
+                pointComments: this.props.pointComments,
+                pathCommentCoords: this.props.pathCoordinates,
+                hasPathComments: true,
+                pathComments: this.props.pathComments,
+                pathUserNames: this.props.pathCommentAuthors,
+                commentUserNames: this.props.pointCommentAuthors
+            })
+        }
+        else if (this.props.pointComments.length > 0) {
+            this.setState({
+                commentCoords: this.props.pointCoordinates,
+                hasComments: true,
+                pointComments: this.props.pointComments,
+                commentUserNames: this.props.pointCommentAuthors
+            })
+        }
+        else if (this.props.pathComments.length > 0) {
+            this.setState({
+                pathCommentCoords: this.props.pathCoordinates,
+                hasPathComments: true,
+                pathComments: this.props.pathComments,
+                pathUserNames: this.props.pathCommentAuthors,
+            })
+        }
+        
+    }
+
     onMarkerHover(data) {
         
         let latitude = data.position.lat;

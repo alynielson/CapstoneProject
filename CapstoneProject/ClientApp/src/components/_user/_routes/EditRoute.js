@@ -3,7 +3,8 @@ import { Button, Form, FormGroup, FormControl, Alert, Col, ButtonGroup, Row, But
 import { GoogleApiWrapper, Map, Polyline, Marker } from 'google-maps-react';
 import { CommentModal } from './CommentModal';
 import img1 from './icons/not_clicked_marker.png';
-import img2 from './icons/_clicked_marker.png'
+import img2 from './icons/_clicked_marker.png';
+import { PathCommentModal } from './PathCommentModal';
 
 export class EditRoute extends Component {
     constructor(props) {
@@ -19,7 +20,9 @@ export class EditRoute extends Component {
             pathCommentCoords: [{}],
             pathTempSpot: null,
             allowPathComment: false,
-            hasPathComments: false
+            hasPathComments: false,
+            showPathCommentModal: false,
+            pathComments: []
         }
         this.allowComment = this.allowComment.bind(this);
         this.handleModalHide = this.handleModalHide.bind(this);
@@ -28,6 +31,7 @@ export class EditRoute extends Component {
         this.dismissComment = this.dismissComment.bind(this);
         this.clickFoPathComment = this.clickForPathComment.bind(this);
         this.allowPathComment = this.allowPathComment.bind(this);
+        this.handlePathCommentSubmit = this.handlePathCommentSubmit.bind(this);
     }
 
     onMarkerHover(data) {
@@ -52,7 +56,8 @@ export class EditRoute extends Component {
 
     handleModalHide() {
         this.setState({
-            showCommentModal: false
+            showCommentModal: false,
+            showPathCommentModal: false
         })
     }
 
@@ -63,6 +68,19 @@ export class EditRoute extends Component {
             showCommentModal: false,
             pointComments: currentComments
         });
+    }
+
+    handlePathCommentSubmit(pathComment) {
+        var currentPathComments = this.state.pathComments;
+        currentPathComments.push(pathComment);
+        this.setState({
+            showPathCommentModal: false,
+            pathComments: currentPathComments
+        });
+    }
+
+    hoverTest(data) {
+        console.log(data);
     }
 
     clickForPathComment(coord) {
@@ -81,7 +99,8 @@ export class EditRoute extends Component {
                         hasPathComments: true,
                         pathCommentCoords: [[ point1ToAdd, point2ToAdd ]],
                         pathTempSpot: null,
-                        allowPathComment: false
+                        allowPathComment: false,
+                        showPathCommentModal: true
                     });
                 }
                 else {
@@ -91,7 +110,8 @@ export class EditRoute extends Component {
                     this.setState({
                         pathCommentCoords: currentPaths,
                         pathTempSpot: null,
-                        allowPathComment: false
+                        allowPathComment: false,
+                        showPathCommentModal: true
                     });
                 }
 
@@ -129,18 +149,21 @@ export class EditRoute extends Component {
 
     allowComment() {
         this.setState({
-            allowComment: true
+            allowComment: true,
+            allowPathComment: false
         })
     }
 
     allowPathComment() {
         this.setState({
-            allowPathComment: true
+            allowPathComment: true,
+            allowComment: false
         });
     }
 
     render() {
         const submitComment = ((comment) => { this.handleCommentSubmit(comment) });
+        const submitPathComment = ((pathComment) => { this.handlePathCommentSubmit(pathComment) });
         var alert = null;
         
         if (this.state.commentShowing != null) {
@@ -156,7 +179,9 @@ export class EditRoute extends Component {
                     <h6>Created by {this.props.owner}</h6>
                 </Row><Row>
                     <Col md={7}>
-                        <CommentModal show={this.state.showCommentModal} hiding={this.handleModalHide} submitting={submitComment}/>
+                        <CommentModal show={this.state.showCommentModal} hiding={this.handleModalHide} submitting={submitComment} />
+                        <PathCommentModal show={this.state.showPathCommentModal} hiding={this.handleModalHide} submitting={submitPathComment} />
+
                     <div className="map">
                         <Map google={window.google}
                             initialCenter={{ lat: this.props.lat, lng: this.props.lng }}
@@ -200,6 +225,7 @@ export class EditRoute extends Component {
                                                 key={index}
                                                 path={path}
                                                 strokeColor='#ff3333'
+                                                onMouseover={(data) => this.hoverTest(data)}
                                             />
                                         );
                                     }

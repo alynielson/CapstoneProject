@@ -275,14 +275,25 @@ namespace CapstoneProject.Controllers
         {
             try
             {
-                if (data == null)
+                if (data != null)
                 {
-                    return NoContent();
+                    PathComment comment = new PathComment();
+                    comment.Note = data.notes;
+                    comment.Latitude1 = data.pathCoordinates[0].lat;
+                    comment.Latitude2 = data.pathCoordinates[1].lat;
+                    comment.Longitude1 = data.pathCoordinates[0].lng;
+                    comment.Longitude2 = data.pathCoordinates[1].lng;
+                    comment.Writer = data.author;
+                    comment.RouteId = data.routeId;
+                    comment.UserId = data.userId;
+                    _context.PathComments.Add(comment);
+                    _context.SaveChanges();
+                    return Ok();
                 }
                 else
                 {
 
-                    return Ok();
+                    return NoContent();
                 }
 
             }

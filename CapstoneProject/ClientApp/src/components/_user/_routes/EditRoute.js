@@ -24,14 +24,16 @@ export class EditRoute extends Component {
             showPathCommentModal: false,
             pathComments: [],
             pathCommentShowing: null,
-            pathCommentPosition: null
+            pathCommentPosition: null,
+            pathUserNames: [],
+            commentUserNames: []
         }
         this.allowComment = this.allowComment.bind(this);
         this.handleModalHide = this.handleModalHide.bind(this);
         this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
         this.onMarkerHover = this.onMarkerHover.bind(this);
         this.dismissComment = this.dismissComment.bind(this);
-        this.clickFoPathComment = this.clickForPathComment.bind(this);
+        this.clickForPathComment = this.clickForPathComment.bind(this);
         this.allowPathComment = this.allowPathComment.bind(this);
         this.handlePathCommentSubmit = this.handlePathCommentSubmit.bind(this);
         this.dismissPathComment = this.dismissPathComment.bind(this);
@@ -74,18 +76,24 @@ export class EditRoute extends Component {
     handleCommentSubmit(comment) {
         var currentComments = this.state.pointComments;
         currentComments.push(comment);
+        var currentAuthors = this.state.commentUserNames;
+        currentAuthors.push(this.props.owner);
         this.setState({
             showCommentModal: false,
-            pointComments: currentComments
+            pointComments: currentComments,
+            commentUserNames: currentAuthors
         });
     }
 
     handlePathCommentSubmit(pathComment) {
         var currentPathComments = this.state.pathComments;
         currentPathComments.push(pathComment);
+        var currentAuthors = this.state.pathUserNames;
+        currentAuthors.push(this.props.owner);
         this.setState({
             showPathCommentModal: false,
-            pathComments: currentPathComments
+            pathComments: currentPathComments,
+            pathUserNames: currentAuthors
         });
     }
 
@@ -181,6 +189,8 @@ export class EditRoute extends Component {
         });
     }
 
+  
+
     render() {
         const submitComment = ((comment) => { this.handleCommentSubmit(comment) });
         const submitPathComment = ((pathComment) => { this.handlePathCommentSubmit(pathComment) });
@@ -194,6 +204,24 @@ export class EditRoute extends Component {
             alert2 = <Alert bsStyle="success" onDismiss={this.dismissPathComment}>
                 <p> {this.state.pathCommentShowing} </p> </Alert>
         }
+        var segments = 
+            this.state.pathCommentCoords.map((path, index) => {
+                if (this.state.hasPathComments) {
+                    return (
+                        <Polyline strokeWeight={6}
+                            key={index}
+                            path={path}
+                            strokeColor="#80ff00"
+                            onMouseover={(data) => this.onPathHover(data)}
+                        />
+                    );
+                   
+                }
+
+            }
+
+            )
+        
         return (
             <div>
                 <Row>
@@ -242,21 +270,8 @@ export class EditRoute extends Component {
                                 >
                                     
                                 </Polyline>
-                                {this.state.pathCommentCoords.map((path, index) => {
-                                    if (this.state.hasPathComments) {
-                                        return (
-                                            <Polyline strokeWeight={6}
-                                                key={index}
-                                                path={path}
-                                                strokeColor='#ff3333'
-                                                onMouseover={(data) => this.onPathHover(data)}
-                                            />
-                                        );
-                                    }
-                                    }
-                                    
-                                )}
-
+                                
+                                {segments}
                             </Map>
                             
                         </div>

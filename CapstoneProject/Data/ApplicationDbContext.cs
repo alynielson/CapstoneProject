@@ -22,6 +22,10 @@ namespace IntegrationProject.Data
         public DbSet<RouteCoordinate> RouteCoordinates { get; set; } 
         public DbSet<RouteDistance> RouteDistances { get; set; }
         public DbSet<RouteElevation> RouteElevations { get; set; }
+
+        public DbSet<PathComment> PathComments { get; set; }
+
+        public DbSet<PointComment> PointComments { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

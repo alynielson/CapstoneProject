@@ -163,7 +163,6 @@ export class UserRouteContent extends Component {
                         returnToRouteHome={returnToRoutes}
                         lat={this.state.defaultLat}
                         lng={this.state.defaultLng}
-                        returnToRouteHome={returnToRoutes}
                         city={this.state.city}
                         description={this.state.description}
                         name={this.state.name}

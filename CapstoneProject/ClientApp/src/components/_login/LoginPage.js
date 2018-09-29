@@ -37,17 +37,22 @@ export class Login extends Component {
     async handleSubmit(event) {
         const data = { email: this.state.email, password: this.state.password};
         event.preventDefault();
-        var resultId = null;
+        var resultData = null;
         await fetch('api/Users/Login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }).then(this.handleRedirect).then(function (response) { return response.json(); }).then(function (jsonData) { return resultId = jsonData.id; }).catch(function (error) { console.log(error);});
-        if (resultId !== null) {
+        }).then(this.handleRedirect).then(function (response) { return response.json(); }).then(function (jsonData)
+            {
+                return resultData = jsonData;
+            }).catch(function (error) { console.log(error); });
+        if (resultData.id !== null) {
 
-            this.setState({ id: resultId });
+            this.setState({ id: resultData.id });
             localStorage.clear();
-            localStorage.setItem('userId', resultId);
+            localStorage.setItem('userId', resultData.id);
+            localStorage.setItem('firstname', resultData.first_name);
+            localStorage.setItem('lastname', resultData.last_name);
             
         }
 

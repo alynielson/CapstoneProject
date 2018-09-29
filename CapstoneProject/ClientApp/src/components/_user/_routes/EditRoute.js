@@ -77,7 +77,7 @@ export class EditRoute extends Component {
         var currentComments = this.state.pointComments;
         currentComments.push(comment);
         var currentAuthors = this.state.commentUserNames;
-        currentAuthors.push(this.props.owner);
+        currentAuthors.push(`${localStorage.getItem('firstname')} ${localStorage.getItem('lastname')}`);
         this.setState({
             showCommentModal: false,
             pointComments: currentComments,
@@ -89,7 +89,7 @@ export class EditRoute extends Component {
         var currentPathComments = this.state.pathComments;
         currentPathComments.push(pathComment);
         var currentAuthors = this.state.pathUserNames;
-        currentAuthors.push(this.props.owner);
+        currentAuthors.push(`${localStorage.getItem('firstname')} ${localStorage.getItem('lastname')}`);
         this.setState({
             showPathCommentModal: false,
             pathComments: currentPathComments,
@@ -198,10 +198,13 @@ export class EditRoute extends Component {
         var alert2 = null;
         if (this.state.commentShowing != null) {
             alert = <Alert bsStyle="info" onDismiss={this.dismissComment}> 
+                <h4>{this.state.commentUserNames[this.state.commentPosition]}</h4>
                 <p> {this.state.commentShowing} </p> </Alert>
         }
         if (this.state.pathCommentShowing != null) {
             alert2 = <Alert bsStyle="success" onDismiss={this.dismissPathComment}>
+                <h4>{this.state.pathUserNames[this.state.pathCommentPosition]}</h4>
+
                 <p> {this.state.pathCommentShowing} </p> </Alert>
         }
         var segments = 

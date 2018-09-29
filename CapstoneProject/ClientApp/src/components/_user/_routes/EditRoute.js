@@ -22,7 +22,9 @@ export class EditRoute extends Component {
             allowPathComment: false,
             hasPathComments: false,
             showPathCommentModal: false,
-            pathComments: []
+            pathComments: [],
+            pathCommentShowing: null,
+            pathCommentPosition: null
         }
         this.allowComment = this.allowComment.bind(this);
         this.handleModalHide = this.handleModalHide.bind(this);
@@ -32,6 +34,8 @@ export class EditRoute extends Component {
         this.clickFoPathComment = this.clickForPathComment.bind(this);
         this.allowPathComment = this.allowPathComment.bind(this);
         this.handlePathCommentSubmit = this.handlePathCommentSubmit.bind(this);
+        this.dismissPathComment = this.dismissPathComment.bind(this);
+        this.onPathHover = this.onPathHover.bind(this);
     }
 
     onMarkerHover(data) {
@@ -52,7 +56,13 @@ export class EditRoute extends Component {
             commentShowing: null,
             commentPosition: null
         })
-}
+    }
+    dismissPathComment() {
+        this.setState({
+            pathCommentShowing: null,
+            pathCommentPosition: null
+        })
+    }
 
     handleModalHide() {
         this.setState({
@@ -79,8 +89,18 @@ export class EditRoute extends Component {
         });
     }
 
-    hoverTest(data) {
-        console.log(data);
+    onPathHover(data) {
+        let latitude1 = data.path[0].lat;
+        let longitude1 = data.path[0].lng;
+        let latitude2 = data.path[1].lat;
+        let longitude2 = data.path[1].lng;
+        let pathCommentArray = this.state.pathCommentCoords;
+        let pathCommentPosition = pathCommentArray.findIndex(a => a[0].lat === latitude1 && a[0].lng === longitude1 && a[1].lat === latitude2 && a[1].lng === longitude2);
+        let pathCommentToShow = this.state.pathComments[pathCommentPosition];
+        this.setState({
+            pathCommentShowing: pathCommentToShow,
+            pathCommentPosition: pathCommentPosition
+        });
     }
 
     clickForPathComment(coord) {
@@ -165,10 +185,14 @@ export class EditRoute extends Component {
         const submitComment = ((comment) => { this.handleCommentSubmit(comment) });
         const submitPathComment = ((pathComment) => { this.handlePathCommentSubmit(pathComment) });
         var alert = null;
-        
+        var alert2 = null;
         if (this.state.commentShowing != null) {
             alert = <Alert bsStyle="info" onDismiss={this.dismissComment}> 
                 <p> {this.state.commentShowing} </p> </Alert>
+        }
+        if (this.state.pathCommentShowing != null) {
+            alert2 = <Alert bsStyle="success" onDismiss={this.dismissPathComment}>
+                <p> {this.state.pathCommentShowing} </p> </Alert>
         }
         return (
             <div>
@@ -225,7 +249,7 @@ export class EditRoute extends Component {
                                                 key={index}
                                                 path={path}
                                                 strokeColor='#ff3333'
-                                                onMouseover={(data) => this.hoverTest(data)}
+                                                onMouseover={(data) => this.onPathHover(data)}
                                             />
                                         );
                                     }
@@ -250,7 +274,7 @@ export class EditRoute extends Component {
                     </Col>
                     <Col md={3}>
                         {alert}
-                        
+                        {alert2}
                         </Col>
                </Row>
                 <Row>

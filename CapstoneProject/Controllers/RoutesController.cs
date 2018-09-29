@@ -270,6 +270,31 @@ namespace CapstoneProject.Controllers
         }
 
 
+        [HttpPost("[action]")]
+        public IActionResult SavePathComment([FromBody] PathCommentVM data)
+        {
+            try
+            {
+                if (data == null)
+                {
+                    return NoContent();
+                }
+                else
+                {
+
+                    return Ok();
+                }
+
+            }
+            catch
+            {
+                throw new Exception("Unable to save to database");
+            }
+        }
+    
+
+
+
         // PUT: api/Routes/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

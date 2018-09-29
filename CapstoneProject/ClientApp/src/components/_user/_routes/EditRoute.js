@@ -87,6 +87,23 @@ export class EditRoute extends Component {
         });
     }
 
+    sendPathCommentToDb(pathComment, author) {
+        let routeId = this.props.routeId;
+        let userId = localStorage.getItem('userId');
+        var data = {
+            notes: pathComment,
+            pathCoordinates: this.state.pathCommentCoords[this.state.pathCommentCoords.length - 1],
+            author: author,
+            routeId: routeId,
+            userId: userId
+        };
+        fetch('api/Routes/SavePathComment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).catch(error => console.log(error));
+    }
+
     sendPointCommentToDb(comment, author) {
         let routeId = this.props.routeId;
         let userId = localStorage.getItem('userId');
@@ -108,7 +125,9 @@ export class EditRoute extends Component {
         var currentPathComments = this.state.pathComments;
         currentPathComments.push(pathComment);
         var currentAuthors = this.state.pathUserNames;
-        currentAuthors.push(`${localStorage.getItem('firstname')} ${localStorage.getItem('lastname')}`);
+        var author = `${localStorage.getItem('firstname')} ${localStorage.getItem('lastname')}`;
+        currentAuthors.push(author);
+        this.sendPathCommentToDb(pathComment, author);
         this.setState({
             showPathCommentModal: false,
             pathComments: currentPathComments,

@@ -90,7 +90,13 @@ export class UserRouteContent extends Component {
         let totalElevationGain;
         let totalElevationLoss;
         let coordinates;
-         fetch(`api/Routes/GetRoute?id=${id}`).then(response => response.json()).then(data => {
+        let pointCommentAuthors;
+        let pointCoordinates;
+        let pointComments;
+        let pathCommentAuthors;
+        let pathCoordinates;
+        let pathComments;
+        fetch(`api/Routes/GetRoute?id=${id}`).then(response => response.json()).then(data => {
             name = data.name;
             city = data.city;
             state = data.state;
@@ -100,6 +106,17 @@ export class UserRouteContent extends Component {
             totalElevationGain = data.totalElevationGain;
             totalElevationLoss = data.totalElevationLoss;
             coordinates = data.coordinates.map(a => { return { lat: parseFloat(a.lat), lng: parseFloat(a.lng) } });
+            pointCommentAuthors = data.pointCommentAuthors;
+            pointComments = data.pointComments;
+            pathCommentAuthors = data.pathCommentAuthors;
+            pathComments = data.pathComments;
+            pointCoordinates = data.pointCoordinates.map(a => { return { lat: parseFloat(a.lat), lng: parseFloat(a.lng) } });
+            pathCoordinates = data.pathCoordinates.map(a => {
+                return [
+                { lat: parseFloat(a[0].lat), lng: parseFloat(a[0].lng) },
+                { lat: parseFloat(a[1].lat), lng: parseFloat(a[1].lng) }
+            ]
+                });
             this.setState({
                 name: name,
                 city: city,
@@ -114,7 +131,13 @@ export class UserRouteContent extends Component {
                 defaultLng: Number(coordinates[1].lng),
                 editRoute: true,
                 createRoute: false,
-                currentRouteId: id
+                currentRouteId: id,
+                pointComments: pointComments,
+                pathComments: pathComments,
+                pointCommentAuthors: pointCommentAuthors,
+                pathCommentAuthors: pathCommentAuthors,
+                pointCoordinates: pointCoordinates,
+                pathCoordinates: pathCoordinates
             });
         }
         ).catch(error => console.log(error));
@@ -171,6 +194,12 @@ export class UserRouteContent extends Component {
                         totalDistance={this.state.totalDistance}
                         totalElevationGain={this.state.totalElevationGain}
                         totalElevationLoss={this.state.totalElevationLoss}
+                        pointComments={this.state.pointComments}
+                        pathComments={this.state.pathComments}
+                        pointCommentAuthors={this.state.pointCommentAuthors}
+                        pathCommentAuthors={this.state.pathCommentAuthors}
+                        pointCoordinates={this.state.pointCoordinates}
+                        pathCoordinates={this.state.pathCoordinates}
                         />
                 </div>
                 );

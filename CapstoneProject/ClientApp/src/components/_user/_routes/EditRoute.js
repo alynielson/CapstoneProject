@@ -15,13 +15,19 @@ export class EditRoute extends Component {
             showCommentModal: false,
             pointComments: [],
             commentShowing: null,
-            commentPosition: null
+            commentPosition: null,
+            pathCommentCoords: [{}],
+            pathTempSpot: null,
+            allowPathComment: false,
+            hasPathComments: false
         }
         this.allowComment = this.allowComment.bind(this);
         this.handleModalHide = this.handleModalHide.bind(this);
         this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
         this.onMarkerHover = this.onMarkerHover.bind(this);
         this.dismissComment = this.dismissComment.bind(this);
+        this.clickFoPathComment = this.clickForPathComment.bind(this);
+        this.allowPathComment = this.allowPathComment.bind(this);
     }
 
     onMarkerHover(data) {
@@ -59,32 +65,65 @@ export class EditRoute extends Component {
         });
     }
 
+    clickForPathComment(coord) {
+        
+            if (this.state.pathTempSpot === null) {
+                this.setState({
+                    pathTempSpot: coord
+                });
+            }
+            else {
+                var point1ToAdd = this.state.pathTempSpot;
+                var point2ToAdd = coord;
+                if (this.state.hasPathComments === false) {
+                    
+                    this.setState({
+                        hasPathComments: true,
+                        pathCommentCoords: [{ point1ToAdd, point2ToAdd }],
+                        pathTempSpot: null,
+                        allowPathComment: false
+                    });
+                }
+                else {
+                    var newPath = { point1ToAdd, point2ToAdd };
+                    var currentPaths = this.state.pathCommentCoords;
+                    currentPaths.push(newPath);
+                    this.setState({
+                        pathCommentCoords: currentPaths,
+                        pathTempSpot: null,
+                        allowPathComment: false
+                    });
+                }
+
+            }
+    }
+
     clickOnPath(t, map, c) {
-        if (this.state.allowComment) {
+        if (this.state.allowComment || this.state.allowPathComment) {
             const { latLng } = c;
             const lat = latLng.lat();
             const lng = latLng.lng();
             const newCoord = { lat: lat, lng: lng };
-            if (this.state.hasComments === false) {
-                
-                this.setState({
+            if (this.state.allowPathComment === true) {
+                this.clickForPathComment(newCoord);
+            }
+            else if (this.state.hasComments === false) {
+                 this.setState({
                     allowComment: false,
                     commentCoords: [newCoord],
                     hasComments: true,
                     showCommentModal: true
-                    
-                })
+                });
             }
             else {
-                var currentCommentLocations = this.state.commentCoords;
-                currentCommentLocations.push(newCoord);
+                 var currentCommentLocations = this.state.commentCoords;
+                 currentCommentLocations.push(newCoord);
                 this.setState({
                     allowComment: false,
                     commentCoords: currentCommentLocations,
                     showCommentModal: true
                 });
-
-            }
+                }
         }
     }
 
@@ -92,6 +131,12 @@ export class EditRoute extends Component {
         this.setState({
             allowComment: true
         })
+    }
+
+    allowPathComment() {
+        this.setState({
+            allowPathComment: true
+        });
     }
 
     render() {
@@ -154,9 +199,12 @@ export class EditRoute extends Component {
                     </Col>
                     <Col md={2}>
                         <ButtonGroup vertical>
-                            <Button onClick={this.allowComment}>Add Comment</Button>
+                           
                             
-                            <Button onClick={this.saveRoute} disabled={!(this.state.totalDistance > 0)}>Save</Button>
+                            <Button onClick={this.allowComment}>Point</Button>
+                            <Button onClick={this.allowPathComment}>Segment</Button>
+                           
+                            
                         </ButtonGroup>
 
                     </Col>

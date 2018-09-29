@@ -106,7 +106,7 @@ export class UserRouteContent extends Component {
                 state: state,
                 description: description,
                 owner: owner,
-                totalDistance: totalDistance,
+                totalDistance: totalDistance,                                                                                                                                                                       
                 totalElevationGain: totalElevationGain,
                 totalElevationLoss: totalElevationLoss,
                 coordinates: coordinates,

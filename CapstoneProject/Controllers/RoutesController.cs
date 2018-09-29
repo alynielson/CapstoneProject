@@ -46,8 +46,46 @@ namespace CapstoneProject.Controllers
                 
             }
             data.coordinates = coords;
+            List<PointComment> pointComments = getPointComments(id);
+            data.pointCommentAuthors = pointComments.Select(a => a.Writer).ToList();
+            data.pointComments = pointComments.Select(a => a.Note).ToList();
+            List<PointCoord> pointCoords = new List<PointCoord> { };
+            foreach(PointComment comment in pointComments)
+            {
+                PointCoord coord = new PointCoord();
+                coord.lat = comment.Latitude;
+                coord.lng = comment.Longitude;
+                pointCoords.Add(coord);
+            }
+            data.pointCoordinates = pointCoords;
+            List<PathComment> pathComments = _context.PathComments.Where(a => a.RouteId == id).ToList();
+            data.pathCommentAuthors = pathComments.Select(a => a.Writer).ToList();
+            data.pathComments = pathComments.Select(a => a.Note).ToList();
+            List<PointCoord[]> pathCoords = new List<PointCoord[]> { };
+            foreach (PathComment comment in pathComments)
+            {
+                PointCoord[] arr = new PointCoord[2];
+                PointCoord coord1 = new PointCoord();
+                coord1.lat = comment.Latitude1;
+                coord1.lng = comment.Longitude1;
+                PointCoord coord2 = new PointCoord();
+                coord2.lat = comment.Latitude2;
+                coord2.lng = comment.Longitude2;
+                arr[0] = coord1;
+                arr[1] = coord2;
+                pathCoords.Add(arr);
+            }
+            data.pathCoordinates = pathCoords;
             return data;
         }
+
+        private List<PointComment> getPointComments(int id)
+        {
+            var pointComments = _context.PointComments.Where(a => a.RouteId == id).ToList();
+            return pointComments;
+        }
+
+        
       
         // POST: api/Routes
         [HttpPost("[action]")]
@@ -302,6 +340,8 @@ namespace CapstoneProject.Controllers
                 throw new Exception("Unable to save to database");
             }
         }
+
+
     
 
 

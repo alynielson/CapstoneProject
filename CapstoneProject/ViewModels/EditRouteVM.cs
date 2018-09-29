@@ -18,5 +18,17 @@ namespace CapstoneProject.ViewModels
         public string totalElevationLoss { get; set; }
 
         public RouteCoords[] coordinates { get; set; }
+
+        public List<string> pointCommentAuthors { get; set; }
+
+        public List<PointCoord> pointCoordinates { get; set; }
+
+        public List<string> pointComments { get; set; }
+
+        public List<string> pathCommentAuthors { get; set; }
+
+        public List<PointCoord[]> pathCoordinates { get; set; }
+
+        public List<string> pathComments { get; set; }
     }
 }

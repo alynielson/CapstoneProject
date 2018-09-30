@@ -2,6 +2,7 @@
 import { Button, ListGroup, ListGroupItem, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { CreateGroup } from './CreateGroup';
+import { EditGroup } from './_groups/EditGroup';
 
 
 export class UserGroupContent extends Component {
@@ -10,11 +11,18 @@ export class UserGroupContent extends Component {
         this.state = {
             createGroup: false,
             groupsIn: [],
-            groupsOwn: []
-            
+            groupsOwn: [],
+            editingGroupId: null,
+            viewingGroupId: null
         }
         this.addNewGroup = this.addNewGroup.bind(this);
         this.backToAllGroups = this.backToAllGroups.bind(this);
+        this.goEditGroup = this.goEditGroup.bind(this);
+    }
+
+    goEditGroup(index) {
+        var groupId = this.state.groupsOwn[index].id;
+
     }
 
     addNewGroup(event) {
@@ -27,7 +35,9 @@ export class UserGroupContent extends Component {
     backToAllGroups() {
        
         this.setState({
-             createGroup: false,
+            createGroup: false,
+            editingGroupId: null,
+            viewingGroupId: null
         })
     }
 
@@ -61,6 +71,9 @@ export class UserGroupContent extends Component {
                     
                     </div>);
         }
+        else if (this.state.editingGroupId !== null) {
+            <EditGroup returnToEventHome={returnToEvents} />
+        }
         else {
             
           
@@ -82,8 +95,8 @@ export class UserGroupContent extends Component {
                             <h3>Groups you organize</h3>
                             <ListGroup>
                                
-                                    {groupsOwn.map((a,index) => 
-                                    (<ListGroupItem key={index} value={a.id}>{a.name}</ListGroupItem>)
+                                {groupsOwn.map((a, index) =>
+                                    (<ListGroupItem key={index} onClick={(index) => this.goEditGroup(index)}value={a.id}>{a.name}</ListGroupItem>)
                                     )}
                                 </ListGroup>
                                 </Col>

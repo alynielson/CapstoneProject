@@ -113,7 +113,30 @@ namespace CapstoneProject.Controllers
             
         }
         
-
+        [HttpGet("[action]")]
+        public GroupVM GetGroupDetails(int id)
+        {
+            var group = _context.Groups.Find(id);
+            GroupVM data = new GroupVM();
+            data.name = group.Name;
+            data.city = group.City;
+            data.description = group.Description;
+            data.state = group.State;
+            data.userId = group.UserId;
+            string ownerFirstName = _context.Users.Find(group.UserId).FirstName;
+            string ownerLastName = _context.Users.Find(group.UserId).LastName;
+            data.owner = $"{ownerFirstName} {ownerLastName}";
+            data.members = _context.GroupMembers.Where(a => a.GroupId == id).Select(a => a.UserId).ToArray();
+            var members = _context.GroupMembers.Where(a => a.GroupId == id).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Cast<User>().ToList();
+            List<string> memberNames =  new List<string>();
+            foreach (User member in members)
+            {
+                string name = $"{member.FirstName} {member.LastName}";
+                memberNames.Add(name);
+            }
+            data.memberNames = memberNames.ToArray();
+            return data;
+        }
         public List<GroupSnapshotVM> GetGroupsOwned(int id)
         {
             var groups = _context.Groups.Where(a => a.UserId == id).ToList();

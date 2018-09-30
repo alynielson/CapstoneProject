@@ -26,6 +26,9 @@ namespace IntegrationProject.Data
         public DbSet<PathComment> PathComments { get; set; }
 
         public DbSet<PointComment> PointComments { get; set; }
+        public DbSet<Event>Events { get; set; }
+        public DbSet<EventRoute> EventRoutes { get; set; }
+        public DbSet<Invite> Invites { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

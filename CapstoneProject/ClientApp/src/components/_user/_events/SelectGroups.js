@@ -154,7 +154,7 @@ export class SelectGroups extends Component {
                         />
                         </FormGroup>
                 </Form>
-           
+                    <Button onClick={() => this.props.goToRoutes(this.state.name,this.state.description,this.state.startDate,this.state.startTime,this.state.groups,this.state.numberOfRoutes)}>Next</Button>
                 
             </Col>
             <Col md={4}>

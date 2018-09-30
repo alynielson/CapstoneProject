@@ -92,19 +92,35 @@ namespace CapstoneProject.Controllers
         {
         }
 
-        public List<Group> GetGroupsIn(int id)
+        public List<GroupSnapshotVM> GetGroupsIn(int id)
         {
             var groups = _context.GroupMembers.Where(a => a.UserId == id)
                 .Join(_context.Groups, a => a.GroupId, b => b.Id, (a, b) => new { a, b })
                 .Select(c => c.b).ToList();
-            return groups;
+            List<GroupSnapshotVM> snapshots = new List<GroupSnapshotVM>();
+            foreach (Group group in groups)
+            {
+                GroupSnapshotVM snapshot = new GroupSnapshotVM();
+                snapshot.Id = group.Id;
+                snapshot.Name = group.Name;
+                snapshots.Add(snapshot);
+            }
+            return snapshots;
             
         }
 
-        public List<Group> GetGroupsOwned(int id)
+        public List<GroupSnapshotVM> GetGroupsOwned(int id)
         {
             var groups = _context.Groups.Where(a => a.UserId == id).ToList();
-            return groups;
+            List<GroupSnapshotVM> snapshots = new List<GroupSnapshotVM>();
+            foreach (Group group in groups)
+            {
+                GroupSnapshotVM snapshot = new GroupSnapshotVM();
+                snapshot.Id = group.Id;
+                snapshot.Name = group.Name;
+                snapshots.Add(snapshot);
+            }
+            return snapshots;
         }
     }
 }

@@ -18,6 +18,10 @@ namespace CapstoneProject.ViewModels
         public int[] members { get; set; }
 
         public int userId { get; set; }
+
+        public string owner { get; set; }
+
+        public string[] memberNames { get; set; }
       
     }
 }

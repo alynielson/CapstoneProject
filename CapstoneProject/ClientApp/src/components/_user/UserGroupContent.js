@@ -8,7 +8,12 @@ export class UserGroupContent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            createGroup: false
+            createGroup: false,
+            groupNamesIn: [],
+            groupIdsIn: [],
+            groupNamesOwn: [],
+            groupIdsOwn: []
+            
         }
         this.addNewGroup = this.addNewGroup.bind(this);
         this.backToAllGroups = this.backToAllGroups.bind(this);
@@ -29,7 +34,29 @@ export class UserGroupContent extends Component {
     }
 
     componentDidMount() {
-        fetch()
+        let inName;
+        let inId;
+        let ownName;
+        let ownId;
+        var id = localStorage.getItem('userId');
+        fetch(`/api/Groups/GetGroupsIn?id=${id}`).then(response => response.json())
+            .then(data => {
+                inName = data.map(a => a.Name);
+                inId = data.map(a => a.Id);
+                this.setState({
+                    groupNamesIn: inName,
+                    groupsIdsIn: inId
+                })
+            }).catch(a => console.log(a));
+        fetch(`/api/Groups/GetGroupsOwn?id=${id}`).then(response => response.json())
+            .then(data => {
+                ownName = data.map(a => a.Name);
+                ownId = data.map(a => a.Id);
+                this.setState({
+                    groupNamesOwn: ownName,
+                    groupIdsOwn: ownId
+                })
+            }).catch(b => console.log(b));
     }
 
 

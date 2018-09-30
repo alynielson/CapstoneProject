@@ -48,7 +48,9 @@ namespace CapstoneProject.Controllers
                 }
             }
             _context.SaveChanges();
-            return Ok();
+            EventSnapshotVM result = new EventSnapshotVM();
+            result.id = ventId;
+            return Ok(result);
         }
 
         // PUT: api/Events/5

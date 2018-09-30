@@ -2,7 +2,7 @@
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { SelectGroups } from './SelectGroups';
-
+import { SelectRoutes } from './SelectRoutes';
 export class CreateEvent extends Component {
     constructor(props) {
         super(props);
@@ -50,7 +50,7 @@ export class CreateEvent extends Component {
             action = <SelectGroups goToRoutes={goToRoutes} />
         }
         else if (!this.state.hasRoutes) {
-            action = null
+            action = <SelectRoutes name={this.state.name} id={this.state.eventId} numberOfRoutes={this.state.numberOfRoutes}/>
         }
         return (
             <div>

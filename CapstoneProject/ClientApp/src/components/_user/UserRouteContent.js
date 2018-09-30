@@ -37,6 +37,7 @@ export class UserRouteContent extends Component {
         this.editRoute = this.editRoute.bind(this);
         this.doneCreatingNew = this.doneCreatingNew.bind(this);
         this.setDistanceFilter = this.setDistanceFilter.bind(this);
+        this.setHillFilter = this.setHillFilter.bind(this);
     }
 
     setDistanceFilter(value) {

@@ -70,3 +70,10 @@
 .modal-form-custom{
     width: 40%;
 }
+.custom-map{
+    height: 50vw;
+    width: 35vw;
+    max-height: 400px;
+    max-width: 400px;
+    margin-right: 40px;
+}

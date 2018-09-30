@@ -3,6 +3,7 @@ import { Button, ListGroup, ListGroupItem, FormControl, ControlLabel, Col, ColPr
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { CreateGroup } from './CreateGroup';
 import { EditGroup } from './_groups/EditGroup';
+import { ViewGroup } from './_groups/ViewGroup';
 
 
 export class UserGroupContent extends Component {
@@ -27,6 +28,8 @@ export class UserGroupContent extends Component {
         this.addNewGroup = this.addNewGroup.bind(this);
         this.backToAllGroups = this.backToAllGroups.bind(this);
         this.goEditGroup = this.goEditGroup.bind(this);
+        this.goViewGroup = this.goViewGroup.bind(this);
+
     }
 
     goEditGroup(index) {
@@ -42,6 +45,25 @@ export class UserGroupContent extends Component {
                 owner: data.owner,
                 userId: data.userId,
                 editingGroupId: groupId
+
+            }))
+            .catch(error => console.log(error));
+
+    }
+
+    goViewGroup(index) {
+        var groupId = this.state.groupsIn[index].id;
+        fetch(`/api/Groups/GetGroupDetails?id=${groupId}`).then(response => response.json()).then(data =>
+            this.setState({
+                name: data.name,
+                city: data.city,
+                state: data.state,
+                description: data.description,
+                memberIds: data.members,
+                memberNames: data.memberNames,
+                owner: data.owner,
+                userId: data.userId,
+                viewingGroupId: groupId
 
             }))
             .catch(error => console.log(error));
@@ -120,6 +142,21 @@ export class UserGroupContent extends Component {
                     returnToEventHome={returnToEvents} />
             );
         }
+        else if (this.state.viewingGroupId != null) {
+            return (
+                <ViewGroup
+                    name={this.state.name}
+                    city={this.state.city}
+                    state={this.state.state}
+                    description={this.state.description}
+                    memberIds={this.state.memberIds}
+                    userId={this.state.userId}
+                    owner={this.state.owner}
+                    memberNames={this.state.memberNames}
+                    id={this.state.editingGroupId}
+                    returnToEventHome={returnToEvents} />
+            );
+        }
         else {
             
           
@@ -133,7 +170,7 @@ export class UserGroupContent extends Component {
                             <ListGroup>
                             {groupsIn.map((a,i) => 
                                 
-                                    (<ListGroupItem key={i}value={a.id}>{a.name}</ListGroupItem>)
+                                    (<ListGroupItem onClick={() => this.goViewGroup(i)} key={i}value={a.id}>{a.name}</ListGroupItem>)
                                 )}
                                 </ListGroup>
                         </Col>

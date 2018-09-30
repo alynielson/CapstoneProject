@@ -12,6 +12,9 @@ import { UserHome } from './components/_user/UserHome';
 import { Logout } from './components/_login/Logout';
 import { Navbar, Jumbotron, Button } from 'react-bootstrap';
 import { Blank } from './components/Blank';
+import { UserRouteContent } from './components/_user/UserRouteContent';
+import { UserEventContent } from './components/_user/UserEventContent';
+import { UserGroupContent } from './components/_user/UserGroupContent';
 
 
 export default class App extends Component {
@@ -114,7 +117,10 @@ export default class App extends Component {
                 <Switch>
                 <Route exact path='/home' component={Blank} />
                 <Route path="/authorize-strava" component={() => window.location = "http://www.strava.com/oauth/authorize?client_id=28837&response_type=code&redirect_uri=https://localhost:44355/users/&approval_prompt=force&scope=view_private"} />
-                <Route exact path='/users' component={UserHome} />
+                    <Route exact path='/users' component={UserHome} />
+                    <Route exact path='/groups' component={UserGroupContent} />
+                    <Route exact path='/routes' component={UserRouteContent} />
+                    <Route exact path='/events' component={UserEventContent} />
                 </Switch>
                 </Layout>
                

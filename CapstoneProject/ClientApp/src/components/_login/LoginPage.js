@@ -46,7 +46,7 @@ export class Login extends Component {
             {
                 return resultData = jsonData;
             }).catch(function (error) { console.log(error); });
-        if (resultData.id !== null) {
+        if (resultData !== null) {
 
             this.setState({ id: resultData.id });
             localStorage.clear();

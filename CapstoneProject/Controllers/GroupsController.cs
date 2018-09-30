@@ -91,5 +91,20 @@ namespace CapstoneProject.Controllers
         public void Delete(int id)
         {
         }
+
+        public List<Group> GetGroupsIn(int id)
+        {
+            var groups = _context.GroupMembers.Where(a => a.UserId == id)
+                .Join(_context.Groups, a => a.GroupId, b => b.Id, (a, b) => new { a, b })
+                .Select(c => c.b).ToList();
+            return groups;
+            
+        }
+
+        public List<Group> GetGroupsOwned(int id)
+        {
+            var groups = _context.Groups.Where(a => a.UserId == id).ToList();
+            return groups;
+        }
     }
 }

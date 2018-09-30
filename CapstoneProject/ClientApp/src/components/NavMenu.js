@@ -21,7 +21,7 @@ export class NavMenu extends Component {
                         <Navbar.Toggle />
                     </Navbar.Header>
                     <Navbar.Collapse>
-                        <Nav>
+                        <Nav pullRight>
                            
                                 <NavItem onClick={this.props.onClickingLogin}>
                                    Login
@@ -48,12 +48,28 @@ export class NavMenu extends Component {
                     </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav>
-                           
+                           <LinkContainer to='/users'>
                                 <NavItem>
                                      Home
                                 </NavItem>
-                           
-                       
+                            </LinkContainer>
+                            <LinkContainer to='/groups'>
+                            <NavItem>
+                                Groups
+                                </NavItem>
+                            </LinkContainer>
+                            <LinkContainer to='/routes'>
+                            <NavItem>
+                               Routes
+                                </NavItem>
+                            </LinkContainer>
+                            <LinkContainer to='/events'>
+                            <NavItem>
+                                Events
+                                </NavItem>
+                                </LinkContainer>
+                        </Nav>   
+                       <Nav pullRight>
                             <NavItem onClick={this.props.tryLogout} >
                                 Log out
                                 </NavItem>

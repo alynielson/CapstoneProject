@@ -28,6 +28,10 @@ export class UserGroupContent extends Component {
         })
     }
 
+    componentDidMount() {
+        fetch()
+    }
+
 
 
     render() {
@@ -44,9 +48,15 @@ export class UserGroupContent extends Component {
                 <div>
                 
                     <Button onClick={(event) => this.addNewGroup(event)}>Create a Group</Button>
-                      
-                    
-                    <div> Your Groups </div>
+                    <Row>
+                        <Col md={4}>
+                            <h3>Groups you're in</h3>
+
+                        </Col>
+                        <Col md={4}>
+                            <h3>Groups you organize</h3>
+                                </Col>
+                    </Row>
                     </div>
 
 

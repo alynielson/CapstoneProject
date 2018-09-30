@@ -162,5 +162,25 @@ namespace CapstoneProject.Controllers
             }
             return Ok();
         }
+
+        [HttpPost("[action]")]
+        public IActionResult EditGroup([FromBody] GroupVM data)
+        {
+            var group = _context.Groups.Find(data.groupId);
+            group.Name = data.name;
+            group.Description = data.description;
+            group.City = data.city;
+            group.State = data.state;
+            foreach (int memberId in data.members)
+            {
+                GroupMember groupMember = new GroupMember();
+                groupMember.GroupId = data.groupId;
+                groupMember.UserId = memberId;
+                _context.GroupMembers.Add(groupMember);
+            }
+            _context.Update(group);
+            _context.SaveChanges();
+            return Ok();
+        }
     }
 }

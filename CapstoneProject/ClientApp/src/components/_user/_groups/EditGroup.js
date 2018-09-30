@@ -15,7 +15,26 @@ export class EditGroup extends Component {
             membersToAdd: [],
             newMembers: []
         }
+        this.handleChange = this.handleChange.bind(this);
 
+    }
+
+    async submitEdit() {
+        var data = {
+            groupId: this.props.id,
+            name: this.state.name,
+            description: this.state.description,
+            city: this.state.city,
+            state: this.state.state,
+            members: this.state.newMembers.map(a => a.value)
+        }
+        await fetch('/api/Groups/EditGroup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).catch(error => console.log(error));
+
+        this.props.returnToEventHome();
     }
 
     addSelectedMember(selectedMember) {
@@ -161,8 +180,8 @@ export class EditGroup extends Component {
                             
                     </Form>
                     <ButtonToolbar>
-                        <Button onClick={this.props.returnToEventHome}>Back</Button>
-                        <Button onClick={(event) => this.submitEdit(event)}>Finish</Button>
+                            <Button onClick={(event) => this.submitEdit(event)}>Back</Button>
+                        
                     </ButtonToolbar>
                 </Col>
                 <Col md={3}>

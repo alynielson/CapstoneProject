@@ -22,6 +22,8 @@ namespace CapstoneProject.ViewModels
         public string owner { get; set; }
 
         public string[] memberNames { get; set; }
+
+        public int groupId { get; set; }
       
     }
 }

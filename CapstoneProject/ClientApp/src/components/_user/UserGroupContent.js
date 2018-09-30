@@ -56,12 +56,23 @@ export class UserGroupContent extends Component {
     }
 
     backToAllGroups() {
-       
-        this.setState({
-            createGroup: false,
-            editingGroupId: null,
-            viewingGroupId: null
-        })
+        var groupsIn;
+        var groupsOwn;
+        var id = localStorage.getItem('userId');
+        fetch(`/api/Groups/GetGroups?id=${id}`).then(response => response.json())
+            .then(data => {
+
+                groupsIn = data.groupsIn;
+                groupsOwn = data.groupsOwn;
+                this.setState({
+                    groupsIn: groupsIn,
+                    groupsOwn: groupsOwn,
+                    createGroup: false,
+                    editingGroupId: null,
+                    viewingGroupId: null
+                })
+            }).catch(a => console.log(a));
+
     }
 
     componentWillMount() {

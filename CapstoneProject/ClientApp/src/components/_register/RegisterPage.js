@@ -52,6 +52,7 @@ export class Register extends Component {
             localStorage.setItem('userId', this.state.id);
             localStorage.setItem('firstname', this.state.first_name);
             localStorage.setItem('lastname', this.state.last_name);
+            this.props.loggedIn();
         }
         }
 

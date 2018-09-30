@@ -24,7 +24,7 @@ export class UserHome extends Component {
 
 
     componentDidMount() {
-        if (this.props.location.search !== "") {
+        if (this.props.location.search) {
             var stravaParams = this.props.location.search.split('&');
             let code = stravaParams[1].slice(5);
             let id = localStorage.getItem('userId');

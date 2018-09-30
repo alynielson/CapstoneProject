@@ -53,6 +53,7 @@ export class Login extends Component {
             localStorage.setItem('userId', resultData.id);
             localStorage.setItem('firstname', resultData.first_name);
             localStorage.setItem('lastname', resultData.last_name);
+            this.props.loggedIn();
             
         }
 
@@ -93,10 +94,10 @@ export class Login extends Component {
 
 
     render() {
-        if (this.state.id !== null) {
-            return (<div><Redirect to={`/users`}/></div>);
+        if (this.state.id != null) {
+            return <Redirect to="/users" />
         }
-        else {
+      
             return (
 
                 <div>
@@ -135,6 +136,6 @@ export class Login extends Component {
                     </Row>
                 </div>
             );
-        }
+        
     }
 }

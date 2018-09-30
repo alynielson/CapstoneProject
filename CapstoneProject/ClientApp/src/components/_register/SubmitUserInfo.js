@@ -16,6 +16,7 @@ export class SubmitUserInfo extends Component {
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleResponse = this.handleResponse.bind(this);
     }
 
     componentDidMount() {

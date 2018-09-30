@@ -86,7 +86,7 @@ namespace CapstoneProject.Controllers
         {
         }
 
-        // DELETE: api/ApiWithActions/5
+        
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
@@ -127,7 +127,7 @@ namespace CapstoneProject.Controllers
             string ownerLastName = _context.Users.Find(group.UserId).LastName;
             data.owner = $"{ownerFirstName} {ownerLastName}";
             data.members = _context.GroupMembers.Where(a => a.GroupId == id).Select(a => a.UserId).ToArray();
-            var members = _context.GroupMembers.Where(a => a.GroupId == id).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Cast<User>().ToList();
+            var members = _context.GroupMembers.Where(a => a.GroupId == id).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Select(c => c.b).ToList();
             List<string> memberNames =  new List<string>();
             foreach (User member in members)
             {
@@ -149,6 +149,18 @@ namespace CapstoneProject.Controllers
                 snapshots.Add(snapshot);
             }
             return snapshots;
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult DeleteMember(int userId, int groupId)
+        {
+            var member = _context.GroupMembers.SingleOrDefault(a => a.UserId == userId && a.GroupId == groupId);
+            if (member != null)
+            {
+                _context.GroupMembers.Remove(member);
+                _context.SaveChanges();
+            }
+            return Ok();
         }
     }
 }

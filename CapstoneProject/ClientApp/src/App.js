@@ -60,6 +60,7 @@ export default class App extends Component {
         this.setState({
             tryLogout: false,
             isLoggedIn: false,
+            isRegistering: false
         });
     }
     onClickingLogin() {
@@ -72,8 +73,8 @@ export default class App extends Component {
     onLoggingIn() {
         this.setState({
             isLoggedIn: true,
-            isLoggingIn: false,
-            isRegistering: false
+            isLoggingIn: false
+            
         })
     }
     onClickingRegister() {

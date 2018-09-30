@@ -13,7 +13,16 @@ export class UserGroupContent extends Component {
             groupsIn: [],
             groupsOwn: [],
             editingGroupId: null,
-            viewingGroupId: null
+            viewingGroupId: null,
+            name: '',
+            city: '',
+            state: '',
+            description: '',
+            memberIds: [],
+            memberNames: [],
+            userId: null,
+            owner: '',
+            
         }
         this.addNewGroup = this.addNewGroup.bind(this);
         this.backToAllGroups = this.backToAllGroups.bind(this);
@@ -22,6 +31,20 @@ export class UserGroupContent extends Component {
 
     goEditGroup(index) {
         var groupId = this.state.groupsOwn[index].id;
+        fetch(`/api/Groups/GetGroupDetails?id=${groupId}`).then(response => response.json()).then(data =>
+            this.setState({
+                name: data.name,
+                city: data.city,
+                state: data.state,
+                description: data.description,
+                memberIds: data.members,
+                memberNames: data.memberNames,
+                owner: data.owner,
+                userId: data.userId,
+                editingGroupId: groupId
+
+            }))
+            .catch(error => console.log(error));
 
     }
 
@@ -72,7 +95,19 @@ export class UserGroupContent extends Component {
                     </div>);
         }
         else if (this.state.editingGroupId !== null) {
-            <EditGroup returnToEventHome={returnToEvents} />
+            return (
+                <EditGroup
+                    name={this.state.name}
+                    city={this.state.city}
+                    state={this.state.state}
+                    description={this.state.description}
+                    memberIds={this.state.memberIds}
+                    userId={this.state.userId}
+                    owner={this.state.owner}
+                    memberNames={this.state.memberNames}
+                    id={this.state.editingGroupId}
+                    returnToEventHome={returnToEvents} />
+            );
         }
         else {
             
@@ -96,7 +131,7 @@ export class UserGroupContent extends Component {
                             <ListGroup>
                                
                                 {groupsOwn.map((a, index) =>
-                                    (<ListGroupItem key={index} onClick={(index) => this.goEditGroup(index)}value={a.id}>{a.name}</ListGroupItem>)
+                                    (<ListGroupItem key={index} onClick={() => this.goEditGroup(index)} value={a.id}>{a.name}</ListGroupItem>)
                                     )}
                                 </ListGroup>
                                 </Col>

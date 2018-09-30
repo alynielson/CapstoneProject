@@ -1,10 +1,14 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
+import { SelectGroups } from './SelectGroups';
 
 export class CreateEvent extends Component {
     constructor(props) {
         super(props);
+        this.state = {
+            hasGroups: false
+        }
     }
 
     render() {

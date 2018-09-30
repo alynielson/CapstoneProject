@@ -11,4 +11,10 @@ namespace CapstoneProject.ViewModels
 
         public int Id { get; set; }
     }
+
+    public class GroupSnapshotVMs
+    {
+        public List<GroupSnapshotVM> groupsIn { get; set; }
+        public List<GroupSnapshotVM> groupsOwn { get; set; }
+    }
 }

@@ -91,8 +91,8 @@ namespace CapstoneProject.Controllers
         public void Delete(int id)
         {
         }
-
-        public List<GroupSnapshotVM> GetGroupsIn(int id)
+        [HttpGet("[action]")]
+        public GroupSnapshotVMs GetGroups(int id)
         {
             var groups = _context.GroupMembers.Where(a => a.UserId == id)
                 .Join(_context.Groups, a => a.GroupId, b => b.Id, (a, b) => new { a, b })
@@ -105,9 +105,14 @@ namespace CapstoneProject.Controllers
                 snapshot.Name = group.Name;
                 snapshots.Add(snapshot);
             }
-            return snapshots;
+            List<GroupSnapshotVM> ownGroups = GetGroupsOwned(id);
+            GroupSnapshotVMs all = new GroupSnapshotVMs();
+            all.groupsIn = snapshots;
+            all.groupsOwn = ownGroups;
+            return all;
             
         }
+        
 
         public List<GroupSnapshotVM> GetGroupsOwned(int id)
         {

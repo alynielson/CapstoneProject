@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
+import { Button, ListGroup, ListGroupItem, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { CreateGroup } from './CreateGroup';
 
@@ -9,10 +9,8 @@ export class UserGroupContent extends Component {
         super(props);
         this.state = {
             createGroup: false,
-            groupNamesIn: [],
-            groupIdsIn: [],
-            groupNamesOwn: [],
-            groupIdsOwn: []
+            groupsIn: [],
+            groupsOwn: []
             
         }
         this.addNewGroup = this.addNewGroup.bind(this);
@@ -33,36 +31,29 @@ export class UserGroupContent extends Component {
         })
     }
 
-    componentDidMount() {
-        let inName;
-        let inId;
-        let ownName;
-        let ownId;
+    componentWillMount() {
+        let groupsIn;
+        let groupsOwn;
         var id = localStorage.getItem('userId');
-        fetch(`/api/Groups/GetGroupsIn?id=${id}`).then(response => response.json())
+        fetch(`/api/Groups/GetGroups?id=${id}`).then(response => response.json())
             .then(data => {
-                inName = data.map(a => a.Name);
-                inId = data.map(a => a.Id);
+
+                groupsIn = data.groupsIn;
+                groupsOwn = data.groupsOwn;
                 this.setState({
-                    groupNamesIn: inName,
-                    groupsIdsIn: inId
+                    groupsIn: groupsIn,
+                    groupsOwn: groupsOwn
                 })
             }).catch(a => console.log(a));
-        fetch(`/api/Groups/GetGroupsOwn?id=${id}`).then(response => response.json())
-            .then(data => {
-                ownName = data.map(a => a.Name);
-                ownId = data.map(a => a.Id);
-                this.setState({
-                    groupNamesOwn: ownName,
-                    groupIdsOwn: ownId
-                })
-            }).catch(b => console.log(b));
+        
     }
 
 
 
     render() {
         const returnToEvents = this.backToAllGroups;
+        var groupsOwn = this.state.groupsOwn;
+        var groupsIn = this.state.groupsIn;
         if (this.state.createGroup) {
             return (
                 <div>
@@ -71,6 +62,8 @@ export class UserGroupContent extends Component {
                     </div>);
         }
         else {
+            
+          
             return (
                 <div>
                 
@@ -78,10 +71,21 @@ export class UserGroupContent extends Component {
                     <Row>
                         <Col md={4}>
                             <h3>Groups you're in</h3>
-
+                            <ListGroup>
+                            {groupsIn.map((a,i) => 
+                                
+                                    (<ListGroupItem key={i}value={a.id}>{a.name}</ListGroupItem>)
+                                )}
+                                </ListGroup>
                         </Col>
                         <Col md={4}>
                             <h3>Groups you organize</h3>
+                            <ListGroup>
+                               
+                                    {groupsOwn.map((a,index) => 
+                                    (<ListGroupItem key={index} value={a.id}>{a.name}</ListGroupItem>)
+                                    )}
+                                </ListGroup>
                                 </Col>
                     </Row>
                     </div>

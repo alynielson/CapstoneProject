@@ -20,7 +20,31 @@ namespace CapstoneProject.Controllers
         {
             _context = context;
         }
-        
+        [HttpGet("[action]")]
+        public List<UserEventVM> GetUserEvents(int userId)
+        {
+            List<UserEventVM> results = new List<UserEventVM> { };
+            var eventsInvites = _context.Invites.Join(_context.Events, a => a.EventId, b => b.Id, (a, b) => new { a, b }).Where(c => c.a.UserId == userId).ToList();
+            eventsInvites = eventsInvites.Where(c => c.a.Going == true || c.b.Date >= DateTime.Now).ToList();
+            var eventsOrgsFirstName = eventsInvites.Join(_context.Users, e => e.b.UserId, f => f.Id, (e, f) => new { e, f }).Select(f => f.f.FirstName).ToList();
+            var eventsOrgsLastName = eventsInvites.Join(_context.Users, e => e.b.UserId, f => f.Id, (e, f) => new { e, f }).Select(f => f.f.LastName).ToList();
+            for (int i = 0; i < eventsInvites.Count(); i++)
+            {
+                UserEventVM vent = new UserEventVM();
+                vent.date = eventsInvites[i].b.Date;
+                vent.eventId = eventsInvites[i].b.Id;
+                vent.going = eventsInvites[i].a.Going;
+                vent.name = eventsInvites[i].b.Name;
+                vent.organizer = $"{eventsOrgsFirstName[i]} {eventsOrgsLastName[i]}";
+                vent.time = eventsInvites[i].b.Time;
+                results.Add(vent);
+            }
+            var resultsToSend = results.OrderByDescending(a => a.date).ToList();
+            return resultsToSend;
+
+
+        }
+
 
         // POST: api/Events
         [HttpPost("[action]")]
@@ -47,8 +71,13 @@ namespace CapstoneProject.Controllers
                     invite.UserId = memberId;
                     _context.Invites.Add(invite);
                 }
+                Invite inviteB = new Invite();
+                inviteB.EventId = ventId;
+                inviteB.UserId = data.userId;
+                _context.Invites.Add(inviteB);
+                _context.SaveChanges();
             }
-            _context.SaveChanges();
+            
             EventSnapshotVM result = new EventSnapshotVM();
             result.id = ventId;
             return Ok(result);

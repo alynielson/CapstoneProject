@@ -83,6 +83,39 @@ namespace CapstoneProject.Operations
             }
         
     }
+
+     public static string FullAddressReverseGeocoder(string lat, string lng)
+        {
+            string apiKey = Credentials.GoogleMapsApiKey;
+            string url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lng}&key={apiKey}";
+            WebResponse response = null;
+            try
+            {
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "GET";
+                response = request.GetResponse();
+                if (response != null)
+                {
+                    string responseString = null;
+                    Stream stream = response.GetResponseStream();
+                    StreamReader streamReader = new StreamReader(stream);
+                    responseString = streamReader.ReadToEnd();
+                    GeoResponse geoResponse = JsonConvert.DeserializeObject<GeoResponse>(responseString);
+                    if (geoResponse.status == "OK")
+                    {
+                        string relevantAddress = geoResponse.results[0].formatted_address;
+                       
+                        return relevantAddress;
+                    }
+                    return "";
+                }
+                return "";
+            }
+            catch
+            {
+                throw new Exception("Google maps was unable to find address");
+            }
+        }   
 }
 
     public class Location

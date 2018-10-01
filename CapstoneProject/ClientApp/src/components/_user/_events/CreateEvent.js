@@ -48,19 +48,22 @@ export class CreateEvent extends Component {
         })
     }
 
-    finishCreating(address, currentRoute1Id, currentRoute2Id, route1details, route2details) {
+    finishCreating(address, currentRoute1Id, currentRoute2Id, route1details, route2details, addressCoords) {
+        var eventId = this.state.eventId;
         var data = {
             address: address,
             routeId1: currentRoute1Id,
             routeId2: currentRoute2Id,
             routeDetails1: route1details,
-            routeDetails2: route2details
+            routeDetails2: route2details,
+            addressCoords: addressCoords,
+            eventId: eventId
         }
         fetch('/api/Events/AddDetails', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }.catch(error => console.log(error)));
+        }).then(response => response.json()).then(data => console.log(data)).catch(error => console.log(error));
         this.props.backToEventHome();
 
         
@@ -74,7 +77,7 @@ export class CreateEvent extends Component {
     render() {
 
         var action;
-        const onCompleting = ((address, currentRoute1Id, currentRoute2Id, route1details, route2details) => this.finishCreating(address, currentRoute1Id, currentRoute2Id, route1details, route2details));
+        const onCompleting = ((address, currentRoute1Id, currentRoute2Id, route1details, route2details, addressCoords) => this.finishCreating(address, currentRoute1Id, currentRoute2Id, route1details, route2details, addressCoords));
         const goToRoutes = (name, description, date, time, groups, numberOfRoutes) => this.goToRoutes(name, description, date, time, groups, numberOfRoutes);
         if (!this.state.hasGroups) {
             action = <SelectGroups goToRoutes={goToRoutes} />

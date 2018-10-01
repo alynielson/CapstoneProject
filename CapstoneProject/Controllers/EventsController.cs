@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CapstoneProject.Models;
+using CapstoneProject.Operations;
 using CapstoneProject.ViewModels;
 using IntegrationProject.Data;
 using Microsoft.AspNetCore.Http;
@@ -56,6 +57,38 @@ namespace CapstoneProject.Controllers
         [HttpPost("[action]")]
         public IActionResult AddDetails([FromBody] EventSubmitVM data)
         {
+            var vent = _context.Events.Find(data.eventId);
+
+                EventRoute route = new EventRoute();
+                route.RouteId = data.routeId1;
+                route.EventId = data.eventId;
+                route.Details = data.routeDetails1;
+            _context.EventRoutes.Add(route);
+            _context.SaveChanges();
+            if (data.routeId2 > 0)
+            {
+                EventRoute route2 = new EventRoute();
+                route2.RouteId = data.routeId2;
+                route2.EventId = data.eventId;
+                route2.Details = data.routeDetails2;
+                _context.EventRoutes.Add(route2);
+                _context.SaveChanges();
+            }
+            if (data.addressCoords != null)
+            {
+                string addressEst = Geocoder.FullAddressReverseGeocoder(data.addressCoords.lat, data.addressCoords.lng);
+                vent.Address = addressEst;
+                vent.LatitudeStart = data.addressCoords.lat;
+                vent.LongitudeStart = data.addressCoords.lng;
+               
+            }
+            else
+            {
+                vent.Address = data.address;
+                
+            }
+            _context.Update(vent);
+            _context.SaveChanges();
             return Ok();
         }
 

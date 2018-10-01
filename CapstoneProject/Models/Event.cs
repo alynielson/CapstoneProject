@@ -24,6 +24,10 @@ namespace CapstoneProject.Models
 
         public string Address { get; set; }
 
+        public string LatitudeStart { get; set; }
+
+        public string LongitudeStart { get; set; }
+
        
     }
 }

@@ -28,7 +28,8 @@ export class SelectRoutes extends Component {
             pathCommentPosition1: null,
             pathCommentShowing2: null,
             pathCommentShowing2: null,
-            routeShowing: 1
+            routeShowing: 1,
+            addressCoords: null
             
         }
        
@@ -470,7 +471,7 @@ export class SelectRoutes extends Component {
                 </FormGroup>
             </div>
         }
-        var finishButton = <Button onClick={() =>this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1details, this.state.route2details)}>Finish</Button>   
+        var finishButton = <Button onClick={() =>this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1details, this.state.route2details, this.state.addressCoords)}>Finish</Button>   
         var finish = null;
         if (this.state.hasSelected) {
            
@@ -485,7 +486,7 @@ export class SelectRoutes extends Component {
                 {finishButton}
                 </div>
         }
-        if (this.state.addressCoords) {
+        if (this.state.addressCoords != null) {
             var startingPoint = (
                 <Marker 
                    

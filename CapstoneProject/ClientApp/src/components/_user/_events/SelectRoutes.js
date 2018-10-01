@@ -27,7 +27,8 @@ export class SelectRoutes extends Component {
             pathCommentShowing1: null,
             pathCommentPosition1: null,
             pathCommentShowing2: null,
-            pathCommentShowing2: null
+            pathCommentShowing2: null,
+            routeShowing: 1
             
         }
        
@@ -42,7 +43,28 @@ export class SelectRoutes extends Component {
         this.dismissComment2 = this.dismissComment2.bind(this);
         this.dismissPathComment1 = this.dismissPathComment1.bind(this);
         this.dismissPathComment2 = this.dismissPathComment2.bind(this);
+        this.finish = this.finish.bind(this);
+        this.viewRouteA = this.viewRouteA.bind(this);
+        this.viewRouteB = this.viewRouteB.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
+
+
+    handleChange(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({
+            [name]: value
+        });
+    }
+
+    finish() {
+        this.setState({
+            hasSelected: true
+        })
+    }
+
     dismissComment1() {
         this.setState({
             commentShowing1: null,
@@ -241,6 +263,21 @@ export class SelectRoutes extends Component {
 
     }
 
+    isRouteA() {
+        return this.state.routeShowing === 1;
+    }
+
+    viewRouteA() {
+        this.setState({
+            routeShowing: 1
+        })
+    }
+    viewRouteB() {
+        this.setState({
+            routeShowing: 2
+        })
+    }
+
     render() {
         const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
         const selectDistanceFilter = ((value) => { this.setDistanceFilter(value) });
@@ -364,6 +401,77 @@ export class SelectRoutes extends Component {
 
                 <p> {this.state.pathCommentShowing2} </p> </Alert>
         }
+        var search = null;
+        var list = null;
+        if (!this.state.hasSelected) {
+            
+            search = <div><SearchRoutes onSearchEnter={routeSearch} />
+                <DistanceButtons sendDistanceArray={selectDistanceFilter} />
+                <HillButtons sendHillArray={selectHillFilter} />
+                <Button onClick={this.finish}>Finish</Button>
+            </div>
+           
+        }
+        if (!this.state.hasSelected) {
+            list = <RouteList routesToAdd={this.state.routeToAdd} onRouteSelect={selectRoute}
+            />
+        }
+        var finalRoutes = null;
+        if (this.state.routesViewing === 2) {
+           finalRoutes =  <ButtonToolbar>
+               <Button onClick={() => this.viewRouteA()} active={this.isRouteA()}>Route A</Button>
+               <Button onClick={() =>this.viewRouteB()} active={!this.isRouteA()}>Route B</Button>
+                </ButtonToolbar>
+        }
+        var routeShowing = <div>
+            <h4> Route A: {this.state.route1.name}</h4>
+            <FormGroup>
+                <ControlLabel>Distance:</ControlLabel>  {Number(this.state.route1.totalDistance).toFixed(2)} miles
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>Total Elevation Gain:</ControlLabel> {Number(this.state.route1.totalElevationGain).toFixed(2)} meters
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>Total Elevation Loss:</ControlLabel> {Number(this.state.route1.totalElevationLoss).toFixed(2)} meters
+            </FormGroup>
+            <FormGroup>
+                <ControlLabel>Event Details for this Route</ControlLabel>
+                <FormControl type='textarea' value={this.state.route1details} name="route1details" onChange={this.handleChange}/>
+                </FormGroup>
+        </div>
+        if (this.state.routeShowing === 2) {
+            routeShowing = <div>
+                <h4> Route B: {this.state.route2.name}</h4>
+                <FormGroup>
+                    <ControlLabel>Distance:</ControlLabel>  {Number(this.state.route2.totalDistance).toFixed(2)} miles
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>Total Elevation Gain:</ControlLabel> {Number(this.state.route2.totalElevationGain).toFixed(2)} meters
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>Total Elevation Loss:</ControlLabel> {Number(this.state.route2.totalElevationLoss).toFixed(2)} meters
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel>Event Details for this Route</ControlLabel>
+                    <FormControl type='textarea' value={this.state.route2details} name="route2details" onChange={this.handleChange}/>
+                </FormGroup>
+            </div>
+        }
+        var finishButton = <Button onClick={() =>this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1details, this.state.route2details)}>Finish</Button>   
+        var finish = null;
+        if (this.state.hasSelected) {
+           
+            finish = <div>
+                <FormGroup>
+                    <ControlLabel>Where will you be starting?</ControlLabel>
+                    <FormControl type="textarea" placeholder="Type an address or click a spot on the map" name="address" value={this.state.address} onChange={this.handleChange}/>
+                    
+                </FormGroup>
+                {finalRoutes}
+                {routeShowing}
+                {finishButton}
+                </div>
+        }
        
         return (
                 
@@ -372,15 +480,14 @@ export class SelectRoutes extends Component {
                     
                     <Row>
                         <Col md={3}>
-
-                            <SearchRoutes onSearchEnter={routeSearch} />
-                            <DistanceButtons sendDistanceArray={selectDistanceFilter} />
-                        <HillButtons sendHillArray={selectHillFilter} />
-                        <Row>{alert} {alert2} {alert3} {alert4} </Row>
+                        {finish}
+                        {search}
+                        
                         </Col>
-                        <Col md={3}>
-                            <RouteList routesToAdd={this.state.routeToAdd} onRouteSelect={selectRoute}
-                            />
+                    <Col md={3}>
+                        <Row>{alert} {alert2} {alert3} {alert4} </Row>
+                        {list}
+                        
                         </Col>
                         <Col md={6}>
                             <div className="custom-map">

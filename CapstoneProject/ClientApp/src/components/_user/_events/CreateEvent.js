@@ -9,9 +9,14 @@ export class CreateEvent extends Component {
         this.state = {
             hasGroups: false,
             hasRoutes: false,
+          
         }
         this.goToRoutes = this.goToRoutes.bind(this);
     }
+
+
+
+
     async goToRoutes(name, description, date, time, groups, numberOfRoutes) {
         let userId = localStorage.getItem('userId');
         let eventId;
@@ -38,20 +43,47 @@ export class CreateEvent extends Component {
             time: time,
             groups: groups,
             numberOfRoutes: numberOfRoutes,
-            eventId: eventId
+            eventId: eventId,
+            
         })
     }
 
+    finishCreating(address, currentRoute1Id, currentRoute2Id, route1details, route2details) {
+        var data = {
+            address: address,
+            routeId1: currentRoute1Id,
+            routeId2: currentRoute2Id,
+            routeDetails1: route1details,
+            routeDetails2: route2details
+        }
+        fetch('/api/Events/AddDetails', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }.catch(error => console.log(error)));
+        this.props.backToEventHome();
+
+        
+    }
+
+       
+
+
+
 
     render() {
+
         var action;
+        const onCompleting = ((address, currentRoute1Id, currentRoute2Id, route1details, route2details) => this.finishCreating(address, currentRoute1Id, currentRoute2Id, route1details, route2details));
         const goToRoutes = (name, description, date, time, groups, numberOfRoutes) => this.goToRoutes(name, description, date, time, groups, numberOfRoutes);
         if (!this.state.hasGroups) {
             action = <SelectGroups goToRoutes={goToRoutes} />
+
         }
         else if (!this.state.hasRoutes) {
-            action = <SelectRoutes name={this.state.name} id={this.state.eventId} numberOfRoutes={this.state.numberOfRoutes}/>
+            action = <SelectRoutes name={this.state.name} id={this.state.eventId} onCompleting={onCompleting} numberOfRoutes={this.state.numberOfRoutes} />
         }
+
         return (
             <div>
                 <h2>Create Event</h2>
@@ -61,15 +93,15 @@ export class CreateEvent extends Component {
                 <Row>
                     <Col md={3}>
                         <Button onClick={this.props.backToEventHome}>Back</Button>
-                       
+
 
 
                     </Col>
                 </Row>
             </div>
-            );
+        );
+
+
     }
-
-
 
 }

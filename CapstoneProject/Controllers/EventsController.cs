@@ -37,6 +37,7 @@ namespace CapstoneProject.Controllers
                 vent.name = eventsInvites[i].b.Name;
                 vent.organizer = $"{eventsOrgsFirstName[i]} {eventsOrgsLastName[i]}";
                 vent.time = eventsInvites[i].b.Time;
+                
                 results.Add(vent);
             }
             var resultsToSend = results.OrderByDescending(a => a.date).ToList();
@@ -119,6 +120,116 @@ namespace CapstoneProject.Controllers
             _context.Update(vent);
             _context.SaveChanges();
             return Ok();
+        }
+
+        [HttpPost("[action]")]
+        public IActionResult Rsvp(int user, int vent)
+        {
+            var invite = _context.Invites.FirstOrDefault(a => a.UserId == user && a.EventId == vent);
+            invite.Going = true;
+            _context.Invites.Update(invite);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        private List<PointComment> getPointComments(int id)
+        {
+            var pointComments = _context.PointComments.Where(a => a.RouteId == id).ToList();
+            return pointComments;
+        }
+
+        [HttpGet("[action]")]
+        public ViewEventVM GetAllEventInfo(int id)
+        {
+            var vent = _context.Events.Find(id);
+            ViewEventVM results = new ViewEventVM();
+            results.address = vent.Address;
+            results.description = vent.Description;
+            var joinedPeopleInvites = _context.Invites.Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Where(c => c.a.Going == true && c.a.EventId == id).ToList();
+            List<string> firstNames = joinedPeopleInvites.Select(d => d.b.FirstName).ToList();
+            List<string> lastNames = joinedPeopleInvites.Select(d => d.b.LastName).ToList();
+            List<string> goingMembers = new List<string>();
+            for (int i = 0; i < firstNames.Count(); i++)
+            {
+                goingMembers.Add($"{firstNames[i]} {lastNames[i]}");
+            }
+            results.goingNames = goingMembers;
+            var routeId = _context.EventRoutes.Where(a => a.EventId == id).Select(a => a.RouteId).ToList();
+            if (routeId.Count() > 0)
+            {
+                results.route1 = GetEventRoute(routeId[0]);
+                
+                results.route1Details = _context.EventRoutes.FirstOrDefault(a => a.RouteId == routeId[0]).Details;
+            }
+            
+            if (routeId.Count() > 1)
+            {
+                results.route2 = GetEventRoute(routeId[1]);
+                results.route2Details = _context.EventRoutes.FirstOrDefault(a => a.RouteId == routeId[1]).Details;
+            }
+            
+            RouteCoords vm = new RouteCoords();
+            vm.lat = vent.LatitudeStart;
+            vm.lng = vent.LongitudeStart;
+            results.startPoint = vm;
+            return (results);
+
+        }
+        public EditRouteVM GetEventRoute(int id)
+        {
+            var route = _context.Routes.Find(id);
+            EditRouteVM data = new EditRouteVM();
+            data.city = route.City;
+            data.state = route.State;
+            data.name = route.Name;
+            data.description = route.Description;
+            data.totalDistance = route.TotalDistance;
+            data.totalElevationGain = route.TotalElevationGain;
+            data.totalElevationLoss = route.TotalElevationLoss;
+            var owner = _context.Users.Find(route.UserId);
+            data.ownerName = $"{owner.FirstName} {owner.LastName}";
+            var points = _context.RouteCoordinates.Where(a => a.RouteId == id).OrderBy(a => a.SortOrder).ToList();
+            RouteCoords[] coords = new RouteCoords[points.Count()];
+            for (int i = 0; i < coords.Length; i++)
+            {
+                RouteCoords routeCoord = new RouteCoords();
+                routeCoord.lat = points[i].Latitude;
+                routeCoord.lng = points[i].Longitude;
+                coords[i] = routeCoord;
+
+            }
+            data.coordinates = coords;
+            List<PointComment> pointComments = getPointComments(id);
+            data.pointCommentAuthors = pointComments.Select(a => a.Writer).ToList();
+            data.pointComments = pointComments.Select(a => a.Note).ToList();
+            List<PointCoord> pointCoords = new List<PointCoord> { };
+            foreach (PointComment comment in pointComments)
+            {
+                PointCoord coord = new PointCoord();
+                coord.lat = comment.Latitude;
+                coord.lng = comment.Longitude;
+                pointCoords.Add(coord);
+            }
+            data.pointCoordinates = pointCoords;
+            List<PathComment> pathComments = _context.PathComments.Where(a => a.RouteId == id).ToList();
+            data.pathCommentAuthors = pathComments.Select(a => a.Writer).ToList();
+            data.pathComments = pathComments.Select(a => a.Note).ToList();
+            List<PointCoord[]> pathCoords = new List<PointCoord[]> { };
+            foreach (PathComment comment in pathComments)
+            {
+                PointCoord[] arr = new PointCoord[2];
+                PointCoord coord1 = new PointCoord();
+                coord1.lat = comment.Latitude1;
+                coord1.lng = comment.Longitude1;
+                PointCoord coord2 = new PointCoord();
+                coord2.lat = comment.Latitude2;
+                coord2.lng = comment.Longitude2;
+                arr[0] = coord1;
+                arr[1] = coord2;
+                pathCoords.Add(arr);
+            }
+            data.pathCoordinates = pathCoords;
+            return data;
         }
 
 

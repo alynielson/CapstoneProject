@@ -53,6 +53,13 @@ namespace CapstoneProject.Controllers
             return Ok(result);
         }
 
+        [HttpPost("[action]")]
+        public IActionResult AddDetails([FromBody] EventSubmitVM data)
+        {
+            return Ok();
+        }
+
+
         // PUT: api/Events/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)

@@ -11,6 +11,7 @@ namespace CapstoneProject.Models
     {
         [Key]
         public int Id { get; set; }
+        public string Details { get; set; }
 
         [ForeignKey("Event")]
         public int EventId { get; set; }

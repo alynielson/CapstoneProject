@@ -47,8 +47,21 @@ export class SelectRoutes extends Component {
         this.viewRouteA = this.viewRouteA.bind(this);
         this.viewRouteB = this.viewRouteB.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.addStart = this.addStart.bind(this);
     }
-
+    addStart(t, map, coord) {
+        if (this.state.hasSelected) {
+            const { latLng } = coord;
+            const lat = latLng.lat();
+            const lng = latLng.lng();
+            const newCoord = { lat: lat, lng: lng };
+            this.setState({
+                address: "Selected on map",
+                addressCoords: newCoord
+            })
+        }
+        
+    }
 
     handleChange(event) {
         const target = event.target;
@@ -472,6 +485,16 @@ export class SelectRoutes extends Component {
                 {finishButton}
                 </div>
         }
+        if (this.state.addressCoords) {
+            var startingPoint = (
+                <Marker 
+                   
+                 
+                    google={window.google}
+                    position={this.state.addressCoords}
+                />
+            );
+        }
        
         return (
                 
@@ -493,8 +516,9 @@ export class SelectRoutes extends Component {
                             <div className="custom-map">
                                 <Map google={window.google}
                                 initialCenter={{ lat: 43.0435794, lng: -88.0138458 }}
-                                    zoom={12}
-                            >
+                                zoom={12}
+                                onClick={(t, map, coord) => this.addStart(t, map, coord)}
+                            >{startingPoint}
                                 {route1Markers}
                                 {route2Markers}
                                     <Polyline

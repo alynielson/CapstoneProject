@@ -19,19 +19,7 @@ namespace CapstoneProject.Controllers
         {
             _context = context;
         }
-        // GET: api/Groups
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Groups/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        
 
         // POST: api/Groups
         [HttpPost("[action]")]
@@ -49,30 +37,14 @@ namespace CapstoneProject.Controllers
                     group.UserId = data.userId;
                     _context.Groups.Add(group);
                     await _context.SaveChangesAsync();
-                    var thisGroup = _context.Groups.Where(a => a.Name == data.name).ToList();
-                    
-                    if (thisGroup.Count() > 1)
-                    {
-                        thisGroup = thisGroup.OrderByDescending(a => a.Id).ToList();
-                        
-                    }
-                    int thisGroupId = thisGroup[0].Id;
-                    foreach (int memberId in data.members)
-                    {
-                        GroupMember groupMember = new GroupMember();
-                        groupMember.GroupId = thisGroupId;
-                        groupMember.UserId = memberId;
-                        _context.GroupMembers.Add(groupMember);
-                    }
-                    await _context.SaveChangesAsync();
+                    int thisGroupId = FindGroupIdByName(data.name);
+                    CreateNewGroupMembers(thisGroupId, data.members);
                     return Ok();
                 }
                 catch
                 {
                     throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.InternalServerError);
-
                 }
-
             }
             else
             {
@@ -80,23 +52,43 @@ namespace CapstoneProject.Controllers
             }
         }
 
-        // PUT: api/Groups/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        private void CreateNewGroupMembers(int id, int[] memberIds)
         {
+            foreach (int memberId in memberIds)
+            {
+                GroupMember groupMember = new GroupMember();
+                groupMember.GroupId = id;
+                groupMember.UserId = memberId;
+                _context.GroupMembers.Add(groupMember);
+            }
+            _context.SaveChangesAsync();
         }
 
-        
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        private int FindGroupIdByName(string name)
         {
+            var thisGroup = _context.Groups.Where(a => a.Name == name).ToList();
+            if (thisGroup.Count() > 1)
+            {
+                thisGroup = thisGroup.OrderByDescending(a => a.Id).ToList();
+            }
+            int thisGroupId = thisGroup[0].Id;
+            return thisGroupId;
         }
+
         [HttpGet("[action]")]
         public GroupSnapshotVMs GetGroups(int id)
         {
-            var groups = _context.GroupMembers.Where(a => a.UserId == id)
-                .Join(_context.Groups, a => a.GroupId, b => b.Id, (a, b) => new { a, b })
-                .Select(c => c.b).ToList();
+            var groups = GetGroupsByUserId(id);
+            List<GroupSnapshotVM> groupsIn = CreateGroupsInSnapshotForClient(groups);
+            List<GroupSnapshotVM> ownGroups = GetGroupsOwned(id);
+            GroupSnapshotVMs all = new GroupSnapshotVMs();
+            all.groupsIn = groupsIn;
+            all.groupsOwn = ownGroups;
+            return all;
+        }
+
+        private List<GroupSnapshotVM> CreateGroupsInSnapshotForClient(List<Group> groups)
+        {
             List<GroupSnapshotVM> snapshots = new List<GroupSnapshotVM>();
             foreach (Group group in groups)
             {
@@ -105,12 +97,14 @@ namespace CapstoneProject.Controllers
                 snapshot.Name = group.Name;
                 snapshots.Add(snapshot);
             }
-            List<GroupSnapshotVM> ownGroups = GetGroupsOwned(id);
-            GroupSnapshotVMs all = new GroupSnapshotVMs();
-            all.groupsIn = snapshots;
-            all.groupsOwn = ownGroups;
-            return all;
-            
+            return snapshots;
+        }
+
+        private List<Group> GetGroupsByUserId(int id)
+        {
+            return _context.GroupMembers.Where(a => a.UserId == id)
+                .Join(_context.Groups, a => a.GroupId, b => b.Id, (a, b) => new { a, b })
+                .Select(c => c.b).ToList();
         }
         
         [HttpGet("[action]")]
@@ -127,16 +121,22 @@ namespace CapstoneProject.Controllers
             string ownerLastName = _context.Users.Find(group.UserId).LastName;
             data.owner = $"{ownerFirstName} {ownerLastName}";
             data.members = _context.GroupMembers.Where(a => a.GroupId == id).Select(a => a.UserId).ToArray();
-            var members = _context.GroupMembers.Where(a => a.GroupId == id).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Select(c => c.b).ToList();
-            List<string> memberNames =  new List<string>();
+            data.memberNames = GetMemberNames(id);
+            return data;
+        }
+
+        private string[] GetMemberNames(int groupId)
+        {
+            var members = _context.GroupMembers.Where(a => a.GroupId == groupId).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Select(c => c.b).ToList();
+            List<string> memberNames = new List<string>();
             foreach (User member in members)
             {
                 string name = $"{member.FirstName} {member.LastName}";
                 memberNames.Add(name);
             }
-            data.memberNames = memberNames.ToArray();
-            return data;
+            return memberNames.ToArray();
         }
+
         public List<GroupSnapshotVM> GetGroupsOwned(int id)
         {
             var groups = _context.Groups.Where(a => a.UserId == id).ToList();
@@ -171,13 +171,7 @@ namespace CapstoneProject.Controllers
             group.Description = data.description;
             group.City = data.city;
             group.State = data.state;
-            foreach (int memberId in data.members)
-            {
-                GroupMember groupMember = new GroupMember();
-                groupMember.GroupId = data.groupId;
-                groupMember.UserId = memberId;
-                _context.GroupMembers.Add(groupMember);
-            }
+            CreateNewGroupMembers(data.groupId, data.members);
             _context.Update(group);
             _context.SaveChanges();
             return Ok();

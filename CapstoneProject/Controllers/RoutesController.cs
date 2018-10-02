@@ -21,6 +21,40 @@ namespace CapstoneProject.Controllers
             _context = context;
         }
 
+        private string GetOwnerName(int userId)
+        {
+            var owner = _context.Users.Find(userId);
+            return $"{owner.FirstName} {owner.LastName}";
+        }
+
+        private RouteCoords[] GetRouteCoordinates(int routeId)
+        {
+            var points = _context.RouteCoordinates.Where(a => a.RouteId == routeId).OrderBy(a => a.SortOrder).ToList();
+            RouteCoords[] coords = new RouteCoords[points.Count()];
+            for (int i = 0; i < coords.Length; i++)
+            {
+                RouteCoords routeCoord = new RouteCoords();
+                routeCoord.lat = points[i].Latitude;
+                routeCoord.lng = points[i].Longitude;
+                coords[i] = routeCoord;
+            }
+            return coords;
+        }
+
+
+        private List<PointCoord> GetCoordinatesOfPointComments(List<PointComment> pointComments)
+        {
+            List<PointCoord> pointCoords = new List<PointCoord> { };
+            foreach (PointComment comment in pointComments)
+            {
+                PointCoord coord = new PointCoord();
+                coord.lat = comment.Latitude;
+                coord.lng = comment.Longitude;
+                pointCoords.Add(coord);
+            }
+            return pointCoords;
+        }
+
         [HttpGet("[action]")]
         public EditRouteVM GetRoute(int id)
         {
@@ -33,34 +67,21 @@ namespace CapstoneProject.Controllers
             data.totalDistance = route.TotalDistance;
             data.totalElevationGain = route.TotalElevationGain;
             data.totalElevationLoss = route.TotalElevationLoss;
-            var owner = _context.Users.Find(route.UserId);
-            data.ownerName = $"{owner.FirstName} {owner.LastName}";
-            var points = _context.RouteCoordinates.Where(a => a.RouteId == id).OrderBy(a => a.SortOrder).ToList();
-            RouteCoords[] coords = new RouteCoords[points.Count()];
-            for (int i= 0; i < coords.Length; i ++)
-            {
-                RouteCoords routeCoord = new RouteCoords();
-                routeCoord.lat = points[i].Latitude;
-                routeCoord.lng = points[i].Longitude;
-                coords[i] = routeCoord;
-                
-            }
-            data.coordinates = coords;
+            data.ownerName = GetOwnerName(id);
+            data.coordinates = GetRouteCoordinates(id);
             List<PointComment> pointComments = getPointComments(id);
             data.pointCommentAuthors = pointComments.Select(a => a.Writer).ToList();
             data.pointComments = pointComments.Select(a => a.Note).ToList();
-            List<PointCoord> pointCoords = new List<PointCoord> { };
-            foreach(PointComment comment in pointComments)
-            {
-                PointCoord coord = new PointCoord();
-                coord.lat = comment.Latitude;
-                coord.lng = comment.Longitude;
-                pointCoords.Add(coord);
-            }
-            data.pointCoordinates = pointCoords;
+            data.pointCoordinates = GetCoordinatesOfPointComments(pointComments);
             List<PathComment> pathComments = _context.PathComments.Where(a => a.RouteId == id).ToList();
             data.pathCommentAuthors = pathComments.Select(a => a.Writer).ToList();
             data.pathComments = pathComments.Select(a => a.Note).ToList();
+            data.pathCoordinates = GetPathCommentsCoordinates(pathComments);
+            return data;
+        }
+
+        private List<PointCoord[]> GetPathCommentsCoordinates(List<PathComment> pathComments)
+        {
             List<PointCoord[]> pathCoords = new List<PointCoord[]> { };
             foreach (PathComment comment in pathComments)
             {
@@ -75,8 +96,7 @@ namespace CapstoneProject.Controllers
                 arr[1] = coord2;
                 pathCoords.Add(arr);
             }
-            data.pathCoordinates = pathCoords;
-            return data;
+            return pathCoords;
         }
 
         private List<PointComment> getPointComments(int id)
@@ -206,12 +226,10 @@ namespace CapstoneProject.Controllers
             }
             string[] terms = term1.Split(' ');
             var locationMatches = _context.Routes.Where(a => a.City.ToLower().Contains(terms[0])).ToList();
-            var possibleStateMatches = _context.Routes.Where(a => a.State.ToLower().Contains(terms[0])).ToList();
-            locationMatches.AddRange(possibleStateMatches);
+            locationMatches = GetRouteMatchesByState(terms[0], locationMatches);
             if (terms.Length > 1)
             {
-                var stateMatches = _context.Routes.Where(a => a.State.ToLower().Contains(terms[1])).ToList();
-                locationMatches.AddRange(stateMatches);
+                locationMatches = GetRouteMatchesByState(terms[1], locationMatches);
             }
             var allLocationMatches = locationMatches.Distinct().ToList();
             if (distanceFilter != null)
@@ -222,6 +240,11 @@ namespace CapstoneProject.Controllers
             {
                 allLocationMatches = FilterByHills(allLocationMatches, hills);
             }
+            return CreateVMForClientFromSearchMatches(allLocationMatches);
+        }
+
+        private List<RouteListVM> CreateVMForClientFromSearchMatches(List<Route> allLocationMatches)
+        {
             List<RouteListVM> results = new List<RouteListVM>();
             foreach (Route match in allLocationMatches)
             {
@@ -232,6 +255,13 @@ namespace CapstoneProject.Controllers
                 results.Add(vm);
             }
             return results;
+        }
+
+        private List<Route> GetRouteMatchesByState(string searchTerm, List<Route> existingMatches)
+        {
+            var possibleStateMatches = _context.Routes.Where(a => a.State.ToLower().Contains(searchTerm)).ToList();
+            existingMatches.AddRange(possibleStateMatches);
+            return existingMatches;
         }
 
         private List<Route> FilterByDistance(List<Route> matches, string distanceFilter)
@@ -303,8 +333,6 @@ namespace CapstoneProject.Controllers
             {
                 throw new Exception("Unable to save to database");
             }
-            
-
         }
 
 
@@ -333,29 +361,11 @@ namespace CapstoneProject.Controllers
 
                     return NoContent();
                 }
-
             }
             catch
             {
                 throw new Exception("Unable to save to database");
             }
-        }
-
-
-    
-
-
-
-        // PUT: api/Routes/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

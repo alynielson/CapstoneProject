@@ -168,7 +168,7 @@ export class UserRouteContent extends Component {
    
 
     render() {
-        const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
+        const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 500);
         const addRoute = ((selectedRoute) => { this.addSelectedRoute(selectedRoute) });
         const returnToRoutes = this.backToAllRoutes;
         const moveFromCreateToEdit = ((id) => { this.doneCreatingNew(id) });

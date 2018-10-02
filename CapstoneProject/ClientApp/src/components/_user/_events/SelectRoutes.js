@@ -380,7 +380,7 @@ export class SelectRoutes extends Component {
                     <Polyline strokeWeight={6}
                         key={index}
                         path={path}
-                        strokeColor="#80ff00"
+                        strokeColor="#F39C12"
                         onMouseover={(data) => this.onPathHover2(data)}
                     />
                 );

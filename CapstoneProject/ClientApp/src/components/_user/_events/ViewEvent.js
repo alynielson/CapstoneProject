@@ -10,6 +10,7 @@ import img1 from './icons/not_clicked_marker.png';
 import img2 from './icons/_clicked_marker.png';
 import { Details } from './Details';
 import { RouteInfo } from './RouteInfo';
+import { StravaData } from './StravaData';
 
 
 export class ViewEvent extends Component {
@@ -369,6 +370,10 @@ export class ViewEvent extends Component {
             rsvp = this.props.goingNames.map((member, index) => <Alert key={index} bsStyle='success' >{member}</Alert>)
             rsvpButton = <Button active={this.props.going} onClick={this.rsvp}>I'm going</Button>
         }
+        var strava = null;
+        if (this.state.isViewingStrava) {
+            strava = <StravaData id={this.props.eventId} date={this.props.date}/>
+        }
         return (
 
 
@@ -385,6 +390,7 @@ export class ViewEvent extends Component {
                         {details}
                         {routeInfo}
                         {rsvp}
+                        {strava}
                     </Col>
                     <Col md={2}>
                         {rsvpButton}
@@ -405,6 +411,7 @@ export class ViewEvent extends Component {
                                     path={this.props.route1.coordinates} />
                                 <Polyline
                                     strokeWeight={6}
+                                    strokeColor='#F39C12'
                                     path={this.props.route2.coordinates} />
                                 {segments1}
                                 {segments2}

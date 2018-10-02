@@ -13,11 +13,17 @@
     background-image: none;
     
 }
+.background-image{
+    width: 90%;
+   height: 90%
+    
+}
 
 
 .body-content {
-    
+    max-height: 100vh;
     padding: 5% 15px 20px 15px;
+    
 }
 
 .button-group {
@@ -71,9 +77,8 @@
     width: 40%;
 }
 .custom-map{
-    height: 50vw;
+    height: 35vw;
     width: 35vw;
-    max-height: 400px;
-    max-width: 400px;
+   
     margin-right: 40px;
 }

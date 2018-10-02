@@ -5,8 +5,13 @@ export class StravaData extends Component {
     constructor(props) {
         super(props);
     }
+
+   
     render() {
-        return (<div>t</div>);
+        return (
+            <div> Strava Data</div>
+            
+            );
     }
 
 

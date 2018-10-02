@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
+import background from './images/background.jpg'
 
 
 export class UserHomeContent extends Component {
@@ -15,7 +16,7 @@ export class UserHomeContent extends Component {
     render() {
         return (
             
-            <div> User Home Content </div>
+            <img className="background-img" src={background} />
             
             
             );

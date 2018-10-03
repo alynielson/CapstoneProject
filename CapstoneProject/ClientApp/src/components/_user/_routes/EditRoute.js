@@ -31,13 +31,13 @@ export class EditRoute extends Component {
         this.allowComment = this.allowComment.bind(this);
         this.handleModalHide = this.handleModalHide.bind(this);
         this.handleCommentSubmit = this.handleCommentSubmit.bind(this);
-        this.onMarkerHover = this.onMarkerHover.bind(this);
         this.dismissComment = this.dismissComment.bind(this);
         this.clickForPathComment = this.clickForPathComment.bind(this);
         this.allowPathComment = this.allowPathComment.bind(this);
         this.handlePathCommentSubmit = this.handlePathCommentSubmit.bind(this);
         this.dismissPathComment = this.dismissPathComment.bind(this);
         this.onPathHover = this.onPathHover.bind(this);
+        this.onMarkerHover = this.onMarkerHover.bind(this);
     }
 
     componentWillMount() {
@@ -71,6 +71,7 @@ export class EditRoute extends Component {
         }
     }
 
+   
     onMarkerHover(data) {
         let latitude = data.position.lat;
         let longitude = data.position.lng;
@@ -82,6 +83,8 @@ export class EditRoute extends Component {
             commentPosition: commentPosition
         });
     }
+
+    
 
     dismissComment(){
         this.setState({
@@ -288,7 +291,6 @@ export class EditRoute extends Component {
                 }
 
             }
-
             )
         
         return (
@@ -326,8 +328,8 @@ export class EditRoute extends Component {
                                                 google={window.google}
                                                 position={coord}
                                             />
-                                            
-                                            );
+
+                                        );
                                     }
                                 })}
 

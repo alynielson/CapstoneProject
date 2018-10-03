@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Well, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonGroup } from 'react-bootstrap';
 import { GoogleApiWrapper, Map, Polyline, DrawingManager } from 'google-maps-react';
-import { SaveRouteModal } from './SaveRouteModal';
+import { SaveRouteModal } from '../_routes/SaveRouteModal';
 
 export class CreateMapContainer extends Component {
     constructor(props) {

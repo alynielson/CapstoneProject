@@ -1,9 +1,6 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, Alert } from 'react-bootstrap';
-import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
-
-
-
+import { Button, Form, FormGroup, FormControl, ControlLabel, Col, Row, Alert } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 
 export class Login extends Component {
     constructor(props) {
@@ -15,10 +12,8 @@ export class Login extends Component {
             isSuccessful: false,
             id: null
         }
-
         this.handleChange = this.handleChange.bind(this);
-        this.handleRedirect = this.handleRedirect.bind(this);
-
+        this.handleResponse = this.handleResponse.bind(this);
     }
 
     handleChange(event) {
@@ -42,7 +37,7 @@ export class Login extends Component {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
-        }).then(this.handleRedirect).then(function (response) { return response.json(); }).then(function (jsonData)
+        }).then(this.handleResponse).then(function (response) { return response.json(); }).then(function (jsonData)
             {
                 return resultData = jsonData;
             }).catch(function (error) { console.log(error); });
@@ -54,24 +49,18 @@ export class Login extends Component {
             localStorage.setItem('firstname', resultData.first_name);
             localStorage.setItem('lastname', resultData.last_name);
             this.props.loggedIn();
-            
         }
-
     }
 
     shouldShowErrorMessage() {
         return this.state.errorMessage !== '';
     }
 
-   
-
-
-    handleRedirect(response) {
+    handleResponse(response) {
         var errorText= '';
         if (response.status === 200) {
             console.log("Successful");
             this.setState({ errorMessage: errorText, isSuccessful: true });
-            
             return response;
         }
        else if (response.status === 401) {
@@ -89,7 +78,6 @@ export class Login extends Component {
         this.setState({ errorMessage:  errorText}
         )
         throw Error(errorText);
-
     }
 
 
@@ -97,9 +85,7 @@ export class Login extends Component {
         if (this.state.id != null) {
             return <Redirect to="/users" />
         }
-      
             return (
-
                 <div>
                     <h1> Log in </h1>
                     <Row>
@@ -108,8 +94,6 @@ export class Login extends Component {
                                 <Alert>{this.state.errorMessage}</Alert>
                             </div>
                             <Form>
-
-
                                 <FormGroup>
                                     <ControlLabel>Email Address</ControlLabel>
                                     <FormControl
@@ -125,10 +109,7 @@ export class Login extends Component {
                                         name="password"
                                         value={this.state.password}
                                         onChange={this.handleChange}
-
                                     />
-
-
                                 </FormGroup>
                                 <Button disabled={!this.checkIfCanSubmit()} className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
                             </Form>
@@ -136,6 +117,5 @@ export class Login extends Component {
                     </Row>
                 </div>
             );
-        
     }
 }

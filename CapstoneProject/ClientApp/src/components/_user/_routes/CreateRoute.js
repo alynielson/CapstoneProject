@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
-import { CreateMapContainer } from './MapContainer';
+import { CreateMapContainer } from '../_mapComponents/CreateMapContainer';
 
 export class CreateRoute extends Component {
     constructor(props) {

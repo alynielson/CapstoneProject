@@ -27,20 +27,21 @@ namespace CapstoneProject.Controllers
         public List<UserEventVM> GetUserEvents(int userId)
         {
             List<UserEventVM> results = new List<UserEventVM> { };
-            var eventsInvites = _context.Invites.Join(_context.Events, a => a.EventId, b => b.Id, (a, b) => new { a, b }).Where(c => c.a.UserId == userId).ToList();
-            eventsInvites = eventsInvites.Where(c => c.a.Going == true || c.b.Date >= DateTime.Now).ToList();
-            var eventsOrgsFirstName = eventsInvites.Join(_context.Users, e => e.b.UserId, f => f.Id, (e, f) => new { e, f }).Select(f => f.f.FirstName).ToList();
-            var eventsOrgsLastName = eventsInvites.Join(_context.Users, e => e.b.UserId, f => f.Id, (e, f) => new { e, f }).Select(f => f.f.LastName).ToList();
+            var eventsInvites = _context.Invites.Join(_context.Events, a => a.EventId, b => b.Id, (a, b) => new { a, b }).Where(c => c.a.UserId == userId)
+                .Where(c => c.a.Going == true || c.b.Date >= DateTime.Now).ToList();
+            List<Event> events = eventsInvites.Select(c => c.b).ToList();
+            List<User> eventsOrganizers = events.Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Select(c => c.b).ToList();
+            List<string> eventsOrgsFirstName = eventsOrganizers.Select(f => f.FirstName).ToList();
+            List<string> eventsOrgsLastName = eventsOrganizers.Select(f => f.LastName).ToList();
             for (int i = 0; i < eventsInvites.Count(); i++)
             {
                 UserEventVM vent = new UserEventVM();
-                vent.date = eventsInvites[i].b.Date;
-                vent.eventId = eventsInvites[i].b.Id;
+                vent.date = events[i].Date;
+                vent.eventId = events[i].Id;
                 vent.going = eventsInvites[i].a.Going;
-                vent.name = eventsInvites[i].b.Name;
+                vent.name = events[i].Name;
                 vent.organizer = $"{eventsOrgsFirstName[i]} {eventsOrgsLastName[i]}";
-                vent.time = eventsInvites[i].b.Time;
-                
+                vent.time = events[i].Time;
                 results.Add(vent);
             }
             var resultsToSend = results.OrderByDescending(a => a.date).ToList();
@@ -48,6 +49,8 @@ namespace CapstoneProject.Controllers
 
 
         }
+
+       
         public static double DateTimeToUnixTimestamp(DateTime dateTime)
         {
             DateTime unixStart = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
@@ -93,6 +96,33 @@ namespace CapstoneProject.Controllers
         [HttpPost("[action]")]
         public IActionResult CreateNewEvent([FromBody] InitialEventVM data)
         {
+            AddNewEventToDb(data);
+            int ventId = _context.Events.OrderByDescending(a => a.Id).FirstOrDefault(a => a.Name == data.name).Id;
+            foreach(GroupSnapshotVM group in data.groups)
+            {
+                var members = _context.GroupMembers.Where(a => a.GroupId == group.Id).Join(_context.Users, a => a.UserId, b => b.Id, (a,b) => new { a,b}).Select(c => c.b.Id).ToList();
+                foreach(int memberId in members)
+                {
+                    CreateNewInvite(memberId, ventId);
+                }
+                CreateNewInvite(data.userId, ventId);
+                _context.SaveChanges();
+            }
+            EventSnapshotVM result = new EventSnapshotVM();
+            result.id = ventId;
+            return Ok(result);
+        }
+
+        private void CreateNewInvite(int memberId, int ventId)
+        {
+            Invite invite = new Invite();
+            invite.EventId = ventId;
+            invite.UserId = memberId;
+            _context.Invites.Add(invite);
+        }
+
+        private void AddNewEventToDb(InitialEventVM data)
+        {
             Event vent = new Event();
             DateTime date = DateTime.Parse(data.date);
             DateTime time = DateTime.Parse(data.time);
@@ -103,27 +133,6 @@ namespace CapstoneProject.Controllers
             vent.Time = time;
             _context.Events.Add(vent);
             _context.SaveChanges();
-            int ventId = _context.Events.OrderByDescending(a => a.Id).FirstOrDefault(a => a.Name == data.name).Id;
-            foreach(GroupSnapshotVM group in data.groups)
-            {
-                var members = _context.GroupMembers.Where(a => a.GroupId == group.Id).Join(_context.Users, a => a.UserId, b => b.Id, (a,b) => new { a,b}).Select(c => c.b.Id).ToList();
-                foreach(int memberId in members)
-                {
-                    Invite invite = new Invite();
-                    invite.EventId = ventId;
-                    invite.UserId = memberId;
-                    _context.Invites.Add(invite);
-                }
-                Invite inviteB = new Invite();
-                inviteB.EventId = ventId;
-                inviteB.UserId = data.userId;
-                _context.Invites.Add(inviteB);
-                _context.SaveChanges();
-            }
-            
-            EventSnapshotVM result = new EventSnapshotVM();
-            result.id = ventId;
-            return Ok(result);
         }
 
         [HttpPost("[action]")]

@@ -42,15 +42,15 @@ namespace CapstoneProject.Controllers
         }
 
 
-        private List<PointCoord> GetCoordinatesOfPointComments(List<PointComment> pointComments)
+        private RouteCoords[] GetCoordinatesOfPointComments(List<PointComment> pointComments)
         {
-            List<PointCoord> pointCoords = new List<PointCoord> { };
-            foreach (PointComment comment in pointComments)
+            RouteCoords[] pointCoords = new RouteCoords[pointComments.Count()];
+            for(int i=0; i< pointCoords.Length; i++)
             {
-                PointCoord coord = new PointCoord();
-                coord.lat = comment.Latitude;
-                coord.lng = comment.Longitude;
-                pointCoords.Add(coord);
+                RouteCoords coord = new RouteCoords();
+                coord.lat = pointComments[i].Latitude;
+                coord.lng = pointComments[i].Longitude;
+                pointCoords[i] = coord;
             }
             return pointCoords;
         }
@@ -80,16 +80,16 @@ namespace CapstoneProject.Controllers
             return data;
         }
 
-        private List<PointCoord[]> GetPathCommentsCoordinates(List<PathComment> pathComments)
+        private List<RouteCoords[]> GetPathCommentsCoordinates(List<PathComment> pathComments)
         {
-            List<PointCoord[]> pathCoords = new List<PointCoord[]> { };
+            List<RouteCoords[]> pathCoords = new List<RouteCoords[]> { };
             foreach (PathComment comment in pathComments)
             {
-                PointCoord[] arr = new PointCoord[2];
-                PointCoord coord1 = new PointCoord();
+                RouteCoords[] arr = new RouteCoords[2];
+                RouteCoords coord1 = new RouteCoords();
                 coord1.lat = comment.Latitude1;
                 coord1.lng = comment.Longitude1;
-                PointCoord coord2 = new PointCoord();
+                RouteCoords coord2 = new RouteCoords();
                 coord2.lat = comment.Latitude2;
                 coord2.lng = comment.Longitude2;
                 arr[0] = coord1;

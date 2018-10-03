@@ -9,16 +9,12 @@ namespace CapstoneProject.ViewModels
     {
         public string note { get; set; }
 
-        public PointCoord pointCoordinates { get; set; }
+        public RouteCoords pointCoordinates { get; set; }
 
         public string author { get; set; }
         public int routeId { get; set; }
         public int userId { get; set; }
     }
 
-    public class PointCoord
-    {
-        public string lat { get; set; }
-        public string lng { get; set; }
-    }
+   
 }

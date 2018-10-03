@@ -9,7 +9,7 @@ namespace CapstoneProject.ViewModels
     {
         public string notes { get; set; }
 
-        public PointCoord[] pathCoordinates { get; set; }
+        public RouteCoords[] pathCoordinates { get; set; }
 
         public string author { get; set; }
 

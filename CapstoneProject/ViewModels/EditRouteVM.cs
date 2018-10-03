@@ -21,13 +21,13 @@ namespace CapstoneProject.ViewModels
 
         public List<string> pointCommentAuthors { get; set; }
 
-        public List<PointCoord> pointCoordinates { get; set; }
+        public RouteCoords[] pointCoordinates { get; set; }
 
         public List<string> pointComments { get; set; }
 
         public List<string> pathCommentAuthors { get; set; }
 
-        public List<PointCoord[]> pathCoordinates { get; set; }
+        public List<RouteCoords[]> pathCoordinates { get; set; }
 
         public List<string> pathComments { get; set; }
     }

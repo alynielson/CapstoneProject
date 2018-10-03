@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
-import { MapContainer } from './MapContainer';
+import { CreateMapContainer } from './MapContainer';
 
 export class CreateRoute extends Component {
     constructor(props) {
@@ -31,7 +31,7 @@ export class CreateRoute extends Component {
             <div>
                 <Row>
                 <Col md={12} className="map-container">
-                    <MapContainer onFinishing={this.props.onFinishing} lat={this.state.defaultLat} lng={this.state.defaultLong}/>  
+                    <CreateMapContainer onFinishing={this.props.onFinishing} lat={this.state.defaultLat} lng={this.state.defaultLong}/>  
                 </Col>
                 </Row>
                 <Row>

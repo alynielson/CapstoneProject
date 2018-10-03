@@ -69,11 +69,9 @@ export class EditRoute extends Component {
                 pathUserNames: this.props.pathCommentAuthors,
             })
         }
-        
     }
 
     onMarkerHover(data) {
-        
         let latitude = data.position.lat;
         let longitude = data.position.lng;
         let commentArray = this.state.commentCoords;
@@ -91,6 +89,7 @@ export class EditRoute extends Component {
             commentPosition: null
         })
     }
+
     dismissPathComment() {
         this.setState({
             pathCommentShowing: null,
@@ -182,7 +181,6 @@ export class EditRoute extends Component {
     }
 
     clickForPathComment(coord) {
-        
             if (this.state.pathTempSpot === null) {
                 this.setState({
                     pathTempSpot: coord
@@ -192,7 +190,6 @@ export class EditRoute extends Component {
                 var point1ToAdd = this.state.pathTempSpot;
                 var point2ToAdd = coord;
                 if (this.state.hasPathComments === false) {
-                    
                     this.setState({
                         hasPathComments: true,
                         pathCommentCoords: [[ point1ToAdd, point2ToAdd ]],
@@ -212,7 +209,6 @@ export class EditRoute extends Component {
                         showPathCommentModal: true
                     });
                 }
-
             }
     }
 
@@ -298,20 +294,18 @@ export class EditRoute extends Component {
         return (
             <div>
                 <Row>
-                    
-                        <h1>{this.props.name}</h1>
-                        <h4>{this.props.description} </h4>
+                    <h1>{this.props.name}</h1>
+                    <h4>{this.props.description} </h4>
                     <h6>Created by {this.props.owner}</h6>
-                </Row><Row>
+                </Row>
+                <Row>
                     <Col md={7}>
                         <CommentModal show={this.state.showCommentModal} hiding={this.handleModalHide} submitting={submitComment} />
                         <PathCommentModal show={this.state.showPathCommentModal} hiding={this.handleModalHide} submitting={submitPathComment} />
-
                     <div className="map">
                         <Map google={window.google}
                             initialCenter={{ lat: this.props.lat, lng: this.props.lng }}
                                 zoom={12}
-
                             >
                                 {this.state.commentCoords.map((coord, index) => {
                                     if (this.state.commentPosition === index) {
@@ -351,27 +345,21 @@ export class EditRoute extends Component {
                     </Col>
                     <Col md={2}>
                         <ButtonGroup vertical>
-                           
-                            
                             <Button onClick={this.allowComment}>Point</Button>
                             <Button onClick={this.allowPathComment}>Segment</Button>
-                           
-                            
                         </ButtonGroup>
-
                     </Col>
                     <Col md={3}>
                         {alert}
                         {alert2}
-                        </Col>
-               </Row>
+                    </Col>
+                </Row>
                 <Row>
                 <ButtonToolbar className='map-buttons'>
                     <Button onClick={this.props.returnToRouteHome}>Back</Button>
-
-                    </ButtonToolbar>
-                    </Row>
-                </div>
+                </ButtonToolbar>
+                </Row>
+            </div>
             
             );
         }

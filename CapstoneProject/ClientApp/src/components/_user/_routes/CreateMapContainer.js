@@ -3,7 +3,7 @@ import { Button, Well, Form, FormGroup, FormControl, ControlLabel, Col, ColProps
 import { GoogleApiWrapper, Map, Polyline, DrawingManager } from 'google-maps-react';
 import { SaveRouteModal } from './SaveRouteModal';
 
-export class MapContainer extends Component {
+export class CreateMapContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -19,7 +19,6 @@ export class MapContainer extends Component {
             routeId: null,
             isSavingNew: false
         }
-
         this.deleteLast = this.deleteLast.bind(this);
         this.deleteAll = this.deleteAll.bind(this);
         this.calculateElevationValues = this.calculateElevationValues.bind(this); 
@@ -43,7 +42,6 @@ export class MapContainer extends Component {
         let data = {
             name: name,
             description: description,
-            
             totalDistance: this.state.totalDistance,
             totalElevationGain: this.state.totalElevationGain,
             totalElevationLoss: this.state.totalElevationLoss,
@@ -51,9 +49,7 @@ export class MapContainer extends Component {
             coordinates: this.state.coordinates,
             distances: this.state.distances,
             elevations: this.state.elevations
-
         }
-      
        await fetch('/api/Routes/Create',{
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -153,7 +149,6 @@ export class MapContainer extends Component {
         }
         else {
             this.getElevationFromGoogle(newCoord, currentPath);
-            
             var currentDistanceArray = this.state.distances;
             var currentTotal = this.state.totalDistance + distance;
             currentDistanceArray.push(distance);
@@ -253,34 +248,30 @@ export class MapContainer extends Component {
 
     render() {
         const submitRoute = ((name,description) => { this.handleSubmit(name,description) });
-
         var polyline;
-        if (this.state.hasClicked == false) {
+        if (!this.state.hasClicked) {
             polyline = null
         }
-        else if (this.state.updateLine === true) {
+        else if (this.state.updateLine) {
             polyline = <Polyline path={this.state.coordinates} />
         }
-        else if (this.state.hasClicked === true) {
+        else if (this.state.hasClicked) {
             polyline = <Polyline path={this.state.coordinates} />
         }
         var uphill;
         var downhill;
-        if (this.state.hasElevation === true) {
+        if (this.state.hasElevation) {
             uphill = this.state.elevations[this.state.elevations.length - 1].up.toFixed(2);
             downhill = this.state.elevations[this.state.elevations.length - 1].down.toFixed(2);
-        
         }
         else {
             uphill = 0;
             downhill = 0;
         }
-        
             return (
                 <Row>
                     <Col md={7}>
                         <SaveRouteModal show={this.state.isSavingNew} hiding={this.handleModalHide} submitting={submitRoute} />
-
                         <div className='map'>
                             <Map google={window.google}
                                 initialCenter={{ lat: this.props.lat, lng: this.props.lng }}
@@ -321,4 +312,4 @@ export class MapContainer extends Component {
     
 }
 export default GoogleApiWrapper({
-})(MapContainer)
+})(CreateMapContainer)

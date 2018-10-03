@@ -3,14 +3,11 @@ import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row,
 import { MapContainer } from './MapContainer';
 
 export class CreateRoute extends Component {
-    
-
     constructor(props) {
         super(props);
         this.state = {
             defaultLat: 43.0362012,
             defaultLong: -87.98582829999999,
-            
         }
     }
 
@@ -27,38 +24,22 @@ export class CreateRoute extends Component {
                     defaultLong: lng
                 });
             }).catch(error => console.log(error));
-            
-            
     }
-
-
-
-
 
     render() {
         return (
             <div>
                 <Row>
                 <Col md={12} className="map-container">
-                        <MapContainer onFinishing={this.props.onFinishing} lat={this.state.defaultLat} lng={this.state.defaultLong}/>  
-                    </Col>
+                    <MapContainer onFinishing={this.props.onFinishing} lat={this.state.defaultLat} lng={this.state.defaultLong}/>  
+                </Col>
                 </Row>
                 <Row>
-                    
-                        <ButtonToolbar className='map-buttons'>
-                            <Button  onClick={this.props.returnToRouteHome}>Back</Button>
-                            
-                        </ButtonToolbar>
-                        
+                    <ButtonToolbar className='map-buttons'>
+                        <Button  onClick={this.props.returnToRouteHome}>Back</Button>  
+                    </ButtonToolbar>
                 </Row>
             </div>
-            
-            
-            
             );
-
-
-
-
     }
 }

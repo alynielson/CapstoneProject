@@ -21,10 +21,11 @@ namespace CapstoneProject.Controllers
             _context = context;
         }
 
-        private string GetOwnerName(int userId)
+        private string GetOwnerName(Route route)
         {
-            var owner = _context.Users.Find(userId);
-            return $"{owner.FirstName} {owner.LastName}";
+            var ownerId = route.UserId;
+            User user = _context.Users.Find(ownerId);
+            return $"{user.FirstName} {user.LastName}";
         }
 
         private RouteCoords[] GetRouteCoordinates(int routeId)
@@ -67,7 +68,7 @@ namespace CapstoneProject.Controllers
             data.totalDistance = route.TotalDistance;
             data.totalElevationGain = route.TotalElevationGain;
             data.totalElevationLoss = route.TotalElevationLoss;
-            data.ownerName = GetOwnerName(id);
+            data.ownerName = GetOwnerName(route);
             data.coordinates = GetRouteCoordinates(id);
             List<PointComment> pointComments = getPointComments(id);
             data.pointCommentAuthors = pointComments.Select(a => a.Writer).ToList();

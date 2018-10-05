@@ -7,6 +7,7 @@ import { HillButtons } from '../_routes/HillButtons';
 import _ from 'lodash';
 import RouteMap from '../_mapComponents/RouteMap';
 import RouteInfo from './RouteInfo';
+import RouteComments from '../_mapComponents/RouteComments';
 
 export class SelectRoutes extends Component {
     constructor(props) {
@@ -45,7 +46,6 @@ export class SelectRoutes extends Component {
                 addressCoords: newCoord
             })
         }
-
     }
 
     handleChange(event) {
@@ -122,8 +122,6 @@ export class SelectRoutes extends Component {
         this.setState({
             comments: currentCommentsShowing
         });
-   
-
     }
 
     setHillFilter(value) {
@@ -227,25 +225,13 @@ export class SelectRoutes extends Component {
     }
 
     render() {
-        const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
+        const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 500);
         const selectDistanceFilter = ((value) => { this.setDistanceFilter(value) });
         const selectHillFilter = ((value) => { this.setHillFilter(value) });
         const selectRoute = ((selectedRoute) => { this.getRouteToEdit(selectedRoute) });
         const addStartPin = ((t, map, coord) => { this.addStart(t, map, coord) });
         const viewPointComment = ((data) => { this.onMarkerHover(data) });
         const viewPathComment = ((data) => { this.onPathHover(data) });
-        var pointAlert = null;
-        var pathAlert = null;
-        if (this.state.comments[0].comment != null) {
-            pointAlert = <Alert bsStyle="info" onDismiss={this.dismissPointComment}>
-                <h4>{this.state.comments[0].author}</h4>
-                <p> {this.state.comments[0].comment} </p> </Alert>
-        }
-        if (this.state.comments[1].comment != null) {
-            pathAlert = <Alert bsStyle="success" onDismiss={this.dismissPathComment}>
-                <h4>{this.state.comments[1].author}</h4>
-                <p> {this.state.comments[1].comment} </p> </Alert>
-        }
         var search = null;
         var list = null;
         if (!this.state.hasSelected) {
@@ -328,7 +314,8 @@ export class SelectRoutes extends Component {
                     </Col>
                     <Col md={3}>
                         <Row>
-                            {pointAlert} {pathAlert}
+                            <RouteComments comments={this.state.comments} dismissPointComment={() => this.dismissPointComment()}
+                                dismissPathComment={() => this.dismissPathComment()} />
                         </Row>
                         {list}
                     </Col>

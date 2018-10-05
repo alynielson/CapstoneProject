@@ -19,7 +19,7 @@ export default class RouteMap extends Component {
                     <Marker key={index}
                         google={window.google}
                         icon={(this.props.commentPosition1 === index) ? img2 : img1}
-                        onMouseover={(data, routeNumber) => this.props.viewPointComment1(data, 1)}
+                        onMouseover={(data, routeNumber) => this.props.viewPointComment(data, 1)}
                         position={coord}
                     />
                 );
@@ -33,7 +33,7 @@ export default class RouteMap extends Component {
                         key={index}
                         path={path}
                         strokeColor="#80ff00"
-                        onMouseover={this.props.viewPathComment1}
+                        onMouseover={(data, routeNumber) => this.props.viewPathComment(data, 1)}
                     />
                 );
             }
@@ -62,7 +62,7 @@ export default class RouteMap extends Component {
                         key={index}
                         path={path}
                         strokeColor="#F39C12"
-                        onMouseover={this.props.viewPathComment2}
+                        onMouseover={(data, routeNumber) => this.props.viewPathComment(data, 2)}
                     />
                 );
             }

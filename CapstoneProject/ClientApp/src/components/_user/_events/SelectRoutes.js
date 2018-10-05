@@ -30,8 +30,7 @@ export class SelectRoutes extends Component {
         this.dismissPointComment = this.dismissPointComment.bind(this);
         this.dismissPathComment = this.dismissPathComment.bind(this);
         this.finish = this.finish.bind(this);
-        this.viewRouteA = this.viewRouteA.bind(this);
-        this.viewRouteB = this.viewRouteB.bind(this);
+        this.viewRoute = this.viewRoute.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.addStart = this.addStart.bind(this);
     }
@@ -215,26 +214,15 @@ export class SelectRoutes extends Component {
         return this.state.routeShowing.routeSpot === 1;
     }
 
-    viewRouteA() {
+    viewRoute(routeNumber) {
         let currentShowing = this.state.routeShowing;
-        currentShowing.routeSpot = 1;
-        if (this.state.routesViewing <= 1 && currentShowing.routeSpot === 2 && currentShowing.values === true) {
+        if (this.state.routesViewing <= 1 && currentShowing.routeSpot !== routeNumber && currentShowing.values === true) {
             currentShowing.values = false;
         }
+        currentShowing.routeSpot = routeNumber;
         this.setState({
             routeShowing: currentShowing,
             comments: [{ position: -1, author: null, comment: null }, {position: -1, author: null, comment: null}]
-        })
-    }
-    viewRouteB() {
-        let currentShowing = this.state.routeShowing;
-        if (this.state.routesViewing <= 1 && currentShowing.routeSpot === 1 && currentShowing.values === true) {
-            currentShowing.values = false;
-        }
-        currentShowing.routeSpot = 2;
-        this.setState({
-            routeShowing: currentShowing,
-            comments: [{ position: -1, author: null, comment: null }, { position: -1, author: null, comment: null }]
         })
     }
 
@@ -276,8 +264,8 @@ export class SelectRoutes extends Component {
         var finalRoutes = null;
         if (this.props.numberOfRoutes === 2) {
             finalRoutes = <ButtonToolbar>
-                <Button onClick={() => this.viewRouteA()} active={this.isRouteA()}>Route A</Button>
-                <Button onClick={() => this.viewRouteB()} active={!this.isRouteA()}>Route B</Button>
+                <Button onClick={(routeNumber) => this.viewRoute(1)} active={this.isRouteA()}>Route A</Button>
+                <Button onClick={(routeNumber) => this.viewRoute(2)} active={!this.isRouteA()}>Route B</Button>
             </ButtonToolbar>
         }
         var routeShowing = <div>

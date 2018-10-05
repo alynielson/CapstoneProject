@@ -5,10 +5,7 @@ import { RouteList } from '../_routes/RouteList';
 import { DistanceButtons } from '../_routes/DistanceButtons';
 import { HillButtons } from '../_routes/HillButtons';
 import _ from 'lodash';
-import { GoogleApiWrapper, Map, Polyline, Marker } from 'google-maps-react';
-import img1 from './icons/not_clicked_marker.png';
-import img2 from './icons/_clicked_marker.png';
-
+import RouteMap from './RouteMap';
 
 export class SelectRoutes extends Component {
     constructor(props) {
@@ -63,6 +60,8 @@ export class SelectRoutes extends Component {
         }
         
     }
+
+   
 
     handleChange(event) {
         const target = event.target;
@@ -297,98 +296,12 @@ export class SelectRoutes extends Component {
         const selectDistanceFilter = ((value) => { this.setDistanceFilter(value) });
         const selectHillFilter = ((value) => { this.setHillFilter(value) });
         const selectRoute = ((selectedRoute) => { this.getRouteToEdit(selectedRoute) });
-        var route1Markers = null;
-        if (this.state.routesViewing > 0) {
-           
-            route1Markers = (this.state.route1.pointCoordinates.map((coord, index) => {
-                if (this.state.commentPosition1 === index) {
-                    return (
-                        <Marker key={index}
-                            icon={img2}
-                            onMouseover={(data) => this.onMarkerHover1(data)}
-                            google={window.google}
-                            position={coord}
-                        />
-                    );
-                }
-                else {
-                    return (
-                        <Marker key={index}
-                            icon={img1}
-                            onMouseover={(data) => this.onMarkerHover1(data)}
-                            google={window.google}
-                            position={coord}
-                        />
-
-                    );
-                }
-            }));
-            
-
-        }
-        var route2Markers = null;
-        if (this.state.routesViewing > 1) {
-
-            route2Markers = (this.state.route2.pointCoordinates.map((coord, index) => {
-                if (this.state.commentPosition2 === index) {
-                    return (
-                        <Marker key={index}
-                            icon={img2}
-                            onMouseover={(data) => this.onMarkerHover2(data)}
-                            google={window.google}
-                            position={coord}
-                        />
-                    );
-                }
-                else {
-                    return (
-                        <Marker key={index}
-                            icon={img1}
-                            onMouseover={(data) => this.onMarkerHover2(data)}
-                            google={window.google}
-                            position={coord}
-                        />
-
-                    );
-                }
-            }));
-
-
-        }
-        var segments1 = null;
-        if (this.state.routesViewing > 0) {
-            segments1 = (this.state.route1.pathCoordinates.map((path, index) => {
-
-                return (
-                    <Polyline strokeWeight={6}
-                        key={index}
-                        path={path}
-                        strokeColor="#80ff00"
-                        onMouseover={(data) => this.onPathHover1(data)}
-                    />
-                );
-
-            }
-
-            ));
-        }
-        var segments2 = null;
-        if (this.state.routesViewing > 1) {
-            segments2 = (this.state.route2.pathCoordinates.map((path, index) => {
-
-                return (
-                    <Polyline strokeWeight={6}
-                        key={index}
-                        path={path}
-                        strokeColor="#F39C12"
-                        onMouseover={(data) => this.onPathHover2(data)}
-                    />
-                );
-
-            }
-
-            ));
-        }
+        const addStartPin = ((t, map, coord) => { this.addStart(t, map, coord) });
+        const viewPointComment1 = ((data) => { this.onMarkerHover1(data) });
+        const viewPointComment2 = ((data => { this.onMarkerHover2(data) }));
+        const viewPathComment1 = ((data) => { this.onPathHover1(data) });
+        const viewPathComment2 = ((data) => { this.onPathHover2(data) });
+      
         var alert = null;
         var alert2 = null;
         var alert3 = null;
@@ -486,65 +399,40 @@ export class SelectRoutes extends Component {
                 {finishButton}
                 </div>
         }
-        if (this.state.addressCoords != null) {
-            var startingPoint = (
-                <Marker 
-                   
-                 
-                    google={window.google}
-                    position={this.state.addressCoords}
-                />
-            );
-        }
        
         return (
-                
-
                 <div>
-                    
                     <Row>
                         <Col md={3}>
-                        {finish}
-                        {search}
-                        
+                            {finish}
+                            {search}
                         </Col>
-                    <Col md={3}>
-                        <Row>{alert} {alert2} {alert3} {alert4} </Row>
-                        {list}
-                        
+                        <Col md={3}>
+                            <Row>
+                                {alert} {alert2} {alert3} {alert4}
+                            </Row>
+                            {list}
                         </Col>
-                        <Col md={6}>
-                            <div className="custom-map">
-                                <Map google={window.google}
-                                initialCenter={{ lat: 43.0435794, lng: -88.0138458 }}
-                                zoom={12}
-                                onClick={(t, map, coord) => this.addStart(t, map, coord)}
-                            >{startingPoint}
-                                {route1Markers}
-                                {route2Markers}
-                                    <Polyline
-                                        strokeWeight={6}
-                                        path={this.state.route1.coordinates} />
-                                    <Polyline
-                                        strokeWeight={6}
-                                        path={this.state.route2.coordinates} />
-                                {segments1}
-                                {segments2}
-
-                                </Map>
+                    <Col md={6}>
+                        <div className="custom-map">
+                            <RouteMap clickAction={addStartPin}
+                                    startingPointPosition={this.state.addressCoords}
+                                    routesViewing={this.state.routesViewing}
+                                    route1={this.state.route1}
+                                    commentPosition1={this.state.commentPosition1}
+                                    viewPointComment1={viewPointComment1}
+                                    route2={this.state.route2}
+                                    commentPosition2={this.state.commentPosition2}
+                                    viewPointComment2={viewPointComment2}
+                                    viewPathComment1={viewPathComment1}
+                                    viewPathComment2={viewPathComment2}
+                                />
                         </div>
-                        
-                            </Col>
-                    </Row>
-                   
-                    <Row>
-                        
+                        </Col>
                     </Row>
                 </div>
-
             );
         }
-} export default GoogleApiWrapper({
-})(SelectRoutes)
+}
 
 

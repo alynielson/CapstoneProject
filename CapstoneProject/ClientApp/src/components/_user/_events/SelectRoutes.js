@@ -35,8 +35,7 @@ export class SelectRoutes extends Component {
         this.getRouteToEdit = this.getRouteToEdit.bind(this);
         this.onPathHover1 = this.onPathHover1.bind(this);
         this.onPathHover2 = this.onPathHover2.bind(this);
-        this.onMarkerHover1 = this.onMarkerHover1.bind(this);
-        this.onMarkerHover2 = this.onMarkerHover2.bind(this);
+        this.onMarkerHover = this.onMarkerHover.bind(this);
         this.dismissComment1 = this.dismissComment1.bind(this);
         this.dismissComment2 = this.dismissComment2.bind(this);
         this.dismissPathComment1 = this.dismissPathComment1.bind(this);
@@ -134,31 +133,33 @@ export class SelectRoutes extends Component {
             pathCommentPosition2: pathCommentPosition
         });
     }
-    onMarkerHover1(data) {
-
+    onMarkerHover(data, routeNumber) {
+       
         let latitude = data.position.lat;
         let longitude = data.position.lng;
-        let commentArray = this.state.route1.pointCoordinates;
-        let commentPosition = commentArray.findIndex(a => a.lat == latitude && a.lng == longitude);
-        let commentToShow = this.state.route1.pointComments[commentPosition];
-        this.setState({
-            commentShowing1: commentToShow,
-            commentPosition1: commentPosition
-        });
+        switch (routeNumber) {
+            case (1):
+                let commentArray = this.state.route1.pointCoordinates;
+                let commentPosition = commentArray.findIndex(a => a.lat == latitude && a.lng == longitude);
+                let commentToShow = this.state.route1.pointComments[commentPosition];
+                this.setState({
+                    commentShowing1: commentToShow,
+                    commentPosition1: commentPosition
+                });
+                break;
+            case (2):
+                commentArray = this.state.route2.pointCoordinates;
+                commentPosition = commentArray.findIndex(a => a.lat == latitude && a.lng == longitude);
+                commentToShow = this.state.route2.pointComments[commentPosition];
+                this.setState({
+                    commentShowing2: commentToShow,
+                    commentPosition2: commentPosition
+                });
+                break;
+        }
+        
     }
-    onMarkerHover2(data) {
-
-        let latitude = data.position.lat;
-        let longitude = data.position.lng;
-        let commentArray = this.state.route2.pointCoordinates;
-        let commentPosition = commentArray.findIndex(a => a.lat == latitude && a.lng == longitude);
-        let commentToShow = this.state.route2.pointComments[commentPosition];
-        this.setState({
-            commentShowing2: commentToShow,
-            commentPosition2: commentPosition
-        });
-    }
-
+   
     setHillFilter(value) {
         this.setState({
             hillFilter: value
@@ -297,8 +298,7 @@ export class SelectRoutes extends Component {
         const selectHillFilter = ((value) => { this.setHillFilter(value) });
         const selectRoute = ((selectedRoute) => { this.getRouteToEdit(selectedRoute) });
         const addStartPin = ((t, map, coord) => { this.addStart(t, map, coord) });
-        const viewPointComment1 = ((data) => { this.onMarkerHover1(data) });
-        const viewPointComment2 = ((data => { this.onMarkerHover2(data) }));
+        const viewPointComment = ((data, routeNumber) => { this.onMarkerHover(data, routeNumber) });
         const viewPathComment1 = ((data) => { this.onPathHover1(data) });
         const viewPathComment2 = ((data) => { this.onPathHover2(data) });
       
@@ -420,10 +420,10 @@ export class SelectRoutes extends Component {
                                     routesViewing={this.state.routesViewing}
                                     route1={this.state.route1}
                                     commentPosition1={this.state.commentPosition1}
-                                    viewPointComment1={viewPointComment1}
+                                    viewPointComment1={viewPointComment}
                                     route2={this.state.route2}
                                     commentPosition2={this.state.commentPosition2}
-                                    viewPointComment2={viewPointComment2}
+                                    viewPointComment2={viewPointComment}
                                     viewPathComment1={viewPathComment1}
                                     viewPathComment2={viewPathComment2}
                                 />

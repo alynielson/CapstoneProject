@@ -19,7 +19,7 @@ export default class RouteMap extends Component {
                     <Marker key={index}
                         google={window.google}
                         icon={(this.props.commentPosition1 === index) ? img2 : img1}
-                        onMouseover={this.props.viewPointComment1}
+                        onMouseover={(data, routeNumber) => this.props.viewPointComment1(data, 1)}
                         position={coord}
                     />
                 );
@@ -48,7 +48,7 @@ export default class RouteMap extends Component {
                     <Marker key={index}
                         google={window.google}
                         icon={(this.props.commentPosition2 === index) ? img2 : img1}
-                        onMouseover={this.props.viewPointComment2}
+                        onMouseover={(data, routeNumber) => this.props.viewPointComment(data, 2)}
                         position={coord}
                     />
                 );

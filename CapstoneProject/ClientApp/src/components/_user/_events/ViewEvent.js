@@ -127,7 +127,7 @@ export class ViewEvent extends Component {
             case (2): tab = <div>
                 <RouteInfo route1={this.props.route1} route1Details={this.props.route1Details}
                     route2={this.props.route2} route2Details={this.props.route2Details} routeShowing={this.state.routeShowing}
-                    hasSelected={true}
+                    hasSelected={true} hasFinished={true}
                 />
                 <RouteChoiceButtons routesViewing={routesViewing} viewRoute={(routeNumber) => this.viewRoute(routeNumber)} routeShowing={this.state.routeShowing} />
             </div>

@@ -22,7 +22,9 @@ export class SelectRoutes extends Component {
             route2: {},
             comments: [{ position: -1, author: null, comment: null }, {position: -1, author: null, comment: null}],
             routeShowing: { routeSpot: 1, values: false },
-            addressCoords: null
+            addressCoords: null,
+            route1Details: '',
+            route2Details: ''
         }
         this.setDistanceFilter = this.setDistanceFilter.bind(this);
         this.setHillFilter = this.setHillFilter.bind(this);
@@ -33,8 +35,8 @@ export class SelectRoutes extends Component {
         this.dismissPathComment = this.dismissPathComment.bind(this);
         this.finish = this.finish.bind(this);
         this.viewRoute = this.viewRoute.bind(this);
-        this.handleChange = this.handleChange.bind(this);
         this.addStart = this.addStart.bind(this);
+        this.changeDetails = this.changeDetails.bind(this);
     }
     addStart(t, map, coord) {
         if (this.state.hasSelected) {
@@ -49,13 +51,19 @@ export class SelectRoutes extends Component {
         }
     }
 
-    handleChange(event) {
-        const target = event.target;
-        const value = target.value;
-        const name = target.name;
-        this.setState({
-            [name]: value
-        });
+    changeDetails(detail, number) {
+        switch (number) {
+            case (1):
+                this.setState({
+                    route1Details: detail
+                });
+                break;
+            case (2):
+                this.setState({
+                    route2Details: detail
+                })
+                break;
+        }
     }
 
     finish() {
@@ -229,6 +237,7 @@ export class SelectRoutes extends Component {
         const addStartPin = ((t, map, coord) => { this.addStart(t, map, coord) });
         const viewPointComment = ((data) => { this.onMarkerHover(data) });
         const viewPathComment = ((data) => { this.onPathHover(data) });
+        const changeDetails = ((detail, number) => { this.changeDetails(detail, number) });
         var search = null;
         var list = null;
         if (!this.state.hasSelected) {
@@ -244,41 +253,7 @@ export class SelectRoutes extends Component {
             list = <RouteList routesToAdd={this.state.routeToAdd} onRouteSelect={selectRoute}
             />
         }
-        var routeShowing = <div>
-            <h4> Route A: {this.state.route1.name}</h4>
-            <FormGroup>
-                <ControlLabel>Distance:</ControlLabel>  {Number(this.state.route1.totalDistance).toFixed(2)} miles
-            </FormGroup>
-            <FormGroup>
-                <ControlLabel>Total Elevation Gain:</ControlLabel> {Number(this.state.route1.totalElevationGain).toFixed(2)} meters
-            </FormGroup>
-            <FormGroup>
-                <ControlLabel>Total Elevation Loss:</ControlLabel> {Number(this.state.route1.totalElevationLoss).toFixed(2)} meters
-            </FormGroup>
-            <FormGroup>
-                <ControlLabel>Event Details for this Route</ControlLabel>
-                <FormControl type='textarea' value={this.state.route1details} name="route1details" onChange={this.handleChange} />
-            </FormGroup>
-        </div>
-        if (this.state.routeShowing.routeSpot === 2 && this.state.route2 !== null) {
-            routeShowing = <div>
-                <h4> Route B: {this.state.route2.name}</h4>
-                <FormGroup>
-                    <ControlLabel>Distance:</ControlLabel>  {Number(this.state.route2.totalDistance).toFixed(2)} miles
-                </FormGroup>
-                <FormGroup>
-                    <ControlLabel>Total Elevation Gain:</ControlLabel> {Number(this.state.route2.totalElevationGain).toFixed(2)} meters
-                </FormGroup>
-                <FormGroup>
-                    <ControlLabel>Total Elevation Loss:</ControlLabel> {Number(this.state.route2.totalElevationLoss).toFixed(2)} meters
-                </FormGroup>
-                <FormGroup>
-                    <ControlLabel>Event Details for this Route</ControlLabel>
-                    <FormControl type='textarea' value={this.state.route2details} name="route2details" onChange={this.handleChange} />
-                </FormGroup>
-            </div>
-        }
-        var finishButton = <Button onClick={() => this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1details, this.state.route2details, this.state.addressCoords)}>Finish</Button>
+        var finishButton = <Button onClick={() => this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1Details, this.state.route2Details, this.state.addressCoords)}>Finish</Button>
         var finish = null;
         if (this.state.hasSelected) {
 
@@ -286,9 +261,8 @@ export class SelectRoutes extends Component {
                 <FormGroup>
                     <ControlLabel>Where will you be starting?</ControlLabel>
                     <FormControl type="textarea" placeholder="Type an address or click a spot on the map" name="address" value={this.state.address} onChange={this.handleChange} />
-
+                    
                 </FormGroup>
-                {routeShowing}
                 {finishButton}
             </div>
         }
@@ -301,6 +275,9 @@ export class SelectRoutes extends Component {
                         {search}
                         <RouteChoiceButtons routesViewing={this.props.numberOfRoutes} routeShowing={this.state.routeShowing}
                             viewRoute={(routeNumber) => this.viewRoute(routeNumber)} />
+                        <RouteInfo hasSelected={this.state.hasSelected} hasFinished={false} route1={this.state.route1} route2={this.state.route2}
+                            route1Details={this.state.route1Details} route2Details={this.state.route2Details} routeShowing={this.state.routeShowing}
+                            onDetailsChanging={this.changeDetails} />
                     </Col>
                     <Col md={3}>
                         <Row>

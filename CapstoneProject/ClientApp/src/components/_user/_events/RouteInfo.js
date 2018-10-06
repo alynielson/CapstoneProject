@@ -3,6 +3,24 @@ import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row,
 
 
 export class RouteInfo extends Component {
+    constructor(props) {
+        super(props);
+        this.handleChange = this.handleChange.bind(this);
+        this.state = {
+            route1Details: '',
+            route2Details: ''
+        }
+    }
+
+    handleChange(event, number) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        this.setState({
+            [name]: value
+        });
+        this.props.onDetailsChanging(value, number);
+    }
    
 render() {
     var routeShowing = null;
@@ -21,11 +39,26 @@ render() {
                 details = this.props.hasSelected ? this.props.route2Details : null;
                 break;
         }
-        if (this.props.hasSelected) {
+        if (this.props.hasFinished) {
             detailsToShow = <FormGroup>
                 <ControlLabel>Event Details for this Route</ControlLabel>
                 {details}
             </FormGroup>
+        }
+        else if (this.props.hasSelected){
+            switch (this.props.routeShowing.routeSpot) {
+                case (1):
+                    detailsToShow = <FormGroup>
+                        <ControlLabel>Event Details for this Route</ControlLabel>
+                        <FormControl type='textarea' value={this.state.route1Details} name="route1Details" onChange={(event, number) => this.handleChange(event, 1)} />
+                    </FormGroup>
+                    break;
+                case (2):
+                    detailsToShow = <FormGroup>
+                        <ControlLabel>Event Details for this Route</ControlLabel>
+                        <FormControl type='textarea' value={this.state.route2Details} name="route2Details" onChange={(event, number) => this.handleChange(event, 2)} />
+                    </FormGroup>
+            }
         }
         routeShowing = <div>
             <h4> {title}: {route.name}</h4>
@@ -48,9 +81,4 @@ render() {
             );
     }
 
-
-
-
-
-
-}
+} export default RouteInfo;

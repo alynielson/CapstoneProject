@@ -5,10 +5,11 @@ import { RouteList } from '../_routes/RouteList';
 import { DistanceButtons } from '../_routes/DistanceButtons';
 import { HillButtons } from '../_routes/HillButtons';
 import _ from 'lodash';
-import RouteMap from '../_mapComponents/RouteMap';
-import RouteInfo from './RouteInfo';
-import RouteComments from '../_mapComponents/RouteComments';
-import RouteChoiceButtons from '../_mapComponents/RouteChoiceButtons';
+import { RouteMap } from '../_mapComponents/RouteMap';
+import { RouteInfo } from './RouteInfo';
+import { RouteComments } from '../_mapComponents/RouteComments';
+import { RouteChoiceButtons } from '../_mapComponents/RouteChoiceButtons';
+import { SelectStartingPoint } from './SelectStartingPoint'; 
 
 export class SelectRoutes extends Component {
     constructor(props) {
@@ -37,6 +38,7 @@ export class SelectRoutes extends Component {
         this.viewRoute = this.viewRoute.bind(this);
         this.addStart = this.addStart.bind(this);
         this.changeDetails = this.changeDetails.bind(this);
+        this.changeAddress = this.changeAddress.bind(this);
     }
     addStart(t, map, coord) {
         if (this.state.hasSelected) {
@@ -49,6 +51,12 @@ export class SelectRoutes extends Component {
                 addressCoords: newCoord
             })
         }
+    }
+
+    changeAddress(address) {
+        this.setState({
+            address: address
+        })
     }
 
     changeDetails(detail, number) {
@@ -237,36 +245,24 @@ export class SelectRoutes extends Component {
         const addStartPin = ((t, map, coord) => { this.addStart(t, map, coord) });
         const viewPointComment = ((data) => { this.onMarkerHover(data) });
         const viewPathComment = ((data) => { this.onPathHover(data) });
-        const changeDetails = ((detail, number) => { this.changeDetails(detail, number) });
         var search = null;
         var list = null;
         if (!this.state.hasSelected) {
-
             search = <div><SearchRoutes onSearchEnter={routeSearch} />
                 <DistanceButtons sendDistanceArray={selectDistanceFilter} />
                 <HillButtons sendHillArray={selectHillFilter} />
                 <Button onClick={this.finish}>Finish</Button>
             </div>
-
-        }
-        if (!this.state.hasSelected) {
-            list = <RouteList routesToAdd={this.state.routeToAdd} onRouteSelect={selectRoute}
-            />
+            list = <RouteList routesToAdd={this.state.routeToAdd} onRouteSelect={selectRoute} />
         }
         var finishButton = <Button onClick={() => this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1Details, this.state.route2Details, this.state.addressCoords)}>Finish</Button>
         var finish = null;
         if (this.state.hasSelected) {
-
             finish = <div>
-                <FormGroup>
-                    <ControlLabel>Where will you be starting?</ControlLabel>
-                    <FormControl type="textarea" placeholder="Type an address or click a spot on the map" name="address" value={this.state.address} onChange={this.handleChange} />
-                    
-                </FormGroup>
+                <SelectStartingPoint changeAddress={this.changeAddress} />
                 {finishButton}
             </div>
         }
-
         return (
             <div>
                 <Row>

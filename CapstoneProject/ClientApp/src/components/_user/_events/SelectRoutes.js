@@ -8,6 +8,7 @@ import _ from 'lodash';
 import RouteMap from '../_mapComponents/RouteMap';
 import RouteInfo from './RouteInfo';
 import RouteComments from '../_mapComponents/RouteComments';
+import RouteChoiceButtons from '../_mapComponents/RouteChoiceButtons';
 
 export class SelectRoutes extends Component {
     constructor(props) {
@@ -208,10 +209,6 @@ export class SelectRoutes extends Component {
         ).catch(error => console.log(error));
     }
 
-    isRouteA() {
-        return this.state.routeShowing.routeSpot === 1;
-    }
-
     viewRoute(routeNumber) {
         let currentShowing = this.state.routeShowing;
         if (this.state.routesViewing <= 1 && currentShowing.routeSpot !== routeNumber && currentShowing.values === true) {
@@ -246,13 +243,6 @@ export class SelectRoutes extends Component {
         if (!this.state.hasSelected) {
             list = <RouteList routesToAdd={this.state.routeToAdd} onRouteSelect={selectRoute}
             />
-        }
-        var finalRoutes = null;
-        if (this.props.numberOfRoutes === 2) {
-            finalRoutes = <ButtonToolbar>
-                <Button onClick={(routeNumber) => this.viewRoute(1)} active={this.isRouteA()}>Route A</Button>
-                <Button onClick={(routeNumber) => this.viewRoute(2)} active={!this.isRouteA()}>Route B</Button>
-            </ButtonToolbar>
         }
         var routeShowing = <div>
             <h4> Route A: {this.state.route1.name}</h4>
@@ -298,7 +288,6 @@ export class SelectRoutes extends Component {
                     <FormControl type="textarea" placeholder="Type an address or click a spot on the map" name="address" value={this.state.address} onChange={this.handleChange} />
 
                 </FormGroup>
-               
                 {routeShowing}
                 {finishButton}
             </div>
@@ -310,7 +299,8 @@ export class SelectRoutes extends Component {
                     <Col md={3}>
                         {finish}
                         {search}
-                        {finalRoutes}
+                        <RouteChoiceButtons routesViewing={this.props.numberOfRoutes} routeShowing={this.state.routeShowing}
+                            viewRoute={(routeNumber) => this.viewRoute(routeNumber)} />
                     </Col>
                     <Col md={3}>
                         <Row>

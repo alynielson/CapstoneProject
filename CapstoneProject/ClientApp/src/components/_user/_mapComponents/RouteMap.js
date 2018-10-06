@@ -3,7 +3,7 @@ import { GoogleApiWrapper, Map, Polyline, Marker } from 'google-maps-react';
 import img1 from './icons/not_clicked_marker.png';
 import img2 from './icons/_clicked_marker.png';
 
-export default class RouteMap extends Component {
+export class RouteMap extends Component {
 
     render() {
         let routeToViewDetails;
@@ -76,4 +76,4 @@ export default class RouteMap extends Component {
             </Map>
         );
     }
-} 
+} export default RouteMap;

@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar, Alert } from 'react-bootstrap';
 
-export default class RouteComments extends Component{
+export class RouteComments extends Component{
 
     render() {
         let pointAlert = null;
@@ -25,4 +25,4 @@ export default class RouteComments extends Component{
     }
 
 
-}
+} export default RouteComments;

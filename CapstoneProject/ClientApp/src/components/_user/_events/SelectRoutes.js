@@ -25,7 +25,8 @@ export class SelectRoutes extends Component {
             routeShowing: { routeSpot: 1, values: false },
             addressCoords: null,
             route1Details: '',
-            route2Details: ''
+            route2Details: '',
+            automaticAddress: false
         }
         this.setDistanceFilter = this.setDistanceFilter.bind(this);
         this.setHillFilter = this.setHillFilter.bind(this);
@@ -47,8 +48,9 @@ export class SelectRoutes extends Component {
             const lng = latLng.lng();
             const newCoord = { lat: lat, lng: lng };
             this.setState({
-                address: "Selected on map",
-                addressCoords: newCoord
+                automaticAddress: true,
+                addressCoords: newCoord,
+                address: "Selected on map"
             })
         }
     }
@@ -259,7 +261,7 @@ export class SelectRoutes extends Component {
         var finish = null;
         if (this.state.hasSelected) {
             finish = <div>
-                <SelectStartingPoint changeAddress={this.changeAddress} />
+                <SelectStartingPoint changeAddress={this.changeAddress} automaticAddress={this.state.automaticAddress}/>
                 {finishButton}
             </div>
         }

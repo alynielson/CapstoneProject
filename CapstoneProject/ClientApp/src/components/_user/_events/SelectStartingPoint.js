@@ -21,10 +21,12 @@ export class SelectStartingPoint extends Component {
     }
 
     render() {
+        let value = this.props.automaticAddress ? "Selected on map" : this.state.address;
+        let change = this.props.automaticAddress ? null : this.handleChange;
         return (
             <FormGroup>
                 <ControlLabel>Where will you be starting?</ControlLabel>
-                <FormControl type="textarea" placeholder="Type an address or click a spot on the map" name="address" value={this.state.address} onChange={this.handleChange} />
+                <FormControl type="textarea" placeholder="Type an address or click a spot on the map" name="address" value={value} onChange={change} />
             </FormGroup>
             );
     }

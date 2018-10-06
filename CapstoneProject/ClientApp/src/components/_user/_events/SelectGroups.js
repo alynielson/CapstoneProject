@@ -1,31 +1,27 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar, ListGroup, ListGroupItem } from 'react-bootstrap';
-import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
+import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ButtonToolbar, ListGroup} from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { GroupItem } from '../_groups/GroupItem';
-
 import 'react-datepicker/dist/react-datepicker.css';
 
 export class SelectGroups extends Component {
     constructor(props) {
         super(props);
-
         this.state = {
             startDate: moment(),
             startTime: moment(),
             name: '',
             description: '',
             groups: [],
-            selectedGroups: []
+            selectedGroups: [],
+            numberOfRoutes: 1
         };
+        this.handleChange = this.handleChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
         this.handleTimeChange = this.handleTimeChange.bind(this);
-        this.handleChange = this.handleChange.bind(this);
         this.addGroup = this.addGroup.bind(this);
-        this.chooseButton1 = this.chooseButton1.bind(this);
-        this.chooseButton2 = this.chooseButton2.bind(this);
-        
+        this.chooseButton = this.chooseButton.bind(this);
     }
 
     componentDidMount() {
@@ -40,14 +36,9 @@ export class SelectGroups extends Component {
 
     }
 
-    chooseButton1() {
+    chooseButton(number) {
         this.setState({
-            numberOfRoutes: 1
-        })
-    }
-    chooseButton2() {
-        this.setState({
-            numberOfRoutes: 2
+            numberOfRoutes: number
         })
     }
 
@@ -78,6 +69,7 @@ export class SelectGroups extends Component {
             [name]: value
         });
     }
+
     handleDateChange(date) {
         this.setState({
             startDate: date
@@ -88,28 +80,13 @@ export class SelectGroups extends Component {
             startTime: time
         });
     }
+  
     checkIfActive(id) {
-        if (this.state.selectedGroups.map(a => a.id).findIndex(id) > -1) {
-            return false;
-        }
-        else {
-            return false;
-        }
-    }
-
-    isButton1() {
-        return (this.state.numberOfRoutes === 1);
-    }
-    isButton2() {
-        return (this.state.numberOfRoutes === 2);
+        return !(this.state.selectedGroups.map(a => a.id).findIndex(id) > -1);
     }
 
     render() {
-        
-    
-    
         var groups = this.state.groups.map((a, index) => (<GroupItem index={index} existingGroups={this.state.selectedGroups} key={a.id} onClick={() => this.addGroup(index)} value={a.id}display={a.name}></GroupItem>));
-        
         return (
             <div>
             <Col md={4}>
@@ -117,7 +94,6 @@ export class SelectGroups extends Component {
                     <FormGroup>
                         <ControlLabel>Event Name</ControlLabel>
                         <FormControl
-
                             type="text"
                             name="name"
                             value={this.state.name}
@@ -136,14 +112,15 @@ export class SelectGroups extends Component {
                     <FormGroup>
                         <ControlLabel>Date</ControlLabel>
                         <DatePicker
-                            selected={this.state.startDate}
+                                selected={this.state.startDate}
+                                name="startDate"
                             onChange={this.handleDateChange}
-
                         />
                     </FormGroup>
                     <FormGroup>
                         <ControlLabel>Time</ControlLabel>
-                        <DatePicker
+                            <DatePicker
+                                name="startTime"
                             selected={this.state.startTime}
                             onChange={this.handleTimeChange}
                             showTimeSelect
@@ -166,8 +143,8 @@ export class SelectGroups extends Component {
                         Choose Number of Routes
                         </ControlLabel>
                     <ButtonToolbar>
-                        <Button active={this.isButton1()} onClick={this.chooseButton1}>1</Button>
-                        <Button active={this.isButton2()} onClick={this.chooseButton2}>2</Button>
+                        <Button active={this.state.numberOfRoutes === 1} onClick={() => this.chooseButton(1)}>1</Button>
+                        <Button active={this.state.numberOfRoutes === 2} onClick={() => this.chooseButton(2)}>2</Button>
                     </ButtonToolbar>
                     </Col>
                 </div>

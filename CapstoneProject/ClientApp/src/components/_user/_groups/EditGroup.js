@@ -1,8 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Button, ListGroup, ListGroupItem, FormControl, ControlLabel, Col, Form, FormGroup, Alert, Row, ButtonToolbar } from 'react-bootstrap';
-import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { MemberList } from './MemberList';
-import { MemberListItem } from './MemberListItem';
 import { SearchMembers } from './SearchMembers';
 import _ from 'lodash';
 
@@ -16,7 +14,6 @@ export class EditGroup extends Component {
             newMembers: []
         }
         this.handleChange = this.handleChange.bind(this);
-
     }
 
     async submitEdit() {
@@ -33,7 +30,6 @@ export class EditGroup extends Component {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         }).catch(error => console.log(error));
-
         this.props.returnToEventHome();
     }
 

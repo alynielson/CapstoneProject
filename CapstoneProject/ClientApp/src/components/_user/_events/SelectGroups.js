@@ -33,7 +33,6 @@ export class SelectGroups extends Component {
             });
         }
         ).catch(a => console.log(a));
-
     }
 
     chooseButton(number) {

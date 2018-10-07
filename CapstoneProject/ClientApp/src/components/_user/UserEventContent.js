@@ -125,8 +125,9 @@ export class UserEventContent extends Component {
         else {
             return (
                 <div>
-                <Row>
                     <Button onClick={(event) => this.addNewEvent(event)}>Create New Event</Button>
+                <Row>
+                    
                 </Row>
                 <h3>Upcoming Events</h3>
                 <Table hover>

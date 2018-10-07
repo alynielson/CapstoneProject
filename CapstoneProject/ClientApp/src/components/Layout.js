@@ -16,17 +16,22 @@ export class Layout extends Component {
     
 
   render() {
-    return (
-      <Grid fluid>
-        
-          
+      return (
+          <Grid fluid>
+
+              <div className="app">
+               
             <NavMenu tryLogout={this.props.tryLogout} onClickingRegister={this.props.onClickingRegister} isLoggedIn={this.props.isLoggedIn} onClickingLogin={this.props.onClickingLogin}/>
-          
-          <div className="body-content">
+                 
+                      <div className="body-content">
             {this.props.children}
-         
-        </div>
+                    
+                 
+                      </div>
+                 
+              </div>  
       </Grid>
+             
     );
   }
 }

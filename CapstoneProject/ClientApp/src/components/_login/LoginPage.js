@@ -1,6 +1,7 @@
 ﻿import React, { Component } from 'react';
 import { Button, Form, FormGroup, FormControl, ControlLabel, Col, Row, Alert } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
+import Background from './images/grey-race.jpg';
 
 export class Login extends Component {
     constructor(props) {
@@ -25,9 +26,6 @@ export class Login extends Component {
         });
     }
 
-    checkIfCanSubmit() {
-        return this.state.email !== '' && this.state.password !== '';
-    }
 
     async handleSubmit(event) {
         const data = { email: this.state.email, password: this.state.password};
@@ -82,38 +80,64 @@ export class Login extends Component {
 
 
     render() {
+        const style = {
+            backgroundImage: `url(${Background})`,
+            backgroundSize: "contain",
+            height: "85vh",
+            
+        };
         if (this.state.id != null) {
             return <Redirect to="/users" />
         }
             return (
-                <div>
-                    <h1> Log in </h1>
-                    <Row>
-                        <Col md={4}>
-                            <div hidden={!this.shouldShowErrorMessage()}>
-                                <Alert>{this.state.errorMessage}</Alert>
+                <div style={style}>
+
+                    <Row className="empty-space10percent">
+                       
+                    </Row>
+                    <Row className="empty-space10percent">
+                    </Row>
+                   
+
+                    <Row className="empty-space10percent">
+                        <Col md={4} mdOffset={4} className="text-center">
+                            <h1 className="page-title"> Log in </h1> </Col>
+                    </Row>
+                    <Row className="empty-space10percent">
+                        <Col md={4} mdOffset={4}>
+                        <div hidden={!this.shouldShowErrorMessage()}>
+                            <Alert>{this.state.errorMessage}</Alert>
                             </div>
+                            </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4} mdOffset={4}>
+                            
+                           
                             <Form>
                                 <FormGroup>
-                                    <ControlLabel>Email Address</ControlLabel>
+                                    
                                     <FormControl
                                         type="text"
                                         name="email"
+                                        placeholder="Email Address"
                                         value={this.state.email}
                                         onChange={this.handleChange} />
                                 </FormGroup>
                                 <FormGroup>
-                                    <ControlLabel>Password</ControlLabel>
+                                    
                                     <FormControl
+                                        placeholder="Password"
                                         type="password"
                                         name="password"
                                         value={this.state.password}
                                         onChange={this.handleChange}
                                     />
                                 </FormGroup>
-                                <Button disabled={!this.checkIfCanSubmit()} className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
+                                <a className="btn action-button" onClick={(event) => this.handleSubmit(event)}>Submit</a>
                             </Form>
                         </Col>
+                       
                     </Row>
                 </div>
             );

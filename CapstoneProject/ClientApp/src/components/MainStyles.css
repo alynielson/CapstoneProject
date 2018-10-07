@@ -1,17 +1,29 @@
 ﻿
 
 /* Highlighting rules for nav menu items */
-.navbar .navbar-nav .active a,
-.navbar .navbar-nav .active a:hover,
-.navbar .navbar-nav .active a:focus {
+
+.navbar .navbar-nav .active a:focus, 
+.navbar .navbar-nav .active a {
     border-bottom: 5px solid purple;
     background-color: white;
     background-image: none;
     color: purple;
-    background-repeat:no-repeat;
+    background-repeat: no-repeat;
     box-shadow: none;
 }
-
+.navbar-default .navbar-nav > li > a:hover{
+    background-color: white;
+    background-image: none;
+    color: purple;
+}
+.login-page{
+    background-color: purple;
+}
+.corner-nav-buttons:hover {
+    background-color: purple;
+    background-image: none;
+    color: white;
+}
 
 .navbar-fixed-top {
     border-bottom-width: 0px;
@@ -52,20 +64,17 @@
 .navbar-default .navbar-brand{
     color: purple;
 }
-    .navbar-default .navbar-brand:hover{
-        color: purple;
-        background-color: none;
-    }
+.navbar-default .navbar-brand:hover{
+    color: purple;
+    background-color: none;
+}
 
-    .navbar-default .navbar-nav > li > a {
-        color: purple;
-        font-weight: 600;
-    }
+.navbar-default .navbar-nav > li > a {
+    color: purple;
+    font-weight: 600;
+}
 
-    .navbar-default .navbar-nav > li > a:hover {
-        color: purple;
-        border-bottom: 5px solid purple;
-    }
+
 
 .navbar-nav > li > a {
     text-shadow: none;
@@ -91,6 +100,17 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+.form-control {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.page-title{
+    color: white;
+    background-color: purple;
+    display: inline;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 42px;
+}
 
 .body-content {
     position: absolute;
@@ -98,13 +118,45 @@
     left: 15px;
     right: 15px;
     bottom: 20px;
+    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
 }
 
+.corner-nav-buttons {
+    background-image: linear-gradient(to top right, orange, hotpink);
+    border-radius: 15px;
+    padding: 5px 10px 5px 10px;
+    color: white;
+}
 
+.action-button{
+    width: 100%;
+    background-color: purple;
+    color: white;
+}
+    .action-button:hover {
+        background-image: linear-gradient(to top right, orange, hotpink);
+        color: white;
+    }
+
+.empty-space10percent {
+    height: 10%;
+}
+
+.alert-info {
+    background-image: none;
+}
+.alert {
+    text-align: center;
+    text-shadow: none;
+    box-shadow: none;
+    border-radius: 0px;
+    border: none;
+   height: 90%;
+   max-height: 50px;
+}
 
 .button-group {
     margin-top: 10px;
-
 }
 
 .btn-default {
@@ -112,20 +164,9 @@
     background-image: none;
 }
 .btn {
-    border-radius: 0px;
+    border-radius: 3px;
 }
 
-.btn-primary {
-    background-color: hotpink;
-    letter-spacing: 1px;
-    
-}
-
-.btn-primary[disabled] {
-    background-color: rebeccapurple;
-    letter-spacing: 1px;
-        
-}
 
 .map {
     height: 70vw;

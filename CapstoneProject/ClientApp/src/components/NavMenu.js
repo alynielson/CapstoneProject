@@ -1,6 +1,6 @@
 ﻿import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Glyphicon, Nav, Navbar, NavItem, Button } from 'react-bootstrap';
+import { Nav, Navbar, NavItem, Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import './MainStyles.css';
 
@@ -22,14 +22,16 @@ export class NavMenu extends Component {
                     </Navbar.Header>
                     <Navbar.Collapse>
                         <Nav pullRight>
-                           
-                            <NavItem onClick={this.props.onClickingLogin}>
-                                   LOG IN
-                                </NavItem>
+                            <NavItem>
+                            <div className="corner-nav-buttons" onClick={this.props.onClickingLogin}>
+                                   LOG IN 
+                                </div>
+                               </NavItem>
                            
                            
                             <NavItem onClick={this.props.onClickingRegister} >
-                                    SIGN UP
+                                <div className="corner-nav-buttons">
+                                    SIGN UP </div>
                                 </NavItem>
                            
                         </Nav>
@@ -49,7 +51,7 @@ export class NavMenu extends Component {
                     <Navbar.Collapse>
                         <Nav>
                             <LinkContainer to='/users'>
-                                <NavItem >
+                                <NavItem>
                                      HOME
                                 </NavItem>
                             </LinkContainer>
@@ -71,7 +73,7 @@ export class NavMenu extends Component {
                         </Nav>   
                        <Nav pullRight>
                             <NavItem onClick={this.props.tryLogout} >
-                                LOG OUT
+                                <div className="corner-nav-buttons">LOG OUT</div>
                                 </NavItem>
                         </Nav>
                     </Navbar.Collapse>

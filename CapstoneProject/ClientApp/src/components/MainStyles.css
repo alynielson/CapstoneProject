@@ -96,6 +96,10 @@
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
 }
+
+button.list-group-item:hover {
+    background-color: #c2e6ff;
+}
 .app {
     background-color: white;
     color: black;

@@ -1,5 +1,4 @@
 ﻿import React, { Component } from 'react';
-import background from './images/background.jpg'
 
 
 export class UserHomeContent extends Component {
@@ -14,7 +13,7 @@ export class UserHomeContent extends Component {
     render() {
         return (
             
-            <img className="background-img" src={background} />
+            <div>User Home Content</div>
             
             
             );

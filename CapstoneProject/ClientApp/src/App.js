@@ -31,6 +31,7 @@ export default class App extends Component {
         this.onCancelLogout = this.onCancelLogout.bind(this);
         this.onClickingRegister = this.onClickingRegister.bind(this);
         this.onLoggingIn = this.onLoggingIn.bind(this);
+        this.onClickingOtherTabs = this.onClickingOtherTabs.bind(this);
     }
 
     componentDidMount() {
@@ -63,6 +64,14 @@ export default class App extends Component {
             isRegistering: false
         });
     }
+
+    onClickingOtherTabs() {
+        this.setState({
+            tryLogout: false,
+            isLoggingIn: false,
+            isRegistering: false
+        })
+    }
     onClickingLogin() {
         this.setState({
             tryLogout: false,
@@ -80,7 +89,8 @@ export default class App extends Component {
     onClickingRegister() {
         this.setState({
             isRegistering: true,
-            isLoggingIn: false
+            isLoggingIn: false,
+
         })
     }
 
@@ -91,6 +101,7 @@ export default class App extends Component {
         const doLogin = (() => this.onClickingLogin());
         const loggedIn = (() => this.onLoggingIn());
         const onClickingRegister = (() => this.onClickingRegister());
+        const onClickingOtherTabs = (() => this.onClickingOtherTabs());
         var logout = null;
         
             if (this.state.tryLogout === true) {
@@ -101,22 +112,25 @@ export default class App extends Component {
         if (this.state.isLoggingIn === true) {
             login = <Login loggedIn={loggedIn}/>
         }
-        var homePage = null;
-        if (!this.state.isLoggedIn && !this.state.isLoggingIn && !this.state.tryLogout && !this.state.isRegistering) {
-            homePage = <Home />
-        }
+       
         var register = null;
         if (this.state.isRegistering) {
             register = <Register loggedIn={loggedIn} loggedIn={loggedIn}/>
         }
         return (
-            <Layout tryLogout={onClickingLogout} isLoggedIn={this.state.isLoggedIn} onClickingLogin={doLogin} onClickingRegister={onClickingRegister}>
+            <Layout tryLogout={onClickingLogout} isLoggedIn={this.state.isLoggedIn}
+                onClickingLogin={doLogin} onClickingRegister={onClickingRegister}
+                onClickingTab={onClickingOtherTabs} 
+            >
                 {logout}
                 {login}
-                {homePage}
+                
                 {register}
                 <Switch>
-                <Route exact path='/home' component={Blank} />
+              
+               
+
+                <Route exact path='/' component={Home} />
                 <Route path="/authorize-strava" component={() => window.location = "http://www.strava.com/oauth/authorize?client_id=28837&response_type=code&redirect_uri=https://localhost:44355/users/&approval_prompt=force&scope=view_private"} />
                     <Route exact path='/users' component={UserHome} />
                     <Route exact path='/groups' component={UserGroupContent} />

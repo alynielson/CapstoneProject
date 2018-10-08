@@ -16,19 +16,18 @@ export class NavMenu extends Component {
                 <Navbar fixedTop fluid collapseOnSelect>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <Link to={'/home'} >NAME</Link>
+                            <Link to={'/'} onClick={this.props.onClickingTab}>NAME</Link>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>
                     <Navbar.Collapse>
+                        
                         <Nav pullRight>
                             <NavItem>
                             <div className="corner-nav-buttons" onClick={this.props.onClickingLogin}>
                                    LOG IN 
                                 </div>
                                </NavItem>
-                           
-                           
                             <NavItem onClick={this.props.onClickingRegister} >
                                 <div className="corner-nav-buttons">
                                     SIGN UP </div>

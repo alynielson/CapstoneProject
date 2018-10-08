@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, ListGroup, ListGroupItem, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
+import { Tooltip, OverlayTrigger, ListGroup, ListGroupItem, FormControl, ControlLabel, Col, ColProps, Row, Glyphicon } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { CreateGroup } from './CreateGroup';
 import { EditGroup } from './_groups/EditGroup';
@@ -117,6 +117,15 @@ export class UserGroupContent extends Component {
 
 
     render() {
+        const style = {
+            backgroundColor: "purple",
+            height: "85vh",
+        };
+        const tooltip = (
+            <Tooltip id="tooltip">
+                You're the organizer of this group!
+            </Tooltip>
+        );
         const returnToEvents = this.backToAllGroups;
         var groupsOwn = this.state.groupsOwn;
         var groupsIn = this.state.groupsIn;
@@ -161,27 +170,36 @@ export class UserGroupContent extends Component {
             
           
             return (
-                <div>
-                
-                    <Button onClick={(event) => this.addNewGroup(event)}>Create a Group</Button>
+                <div style={style}>
+                    <Row className="empty-space5percent" />
                     <Row>
-                        <Col md={4}>
-                            <h3>Groups you're in</h3>
+                        <Col md={2} mdOffset={1} >
+                            <a className="btn action-button" onClick={(event) => this.addNewGroup(event)}>Create a Group</a>
+                            </Col>
+                        </Row>
+                    
+                    <Row>
+                        <Col md={4} mdOffset={1}>
+                            <h3 className="page-subtitle">Your Groups</h3>
                             <ListGroup>
+                                {groupsOwn.map((a, index) =>
+                                    (<ListGroupItem key={index} onClick={() => this.goEditGroup(index)} value={a.id}>
+                                        {a.name}
+                                        <span className="pull-right">
+                                            <OverlayTrigger placement="right" overlay={tooltip}>
+                                                <Glyphicon glyph="star" />
+                                            </OverlayTrigger>
+                                        </span>
+                                    </ListGroupItem>)
+                                )}
                             {groupsIn.map((a,i) => 
                                 
                                     (<ListGroupItem onClick={() => this.goViewGroup(i)} key={i}value={a.id}>{a.name}</ListGroupItem>)
                                 )}
+                               
                                 </ListGroup>
                         </Col>
-                        <Col md={4}>
-                            <h3>Groups you organize</h3>
-                            <ListGroup>
-                               
-                                {groupsOwn.map((a, index) =>
-                                    (<ListGroupItem key={index} onClick={() => this.goEditGroup(index)} value={a.id}>{a.name}</ListGroupItem>)
-                                    )}
-                                </ListGroup>
+                        <Col md={3} mdOffset={3}>
                                 </Col>
                     </Row>
                     </div>

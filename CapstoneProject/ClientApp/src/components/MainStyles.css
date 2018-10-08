@@ -106,12 +106,14 @@
 }
 .page-title{
     color: white;
-    background-color: purple;
-    display: inline;
-    padding-left: 5px;
-    padding-right: 5px;
     font-size: 42px;
 }
+
+.page-subtitle{
+    color: white;
+}
+
+
 
 .body-content {
     position: absolute;
@@ -147,6 +149,10 @@
 
 .empty-space10percent {
     height: 10%;
+}
+
+.empty-space5percent {
+    height: 5%;
 }
 
 .alert-info {

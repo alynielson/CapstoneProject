@@ -112,6 +112,10 @@ export default class App extends Component {
         if (this.state.isLoggingIn === true) {
             login = <Login loggedIn={loggedIn}/>
         }
+        var home = null;
+        if (!this.state.isLoggedIn && !this.state.isLoggingIn && !this.state.isRegistering && !this.state.tryLogout) {
+            home = <Home />
+        }
        
         var register = null;
         if (this.state.isRegistering) {
@@ -124,13 +128,12 @@ export default class App extends Component {
             >
                 {logout}
                 {login}
-                
+                {home}
                 {register}
                 <Switch>
               
                
-
-                <Route exact path='/' component={Home} />
+                    <Route exact path="/" component={Home} />
                 <Route path="/authorize-strava" component={() => window.location = "http://www.strava.com/oauth/authorize?client_id=28837&response_type=code&redirect_uri=https://localhost:44355/users/&approval_prompt=force&scope=view_private"} />
                     <Route exact path='/users' component={UserHome} />
                     <Route exact path='/groups' component={UserGroupContent} />

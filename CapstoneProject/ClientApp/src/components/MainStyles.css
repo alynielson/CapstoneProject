@@ -49,6 +49,9 @@
     background-image: none;
     background-color: white;
 }
+.brand{
+    cursor: pointer;
+}
 .navbar-default {
     box-shadow: none;
     background-color: white;

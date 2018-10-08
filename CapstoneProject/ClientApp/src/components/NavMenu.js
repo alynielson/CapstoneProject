@@ -16,7 +16,7 @@ export class NavMenu extends Component {
                 <Navbar fixedTop fluid collapseOnSelect>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <Link to={'/'} onClick={this.props.onClickingTab}>NAME</Link>
+                            <div className="brand" onClick={this.props.onClickingTab}>NAME</div>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>

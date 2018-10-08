@@ -16,9 +16,7 @@
     background-image: none;
     color: purple;
 }
-.login-page{
-    background-color: purple;
-}
+
 .corner-nav-buttons:hover {
     background-color: purple;
     background-image: none;
@@ -128,14 +126,20 @@
     color: white;
 }
 
-.action-button{
+.action-button {
     width: 100%;
-    background-color: purple;
+    background-image: linear-gradient(to top right, orange, hotpink);
     color: white;
 }
     .action-button:hover {
-        background-image: linear-gradient(to top right, orange, hotpink);
+        background-image: none;
+        background-color: purple;
+        border: 3px solid hotpink;
         color: white;
+    }
+
+    .text-muted{
+        color: #D9EDF7;
     }
 
 .empty-space10percent {

@@ -81,8 +81,9 @@ export class Login extends Component {
 
     render() {
         const style = {
-            backgroundImage: `url(${Background})`,
-            backgroundSize: "contain",
+            //backgroundImage: `url(${Background})`,
+            //backgroundSize: "contain",
+            backgroundColor: "purple",
             height: "85vh",
             
         };

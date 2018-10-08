@@ -32,23 +32,30 @@ export class Register extends Component {
     }
 
     async handleSubmit(event) {
-        var resultId = null;
-        const data = { first_name: this.state.first_name, last_name: this.state.last_name, password: this.state.password, email: this.state.email };  
-        event.preventDefault();
-        await fetch('api/Users/Create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        }).then(this.handleResponse).then(function (response) { return response.json(); }).then(function (jsonData) {return resultId = jsonData.id; }).catch(function (error) { console.log(error); });
-        console.log(resultId);
-        if (resultId !== null) {
-            
-            this.setState({ id: resultId });
-            localStorage.clear();
-            localStorage.setItem('userId', this.state.id);
-            localStorage.setItem('firstname', this.state.first_name);
-            localStorage.setItem('lastname', this.state.last_name);
-            this.props.loggedIn();
+        if (this.checkIfCanSubmit()) {
+            var resultId = null;
+            const data = { first_name: this.state.first_name, last_name: this.state.last_name, password: this.state.password, email: this.state.email };
+            event.preventDefault();
+            await fetch('api/Users/Create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(this.handleResponse).then(function (response) { return response.json(); }).then(function (jsonData) { return resultId = jsonData.id; }).catch(function (error) { console.log(error); });
+            console.log(resultId);
+            if (resultId !== null) {
+
+                this.setState({ id: resultId });
+                localStorage.clear();
+                localStorage.setItem('userId', this.state.id);
+                localStorage.setItem('firstname', this.state.first_name);
+                localStorage.setItem('lastname', this.state.last_name);
+                this.props.loggedIn();
+            }
+        }
+        else {
+            this.setState({
+                errorMessage: "You didn't fill out all of the fields!"
+            });
         }
     }
 
@@ -65,7 +72,7 @@ export class Register extends Component {
             return response;
         }
         else if (response.status === 409) {
-            errorText = 'The email you entered already exists.';
+            errorText = 'That email already exists!';
         }
         else {
             errorText = 'Unable to get a response from the server.';
@@ -99,20 +106,33 @@ export class Register extends Component {
 
    
     render() {
+        const style = {
+            backgroundColor: "purple",
+            height: "85vh",
+        }
         if (this.state.id === null) {
             return (
-                <div>
-                    <h1> Register </h1>
-                    <Row>
-                        <Col md={4}>
-                            <div hidden={!this.shouldShowErrorMessage()}>
-                                <Alert>{this.state.errorMessage}</Alert>
+                <div style={style}>
+                    <Row className="empty-space10percent" />
+                    <Row className="empty-space10percent">
+                        <Col md={4} mdOffset={4} className="text-center">
+                            <h1 className="page-title"> Sign up </h1>
+                            </Col>
+                    </Row>
+                    <Row className="empty-space10percent">
+                        <Col md={4} mdOffset={4}>
+                        <div hidden={!this.shouldShowErrorMessage()}>
+                            <Alert>{this.state.errorMessage}</Alert>
                             </div>
+                            </Col>
+                    </Row>
+                    <Row>
+                        <Col md={4} mdOffset={4}>
+                           
                             <Form>
                                 <FormGroup>
-                                    <ControlLabel>First Name</ControlLabel>
                                     <FormControl
-
+                                        placeholder="First Name"
                                         type="text"
                                         name="first_name"
                                         value={this.state.first_name}
@@ -120,8 +140,8 @@ export class Register extends Component {
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <ControlLabel>Last Name</ControlLabel>
                                     <FormControl
+                                        placeholder="Last Name"
                                         type="text"
                                         name="last_name"
                                         value={this.state.last_name}
@@ -129,8 +149,8 @@ export class Register extends Component {
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <ControlLabel>Email Address</ControlLabel>
                                     <FormControl
+                                        placeholder="Email Address"
                                         type="text"
                                         name="email"
                                         value={this.state.email}
@@ -138,8 +158,8 @@ export class Register extends Component {
                                     <small hidden={this.validateEmail()} className="form-text text-muted">Not a valid email</small>
                                 </FormGroup>
                                 <FormGroup>
-                                    <ControlLabel>Password</ControlLabel>
                                     <FormControl
+                                        placeholder="Password"
                                         type="password"
                                         name="password"
                                         value={this.state.password}
@@ -148,8 +168,8 @@ export class Register extends Component {
                                     <small hidden={this.validatePassword()} className="form-text text-muted">Password not long enough</small>
                                 </FormGroup>
                                 <FormGroup>
-                                    <ControlLabel>Confirm Password</ControlLabel>
                                     <FormControl
+                                        placeholder="Confirm Password"
                                         type="password"
                                         name="password_confirmation"
                                         value={this.state.password_confirmation}
@@ -157,7 +177,7 @@ export class Register extends Component {
                                     />
                                     <small hidden={this.confirmPasswordsMatch()} className="form-text text-muted">Passwords do not match</small>
                                 </FormGroup>
-                                <Button disabled={!this.checkIfCanSubmit()} className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
+                                <a className="btn action-button" onClick={(event) => this.handleSubmit(event)}>Submit</a>
                             </Form>
                         </Col>
                     </Row>

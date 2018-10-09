@@ -31,11 +31,10 @@ export class PathCommentModal extends Component {
                     <h3>New Note - Route Segment</h3>
                     <Form>
                         <FormGroup>
-                            <ControlLabel>Enter your note here.</ControlLabel>
                             <FormControl
                                 componentClass="textarea"
                                 name="pathComment"
-
+                                placeholder="Enter your note here."
                                 value={this.state.pathComment}
                                 onChange={this.handleChange} />
                         </FormGroup>

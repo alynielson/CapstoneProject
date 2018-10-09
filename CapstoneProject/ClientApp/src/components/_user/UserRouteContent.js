@@ -205,6 +205,7 @@ export class UserRouteContent extends Component {
                         pathCommentAuthors={this.state.pathCommentAuthors}
                         pointCoordinates={this.state.pointCoordinates}
                         pathCoordinates={this.state.pathCoordinates}
+                        returnToRouteHome={returnToRoutes}
                         />
                 </div>
                 );

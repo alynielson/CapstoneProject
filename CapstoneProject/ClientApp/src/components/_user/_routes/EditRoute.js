@@ -266,13 +266,13 @@ export class EditRoute extends Component {
         var alert = null;
         var alert2 = null;
         if (this.state.commentShowing != null) {
-            alert = <Alert bsStyle="info" onDismiss={this.dismissComment}> 
-                <h4>{this.state.commentUserNames[this.state.commentPosition]}</h4>
+            alert = <Alert onDismiss={this.dismissComment} className="comments"> 
+                <h5>{this.state.commentUserNames[this.state.commentPosition]}</h5>
                 <p> {this.state.commentShowing} </p> </Alert>
         }
         if (this.state.pathCommentShowing != null) {
-            alert2 = <Alert bsStyle="success" onDismiss={this.dismissPathComment}>
-                <h4>{this.state.pathUserNames[this.state.pathCommentPosition]}</h4>
+            alert2 = <Alert onDismiss={this.dismissPathComment} className="comments">
+                <h5>{this.state.pathUserNames[this.state.pathCommentPosition]}</h5>
 
                 <p> {this.state.pathCommentShowing} </p> </Alert>
         }
@@ -295,11 +295,7 @@ export class EditRoute extends Component {
         
         return (
             <div>
-                <Row>
-                    <h1>{this.props.name}</h1>
-                    <h4>{this.props.description} </h4>
-                    <h6>Created by {this.props.owner}</h6>
-                </Row>
+
                 <Row>
                     <Col md={7}>
                         <CommentModal show={this.state.showCommentModal} hiding={this.handleModalHide} submitting={submitComment} />
@@ -345,22 +341,32 @@ export class EditRoute extends Component {
                             
                         </div>
                     </Col>
-                    <Col md={2}>
-                        <ButtonGroup vertical>
-                            <Button onClick={this.allowComment}>Point</Button>
-                            <Button onClick={this.allowPathComment}>Segment</Button>
+                    <Col md={1}>
+                        <ButtonGroup vertical className="map-action-buttons">
+                            <Button onClick={this.allowComment} active={this.state.allowComment}>Point</Button>
+                            <Button onClick={this.allowPathComment} active={this.state.allowPathComment}>Segment</Button>
                         </ButtonGroup>
                     </Col>
                     <Col md={3}>
+                        <Col md={11} mdOffset={1}>
+                        <Row>
+                            <h3 className="page-subtitle">{this.props.name}</h3>
+                            <h4 className="page-subtitle">{this.props.description} </h4>
+                            <h5 className="page-subtitle">Created by {this.props.owner}</h5>
+                        </Row>
                         {alert}
-                        {alert2}
+                            {alert2}
+                        </Col>
+                        
+                    </Col>
+                    <Col md={1}>
+                        <a className="btn action-button map-back2" onClick={this.props.returnToRouteHome}>Back</a>
                     </Col>
                 </Row>
-                <Row>
-                <ButtonToolbar className='map-buttons'>
-                    <Button onClick={this.props.returnToRouteHome}>Back</Button>
-                </ButtonToolbar>
-                </Row>
+              
+                
+                    
+               
             </div>
             
             );

@@ -31,8 +31,8 @@ export class CommentModal extends Component {
                     <h3>New Note - Route Point</h3>
                     <Form>
                         <FormGroup>
-                            <ControlLabel>Enter your note here.</ControlLabel>
                             <FormControl
+                                placeholder="Enter your note here."
                                 componentClass="textarea"
                                 name="comment"
 

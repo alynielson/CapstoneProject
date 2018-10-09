@@ -34,8 +34,8 @@ export class SearchRoutes extends Component {
     render() {
         return (
             <FormGroup>
-                <ControlLabel>Search for routes by location</ControlLabel>
                 <FormControl
+                    placeholder="Search for routes by location"
                     type="text"
                     name="term2"
                     value={this.state.term2}

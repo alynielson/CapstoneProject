@@ -168,6 +168,10 @@ export class UserRouteContent extends Component {
    
 
     render() {
+        const style = {
+            backgroundColor: "purple",
+            height: "85vh",
+        };
         const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 500);
         const addRoute = ((selectedRoute) => { this.addSelectedRoute(selectedRoute) });
         const returnToRoutes = this.backToAllRoutes;
@@ -176,13 +180,13 @@ export class UserRouteContent extends Component {
         const selectHillFilter = ((value) => { this.setHillFilter(value) });
         if (this.state.createRoute) {
             return (
-                <div>
+                <div style={style}>
                     <CreateRoute onFinishing={moveFromCreateToEdit} returnToRouteHome={returnToRoutes} />
                 </div>);
         }
         else if (this.state.editRoute) {
             return (
-                <div>
+                <div style={style}>
                     <EditRoute routeId={this.state.currentRouteId} coordinates={this.state.coordinates}
                         returnToRouteHome={returnToRoutes}
                         lat={this.state.defaultLat}
@@ -208,35 +212,40 @@ export class UserRouteContent extends Component {
         }
         else {
             return (
-                <div>
+                <div style={style}>
+                    <Row className="empty-space10percent" />
                     <Row>
-                        <Col md={3}>
-                            <Button onClick={(event) => this.addNewRoute(event)}>Create a Route</Button>
-                            </Col>
+                        <Col md={2} mdOffset={1}>
+                                <a className="btn action-button" onClick={(event) => this.addNewRoute(event)}>Create a Route</a>
+                        </Col>
                     </Row>
+                    <Row className="empty-space5percent" />
+                    <Col md={6}>
                     <Row>
-                    <Col md={4}>
+                        <Col md={8} mdOffset={1}>
 
                         <SearchRoutes onSearchEnter={routeSearch} />
                         
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={12}>
+                        <Col md={8} mdOffset={1}>
                             <DistanceButtons sendDistanceArray={selectDistanceFilter}/>
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={12}>
+                        <Col md={10} mdOffset={1}>
                             <HillButtons sendHillArray={selectHillFilter}/>
                         </Col>
                     </Row>
+                   
+                    </Col>
                     <Row>
-                        <Col md={6}>
+                        <Col md={5}>
                             <RouteList routesToAdd={this.state.routeToAdd}
                                 onRouteSelect={addRoute} />
-                            </Col>
-                        </Row>
+                        </Col>
+                    </Row>
                 </div>
                 
             );

@@ -42,7 +42,7 @@ export class HillButtons extends Component {
                 <ControlLabel>Filter by amount of climbing (in meters):</ControlLabel>
                 <ButtonToolbar>
                     {this.state.buttons.map((el, index) =>
-                        <Button key={index} onClick={() => this.onClick(index)} active={this.state.buttons[index].isActive}>
+                        <Button className="hill-buttons" key={index} onClick={() => this.onClick(index)} active={this.state.buttons[index].isActive}>
                             {el.name}
                         </Button>
                     )}

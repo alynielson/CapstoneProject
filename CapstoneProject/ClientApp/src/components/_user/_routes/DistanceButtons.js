@@ -42,7 +42,7 @@ export class DistanceButtons extends Component {
                 <ControlLabel>Filter by distance (in miles):</ControlLabel>
                 <ButtonToolbar>
                     {this.state.buttons.map((el, index) =>
-                        <Button key={index} onClick={() => this.onClick(index)} active={this.state.buttons[index].isActive}>
+                        <Button className="distance-buttons" key={index} onClick={() => this.onClick(index)} active={this.state.buttons[index].isActive}>
                             {el.name}
                         </Button>
                     )}

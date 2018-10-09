@@ -250,6 +250,13 @@ button.list-group-item:hover {
         color: #D9EDF7;
     }
 
+.btn.btn-primary {
+    background-image: none;
+    background-color: purple;
+    border: 1px solid hotpink;
+    color: white;
+}
+
 .empty-space10percent {
     height: 10%;
 }
@@ -330,8 +337,17 @@ button.list-group-item:hover {
       
 }
 
-.modal-form-custom{
+.modal-form-custom {
     width: 40%;
+    color: #555;
+    font-family: Cambria, Cochin, Georgia, Times, Times New Roman, serif;
+}
+
+.modal-body {
+    background-color: #c2e6ff;
+}
+.modal-footer {
+    background-color: #c2e6ff;
 }
 .custom-map{
     height: 35vw;

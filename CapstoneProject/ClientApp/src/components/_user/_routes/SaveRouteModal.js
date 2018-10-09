@@ -29,11 +29,11 @@ export class SaveRouteModal extends Component {
     }
 
     render() {
-        
+       
        
             return (
               
-                    <Modal show={this.props.show}  dialogClassName="modal-form-custom">
+                <Modal show={this.props.show} dialogClassName="modal-form-custom">
                     
                     <Modal.Body>
                         <h2>Save</h2>
@@ -41,20 +41,18 @@ export class SaveRouteModal extends Component {
                         <h6>Once you save, you won't be able to edit the route's points.</h6>
                         <Form>
                             <FormGroup>
-                                <ControlLabel>Route Name</ControlLabel>
                                 <FormControl
                                     type="text"
-                                   
+                                   placeholder="Route Name"
                                     name="name"
                                     value={this.state.name}
                                     onChange={this.handleChange} />
                             </FormGroup>
                             <FormGroup>
-                                <ControlLabel>Description</ControlLabel>
                                 <FormControl
                                     type="text"
                                     name="description"
-                                    
+                                    placeholder="Description"
                                     value={this.state.description}
                                     onChange={this.handleChange} />
                             </FormGroup>

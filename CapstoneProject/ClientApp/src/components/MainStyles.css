@@ -100,6 +100,54 @@
 button.list-group-item:hover {
     background-color: #c2e6ff;
 }
+
+.list-group-item{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+}
+    .btn-group-vertical > .btn{
+        margin-bottom: 10px;
+    }
+
+    .list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {
+        background-color: #c2e6ff;
+        background-image: none;
+        text-shadow: none;
+        border: none;
+        color: #555;
+    }
+
+
+    .btn-group-vertical > .btn.active,
+    .btn-group-vertical > .btn:first-child:not(:last-child).active,
+    .btn-group-vertical > .btn:not(:first-child):not(:last-child).active,
+    .btn-group-vertical > .btn:last-child:not(:first-child).active,
+    .btn-group-vertical > .btn.active:hover,
+    .btn-group-vertical > .btn:first-child:not(:last-child).active:hover,
+    .btn-group-vertical > .btn:not(:first-child):not(:last-child).active:hover,
+    .btn-group-vertical > .btn:last-child:not(:first-child).active:hover,
+    .btn-group-vertical > .btn.active:focus,
+    .btn-group-vertical > .btn:first-child:not(:last-child).active:focus,
+    .btn-group-vertical > .btn:not(:first-child):not(:last-child).active:focus,
+    .btn-group-vertical > .btn:last-child:not(:first-child).active:focus {
+        background-image: linear-gradient(to left, orange, hotpink);
+       background-color: hotpink;
+        border: none;
+        outline: none;
+    }
+.btn-group-vertical > .btn,
+.btn-group-vertical > .btn:first-child:not(:last-child),
+.btn-group-vertical > .btn:not(:first-child):not(:last-child),
+.btn-group-vertical > .btn:last-child:not(:first-child) {
+    border-radius: 15px;
+    padding: 3px 6px;
+    background-image: none;
+    background-color: purple;
+    border: 3px solid hotpink;
+    color: white;
+    text-shadow: none;
+}
+
 .app {
     background-color: white;
     color: black;

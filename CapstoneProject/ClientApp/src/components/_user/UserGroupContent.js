@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Tooltip, OverlayTrigger, ListGroup, ListGroupItem, FormControl, ControlLabel, Col, ColProps, Row, Glyphicon } from 'react-bootstrap';
+import { Tooltip, OverlayTrigger, ListGroup, ListGroupItem, ButtonGroup, Button, Col, ColProps, Row, Glyphicon } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { CreateGroup } from './CreateGroup';
 import { EditGroup } from './_groups/EditGroup';
@@ -23,16 +23,24 @@ export class UserGroupContent extends Component {
             memberNames: [],
             userId: null,
             owner: '',
+            viewingGroupDetails: "About"
             
         }
         this.addNewGroup = this.addNewGroup.bind(this);
         this.backToAllGroups = this.backToAllGroups.bind(this);
         this.goEditGroup = this.goEditGroup.bind(this);
         this.goViewGroup = this.goViewGroup.bind(this);
-
+        this.changeViewingDetails = this.changeViewingDetails.bind(this);
     }
 
-    goEditGroup(index) {
+    changeViewingDetails(tab) {
+        this.setState({
+            viewingGroupDetails: tab
+        });
+    }
+
+    goEditGroup() {
+        let index = this.state.canEditGroup;
         var groupId = this.state.groupsOwn[index].id;
         fetch(`/api/Groups/GetGroupDetails?id=${groupId}`).then(response => response.json()).then(data =>
             this.setState({
@@ -51,8 +59,9 @@ export class UserGroupContent extends Component {
 
     }
 
-    goViewGroup(index) {
-        var groupId = this.state.groupsIn[index].id;
+    goViewGroup(index, list) {
+        var groupId = (list === "in") ? this.state.groupsIn[index].id : this.state.groupsOwn[index].id;
+        var canEdit = (list === "own") ? index : null;
         fetch(`/api/Groups/GetGroupDetails?id=${groupId}`).then(response => response.json()).then(data =>
             this.setState({
                 name: data.name,
@@ -63,8 +72,9 @@ export class UserGroupContent extends Component {
                 memberNames: data.memberNames,
                 owner: data.owner,
                 userId: data.userId,
-                viewingGroupId: groupId
-
+                viewingGroupId: groupId,
+                viewingGroupDetails:"About",
+                canEditGroup: canEdit
             }))
             .catch(error => console.log(error));
 
@@ -126,6 +136,31 @@ export class UserGroupContent extends Component {
                 You're the organizer of this group!
             </Tooltip>
         );
+        let viewGroup = null;
+        let viewGroupButtons = null;
+        let editGroup = null;
+        if (this.state.viewingGroupId != null) {
+            viewGroup = <ViewGroup
+                name={this.state.name}
+                city={this.state.city}
+                state={this.state.state}
+                description={this.state.description}
+                memberIds={this.state.memberIds}
+                userId={this.state.userId}
+                owner={this.state.owner}
+                memberNames={this.state.memberNames}
+                id={this.state.editingGroupId}
+                viewingGroupDetails={this.state.viewingGroupDetails}
+            />
+            if (this.state.canEditGroup !== null) {
+                editGroup = <a className="btn action-button" onClick={() => this.goEditGroup()}>Edit Group</a>
+            }
+            viewGroupButtons = <ButtonGroup vertical>
+                <Button onClick={() => this.changeViewingDetails("About")} active={this.state.viewingGroupDetails === "About"}>About</Button>
+                <Button onClick={() => this.changeViewingDetails("Members")} active={this.state.viewingGroupDetails === "Members"}>Members</Button>
+                <Button onClick={() => this.changeViewingDetails("Events")} active={this.state.viewingGroupDetails === "Events"}>Events</Button>
+            </ButtonGroup>
+        }
         const returnToEvents = this.backToAllGroups;
         var groupsOwn = this.state.groupsOwn;
         var groupsIn = this.state.groupsIn;
@@ -151,26 +186,12 @@ export class UserGroupContent extends Component {
                     returnToEventHome={returnToEvents} />
             );
         }
-        else if (this.state.viewingGroupId != null) {
-            return (
-                <ViewGroup
-                    name={this.state.name}
-                    city={this.state.city}
-                    state={this.state.state}
-                    description={this.state.description}
-                    memberIds={this.state.memberIds}
-                    userId={this.state.userId}
-                    owner={this.state.owner}
-                    memberNames={this.state.memberNames}
-                    id={this.state.editingGroupId}
-                    returnToEventHome={returnToEvents} />
-            );
-        }
+       
         else {
             
           
             return (
-                <div style={style}>
+                <div style={style}> 
                     <Row className="empty-space5percent" />
                     <Row>
                         <Col md={2} mdOffset={1} >
@@ -183,7 +204,7 @@ export class UserGroupContent extends Component {
                             <h3 className="page-subtitle">Your Groups</h3>
                             <ListGroup>
                                 {groupsOwn.map((a, index) =>
-                                    (<ListGroupItem key={index} onClick={() => this.goEditGroup(index)} value={a.id}>
+                                    (<ListGroupItem key={index} onClick={() => this.goViewGroup(index, "own")} active={this.state.viewingGroupId === a.id} value={a.id}>
                                         {a.name}
                                         <span className="pull-right">
                                             <OverlayTrigger placement="right" overlay={tooltip}>
@@ -192,16 +213,25 @@ export class UserGroupContent extends Component {
                                         </span>
                                     </ListGroupItem>)
                                 )}
-                            {groupsIn.map((a,i) => 
-                                
-                                    (<ListGroupItem onClick={() => this.goViewGroup(i)} key={i}value={a.id}>{a.name}</ListGroupItem>)
+                                {groupsIn.map((a, i) =>
+
+                                    (<ListGroupItem onClick={() => this.goViewGroup(i,"in")} key={i} value={a.id} active={this.state.viewingGroupId === a.id}>{a.name}</ListGroupItem>)
                                 )}
                                
                                 </ListGroup>
                         </Col>
-                        <Col md={3} mdOffset={3}>
-                                </Col>
+                        <Col md={4} mdOffset={1}>
+                            {viewGroup}
+                        </Col>
+                        <Col md={1}>
+                            {viewGroupButtons}
+                            </Col>
                     </Row>
+                    
+                    <Row>
+                        <Col md={2} mdOffset={7}>
+                        {editGroup}
+                    </Col></Row>
                     </div>
 
 

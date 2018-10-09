@@ -268,10 +268,14 @@ export class CreateMapContainer extends Component {
             uphill = 0;
             downhill = 0;
         }
-            return (
+        return (
+            <div>
+            
                 <Row>
-                    <Col md={7}>
+                    <Col md={7} >
+                        
                         <SaveRouteModal show={this.state.isSavingNew} hiding={this.handleModalHide} submitting={submitRoute} />
+                        
                         <div className='map'>
                             <Map google={window.google}
                                 initialCenter={{ lat: this.props.lat, lng: this.props.lng }}
@@ -284,7 +288,8 @@ export class CreateMapContainer extends Component {
                         </div>
                     </Col>
                     <Col md={2}>
-                        <ButtonGroup vertical>
+                       
+                        <ButtonGroup vertical className="map-action-buttons">
                             <Button onClick={this.deleteLast}>Undo</Button>
                             <Button onClick={this.deleteAll}>Clear All</Button>
                             <Button onClick={this.saveRoute} disabled={!(this.state.totalDistance > 0)}>Save</Button>
@@ -292,7 +297,7 @@ export class CreateMapContainer extends Component {
 
                     </Col>
                     <Col md={3}>
-                        <FormGroup>
+                        <FormGroup className="map-info">
                             <ControlLabel>Total Distance</ControlLabel>
                             <Well>{this.state.totalDistance.toFixed(3)} miles</Well>
                             <ControlLabel>Total Elevation Gain</ControlLabel>
@@ -304,8 +309,12 @@ export class CreateMapContainer extends Component {
                             <ControlLabel>Downhill on Last Stretch</ControlLabel>
                             <Well>{downhill} meters</Well>
                         </FormGroup>
+                        <Col md={4} mdOffset={8}>
+                            <a className="btn action-button map-back" onClick={this.props.returnToRouteHome}>Back</a>
+                            </Col>
                     </Col>
                 </Row>
+                </div>
             );
         }
        

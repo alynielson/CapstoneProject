@@ -29,16 +29,16 @@ export class CreateRoute extends Component {
     render() {
         return (
             <div>
+               
                 <Row>
                 <Col md={12} className="map-container">
-                    <CreateMapContainer onFinishing={this.props.onFinishing} lat={this.state.defaultLat} lng={this.state.defaultLong}/>  
+                        <CreateMapContainer onFinishing={this.props.onFinishing} lat={this.state.defaultLat}
+                            lng={this.state.defaultLong}
+                            returnToRouteHome={this.props.returnToRouteHome}
+                        />  
                 </Col>
                 </Row>
-                <Row>
-                    <ButtonToolbar className='map-buttons'>
-                        <Button  onClick={this.props.returnToRouteHome}>Back</Button>  
-                    </ButtonToolbar>
-                </Row>
+               
             </div>
             );
     }

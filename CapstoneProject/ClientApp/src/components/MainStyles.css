@@ -285,6 +285,20 @@ button.list-group-item:hover {
     margin-top: 10px;
 }
 
+.well {
+    background-image: none;
+    background-color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-right: 30px;
+    padding: 6px 12px;
+    border: none;
+}
+
+.map-info{
+    margin-top: 20px;
+
+}
+
 .btn-default {
     box-shadow: none;
     background-image: none;
@@ -293,13 +307,15 @@ button.list-group-item:hover {
     border-radius: 3px;
 }
 
+.map-action-buttons{
+    margin-left: 20px;
+    margin-top: 20px;
+}
 
 .map {
-    height: 70vw;
-    width: 70vw;
-    max-width: 600px;
-    max-height: 600px;
+    height: 78vh;
     margin-top: 10px;
+    margin-left: 10px;
     margin-bottom: 10px;
 }
 
@@ -322,4 +338,8 @@ button.list-group-item:hover {
     width: 35vw;
    
     margin-right: 40px;
+}
+
+.map-back {
+    margin-top: 70px;
 }

@@ -34,8 +34,8 @@ export class SearchMembers extends Component {
     render() {
         return (
             <FormGroup>
-                <ControlLabel>Search for members to add</ControlLabel>
                 <FormControl
+                    placeholder="Search for members to add"
                     type="text"
                     name="term2"
                     value={this.state.term2}

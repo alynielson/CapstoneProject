@@ -98,18 +98,35 @@ export class CreateGroup extends Component {
         const membersAdded = this.state.members.map((member) => <ListGroupItem key={member.value} bsStyle='success'>{member.display}</ListGroupItem>)
         const memberSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
         const addMember = ((selectedMember) => { this.addSelectedMember(selectedMember) });
-      
+        const style = {
+            backgroundColor: "purple",
+            height: "85vh",
+        };
+        const membersBox = {
+            backgroundColor: "#c2e6ff",
+            height: "60vh",
+            paddingLeft: "30px",
+            paddingRight: "30px",
+            color: "#555",
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            overflow: "auto",
+            marginBottom: "10px"
+        }
             return (
-                <div>
-                    <h1> New Group </h1>
+                <div style={style}>
+                    <Row className="empty-space5percent" />
                     <Row>
-                        <Col md={3}>
+                        <Col md={2} mdOffset={1}>
+                            <h1 className="page-subtitle"> New Group </h1>
+                            </Col>
+                        </Row>
+                    <Row>
+                        <Col md={3} mdOffset={1}>
                             
                             <Form>
                                 <FormGroup>
-                                    <ControlLabel>Group Name</ControlLabel>
                                     <FormControl
-
+                                        placeholder="Group Name"
                                         type="text"
                                         name="name"
                                         value={this.state.name}
@@ -117,15 +134,23 @@ export class CreateGroup extends Component {
                                     />
                                 </FormGroup>
                                 <FormGroup>
-                                    <ControlLabel>City</ControlLabel>
                                     <FormControl
+                                        placeholder="Description"
+                                        componentClass="textarea"
+                                        name="description"
+                                        value={this.state.description}
+                                        onChange={this.handleChange} />
+
+                                </FormGroup>
+                                <FormGroup>
+                                    <FormControl
+                                        placeholder="City"
                                         type="text"
                                         name="city"
                                         value={this.state.city}
                                         onChange={this.handleChange}
                                     />
                                 </FormGroup>
-                                <ControlLabel>State</ControlLabel>
                                 <FormControl
                                     componentClass="select"
                                     name="state"
@@ -134,15 +159,7 @@ export class CreateGroup extends Component {
                                 >
                                     {this.state.states.map((state) => <option key={state.value} value={state.value}>{state.display}</option>)}
                                 </FormControl>
-                                <FormGroup>
-                                    <ControlLabel>Description</ControlLabel>
-                                    <FormControl
-                                        componentClass="textarea"
-                                        name="description"
-                                        value={this.state.description}
-                                        onChange={this.handleChange} />
-                                    
-                                </FormGroup>
+                                
 
                             </Form>
                             <ButtonToolbar>
@@ -156,11 +173,13 @@ export class CreateGroup extends Component {
                             <MemberList membersToAdd={this.state.membersToAdd}
                                 onMemberSelect={addMember} existingMembers={this.state.members} />
                         </Col>
-                        <Col md={3}>
-                            <ControlLabel>Added Members </ControlLabel>
+                        <Col md={4}>
+                            <div style={membersBox}>
+                                <h3>Members Added</h3>
                             <ListGroup>
                                 {membersAdded}
                                 </ListGroup>
+                                </div>
                         </Col>
                     </Row>
 

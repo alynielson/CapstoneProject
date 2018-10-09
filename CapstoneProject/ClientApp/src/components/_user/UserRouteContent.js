@@ -235,7 +235,7 @@ export class UserRouteContent extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={10} mdOffset={1}>
+                        <Col md={11} mdOffset={1}>
                             <HillButtons sendHillArray={selectHillFilter}/>
                         </Col>
                     </Row>

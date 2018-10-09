@@ -81,6 +81,13 @@ export class UserEventContent extends Component {
 
 
     render() {
+        const style = {
+            backgroundColor: "purple",
+            height: "85vh",
+            overflowY: "auto",
+            overflowX: "hidden"
+            
+        };
         var eventsInTable = null;
         if (this.state.eventsInTable != null) {
             eventsInTable = this.state.eventsInTable.map(data => {
@@ -90,7 +97,6 @@ export class UserEventContent extends Component {
                         <td>{data.name}</td>
                         <td>{moment(data.time).format('HH:mm a')}</td>
                         <td>{data.organizer}</td>
-                        <td>{data.going}</td>
                     </tr>
                     
                     )
@@ -101,10 +107,10 @@ export class UserEventContent extends Component {
         }
         const backToEventHome = this.backToEventHome;
         if (this.state.createEvent) {
-            return (<CreateEvent backToEventHome={backToEventHome} />);
+            return (<CreateEvent style={style} backToEventHome={backToEventHome} />);
         }
         if (this.state.viewingEvent) {
-            return <ViewEvent
+            return <ViewEvent style={style}
                 eventId={this.state.eventId}
                 description={this.state.description}
                 name={this.state.name}
@@ -124,12 +130,17 @@ export class UserEventContent extends Component {
         }
         else {
             return (
-                <div>
-                    <Button onClick={(event) => this.addNewEvent(event)}>Create New Event</Button>
-                <Row>
+                <div style={style}>
+                    <Row className="empty-space5percent" />
                     
-                </Row>
-                <h3>Upcoming Events</h3>
+                    <Row>
+                        <Col md={2} mdOffset={1}>
+                            <a className="btn action-button" onClick={(event) => this.addNewEvent(event)}>Create New Event</a>
+                            </Col>
+                    </Row>
+                    <Row>
+                        <Col md={10} mdOffset={1}>
+                            <h3 className="page-subtitle">Upcoming Events</h3>
                 <Table hover>
                     <thead>
                         <tr>
@@ -138,13 +149,14 @@ export class UserEventContent extends Component {
                             <th>Event</th>
                             <th>Time</th>
                             <th>Organizer</th>
-                            <th>Going</th>
                         </tr>
                     </thead>
                     <tbody>
                         {eventsInTable}
                     </tbody>
-                    </Table>
+                            </Table>
+                            </Col>
+                        </Row>
                     </div>
             );
         }

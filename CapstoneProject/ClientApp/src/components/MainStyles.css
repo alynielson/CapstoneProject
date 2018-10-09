@@ -374,3 +374,19 @@ button.list-group-item:hover {
     box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.41);
     color: #555;
 }
+
+.table {
+    color: white;
+}
+
+tr:hover {
+    background-color: #c2e6ff;
+    background-image: none;
+    color: #555;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+    background-color: #c2e6ff;
+    background-image: none;
+    color: #555;
+}

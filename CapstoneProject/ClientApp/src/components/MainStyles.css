@@ -237,6 +237,14 @@ button.list-group-item:hover {
    max-height: 50px;
 }
 
+.dismissable-item {
+    background-image: none;
+    background-color: white;
+    color: #555;
+    border-radius: 0px;
+    margin-bottom: 0px;
+}
+
 .button-group {
     margin-top: 10px;
 }

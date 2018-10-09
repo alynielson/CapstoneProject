@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, ListGroup, ListGroupItem, FormControl, ControlLabel, Col, Form, FormGroup, Alert, Row, ButtonToolbar } from 'react-bootstrap';
+import { Button, ListGroup, ListGroupItem, FormControl, ControlLabel, Col, Form, FormGroup, Alert, Row, ButtonGroup } from 'react-bootstrap';
 import { MemberList } from './MemberList';
 import { SearchMembers } from './SearchMembers';
 import _ from 'lodash';
@@ -11,9 +11,24 @@ export class EditGroup extends Component {
             members: [],
             states: [],
             membersToAdd: [],
-            newMembers: []
+            newMembers: [],
+            justAddedMember: false
         }
         this.handleChange = this.handleChange.bind(this);
+        this.showJustAdded = this.showJustAdded.bind(this);
+    }
+
+    showJustAdded(button) {
+        if (button === "add" && this.state.justAddedMember === false) {
+            this.setState({
+                justAddedMember: true
+            });
+        }
+        else if (button === "current" && this.state.justAddedMember === true) {
+            this.setState({
+                justAddedMember: false
+            });
+        }
     }
 
     async submitEdit() {
@@ -42,7 +57,8 @@ export class EditGroup extends Component {
             let editableMembers = this.state.newMembers.slice();
             editableMembers.push(selectedMember);
             this.setState({
-                newMembers: editableMembers
+                newMembers: editableMembers,
+                justAddedMember: true
             });
         }
         else {
@@ -119,27 +135,53 @@ export class EditGroup extends Component {
         })
     }
     render() {
+        const style = {
+            backgroundColor: "purple",
+            height: "85vh",
+        };
+        const membersBox = {
+            backgroundColor: "#c2e6ff",
+            height: "60vh",
+            paddingLeft: "15px",
+            paddingRight: "15px",
+            color: "#555",
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            overflow: "auto",
+            marginBottom: "10px",
+            boxShadow: "4px 4px 5px 0px rgba(0,0,0,0.41)",
+            borderRadius: "5px"
+        }
         if (this.state.members !== undefined) {
-            var membersAdded = this.state.members.map((member, index) => <Alert key={member.value} bsStyle='success' onDismiss={() => this.deleteMember(index)}>{member.display}</Alert>)
+            var membersAdded = this.state.members.map((member, index) => <Alert className="dismissable-item"key={member.value} onDismiss={() => this.deleteMember(index)}>{member.display}</Alert>)
         } else { membersAdded = null;}
-        var newMembers = this.state.newMembers.map((member) => <ListGroupItem key={member.value} bsStyle='success'>{member.display}</ListGroupItem>)
+        var newMembers = this.state.newMembers.map((member) => <ListGroupItem key={member.value} >{member.display}</ListGroupItem>)
 
        
             const memberSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
         const addMember = ((selectedMember) => { this.addSelectedMember(selectedMember) });
+        var membersToShow = <div><h3>Members </h3>
+            <ListGroup>
+                {membersAdded}
+            </ListGroup></div>
+        if (this.state.justAddedMember) {
+            membersToShow = <div><h3>Members To Add</h3>
+                <ListGroup>{newMembers}</ListGroup></div>
+        }
         return (
-            <div>
-            <Row>
-                <h2>Edit Group</h2>
-                </Row>
+            <div style={style}>
+                <Row className="empty-space2percent"> </Row>
                 <Row>
-                <Col md={3}>
+                        <Col md={2} mdOffset={1}>
+                            <h1 className="page-subtitle"> Edit Group </h1>
+                        </Col>
+                    </Row>
+                <Row>
+                    <Col md={3} mdOffset={1}>
                     <Form>
                        
                             <FormGroup>
-                                <ControlLabel>Group Name</ControlLabel>
                                 <FormControl
-
+                                    placeholder="Group Name"
                                     type="text"
                                     name="name"
                                     value={this.state.name}
@@ -147,16 +189,25 @@ export class EditGroup extends Component {
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <ControlLabel>City</ControlLabel>
                                 <FormControl
+                                    placeholder="Description"
+                                    componentClass="textarea"
+                                    name="description"
+                                    value={this.state.description}
+                                    onChange={this.handleChange} />
+
+                            </FormGroup>
+                            <FormGroup>
+                                <FormControl
+                                    placeholder="City"
                                     type="text"
                                     name="city"
                                     value={this.state.city}
                                     onChange={this.handleChange}
                                 />
                             </FormGroup>
-                            <ControlLabel>State</ControlLabel>
                             <FormControl
+                                placeholder="State"
                                 componentClass="select"
                                 name="state"
                                 value={this.state.state}
@@ -164,21 +215,10 @@ export class EditGroup extends Component {
                             >
                                 {this.state.states.map((state) => <option key={state.value} value={state.value}>{state.display}</option>)}
                             </FormControl>
-                            <FormGroup>
-                                <ControlLabel>Description</ControlLabel>
-                                <FormControl
-                                    componentClass="textarea"
-                                    name="description"
-                                    value={this.state.description}
-                                    onChange={this.handleChange} />
-
-                            </FormGroup>
+                          
                             
                     </Form>
-                    <ButtonToolbar>
-                            <Button onClick={(event) => this.submitEdit(event)}>Back</Button>
-                        
-                    </ButtonToolbar>
+                    
                 </Col>
                 <Col md={3}>
 
@@ -188,16 +228,22 @@ export class EditGroup extends Component {
                     </Col>
 
                     <Col md={3}>
-                        <ControlLabel>Members To Add</ControlLabel>
-                        <ListGroup>{newMembers}</ListGroup>
+                        <div style={membersBox}>
+                            {membersToShow}
+                            </div>
                     </Col>
-                    <Col md={3}>
-                    <ControlLabel>Members </ControlLabel>
-                    <ListGroup>
-                        {membersAdded}
-                    </ListGroup>
-                    </Col>
+                    <Col md={1}>
+                        <ButtonGroup vertical>
+                            <Button active={this.state.justAddedMember} onClick={() => this.showJustAdded("add")}>To Add</Button>
+                            <Button active={!this.state.justAddedMember} onClick={() => this.showJustAdded("current")}>Members</Button>
+                        </ButtonGroup>
+                        </Col>
                 </Row>
+                <Row>
+                    <Col md={2} mdOffset={1}>
+                        <a className="btn action-button" onClick={(event) => this.submitEdit(event)}>Finish</a>
+                        </Col>
+                    </Row>
                 </div>
             );
     }

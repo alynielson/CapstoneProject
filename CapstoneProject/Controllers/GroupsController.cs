@@ -171,9 +171,10 @@ namespace CapstoneProject.Controllers
             group.Description = data.description;
             group.City = data.city;
             group.State = data.state;
-            CreateNewGroupMembers(data.groupId, data.members);
             _context.Update(group);
             _context.SaveChanges();
+            CreateNewGroupMembers(data.groupId, data.members);
+            
             return Ok();
         }
     }

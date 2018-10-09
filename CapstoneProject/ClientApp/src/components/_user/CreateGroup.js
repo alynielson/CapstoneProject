@@ -101,7 +101,7 @@ export class CreateGroup extends Component {
     }
 
     render() {
-        const membersAdded = this.state.members.map((member) => <ListGroupItem key={member.value} bsStyle='success'>{member.display}</ListGroupItem>)
+        const membersAdded = this.state.members.map((member) => <ListGroupItem key={member.value}>{member.display}</ListGroupItem>)
         const memberSearch = _.debounce((term2) => { this.searchTest(term2) }, 1000);
         const addMember = ((selectedMember) => { this.addSelectedMember(selectedMember) });
         const style = {

@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ListGroupItem, ListGroup, ColProps, Row, ButtonToolbar } from 'react-bootstrap';
+import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ListGroupItem, ListGroup, ColProps, Row, Alert } from 'react-bootstrap';
 import { Route, Link, Redirect, withRouter, BrowserRouter } from 'react-router-dom';
 import { NavMenu } from '../NavMenu';
 import { SearchMembers } from './_groups/SearchMembers';
@@ -16,7 +16,8 @@ export class CreateGroup extends Component {
             states: [],
             description: '',
             members: [],
-            membersToAdd: []
+            membersToAdd: [],
+            errorMessage: ''
         }
         this.handleChange = this.handleChange.bind(this);
         this.submitGroup = this.submitGroup.bind(this);
@@ -25,18 +26,23 @@ export class CreateGroup extends Component {
 
     submitGroup(event) {
         event.preventDefault();
-        var userId = localStorage.getItem('userId');
-        var members = this.state.members.map(a => Number(a.value));
-        const data = {
-            name: this.state.name, city: this.state.city, state: this.state.state, description: this.state.description,
-            members: members, userId: userId
-        };
-        fetch('api/Groups/Create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        }).catch(function (error) { console.log(error); });
-        this.props.returnToEventHome();
+        if (!this.canSubmit()) {
+            this.setState({ errorMessage: "Can't create without a name and description!" });
+        }
+        else {
+            var userId = localStorage.getItem('userId');
+            var members = this.state.members.map(a => Number(a.value));
+            const data = {
+                name: this.state.name, city: this.state.city, state: this.state.state, description: this.state.description,
+                members: members, userId: userId
+            };
+            fetch('api/Groups/Create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).catch(function (error) { console.log(error); });
+            this.props.returnToEventHome();
+        }
     }
 
     addSelectedMember(selectedMember) {
@@ -110,11 +116,13 @@ export class CreateGroup extends Component {
             color: "#555",
             fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
             overflow: "auto",
-            marginBottom: "10px"
+            marginBottom: "10px",
+            boxShadow: "4px 4px 5px 0px rgba(0,0,0,0.41)",
+            borderRadius: "5px"
         }
             return (
                 <div style={style}>
-                    <Row className="empty-space5percent" />
+                    <Row className="empty-space2percent" />
                     <Row>
                         <Col md={2} mdOffset={1}>
                             <h1 className="page-subtitle"> New Group </h1>
@@ -122,7 +130,9 @@ export class CreateGroup extends Component {
                         </Row>
                     <Row>
                         <Col md={3} mdOffset={1}>
-                            
+                            <div hidden={this.state.errorMessage === ''}>
+                                <Alert>{this.state.errorMessage}</Alert>
+                                </div>
                             <Form>
                                 <FormGroup>
                                     <FormControl
@@ -162,10 +172,7 @@ export class CreateGroup extends Component {
                                 
 
                             </Form>
-                            <ButtonToolbar>
-                                <Button onClick={this.props.returnToEventHome}>Back</Button>
-                                <Button disabled={!this.canSubmit()} onClick={(event) => this.submitGroup(event)}>Finish</Button>
-                    </ButtonToolbar>
+                       
                         </Col>
                         <Col md={3}>
                             
@@ -182,6 +189,15 @@ export class CreateGroup extends Component {
                                 </div>
                         </Col>
                     </Row>
+                    <Row>
+                        <Col md={1} mdOffset={1}>
+                                <a className="smaller-action-buttons" onClick={this.props.returnToEventHome}>Back</a>
+                        </Col>
+                        <Col md={2}>
+                            <a className="btn action-button" onClick={(event) => this.submitGroup(event)}>Finish</a>
+
+                            </Col>
+                        </Row>
 
                 </div>
             );

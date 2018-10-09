@@ -20,7 +20,9 @@ export class ViewGroup extends Component {
             color: "#555",
             fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
             overflow: "auto",
-            marginBottom: "10px"
+            marginBottom: "10px",
+            boxShadow: "4px 4px 5px 0px rgba(0,0,0,0.41)",
+            borderRadius: "5px"
         }
         var contents = null;
         if (this.props.viewingGroupDetails === "About") {

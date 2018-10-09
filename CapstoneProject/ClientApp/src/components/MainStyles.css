@@ -117,7 +117,7 @@ button.list-group-item:hover {
         color: #555;
     }
 
-   
+   .smaller-action-buttons:hover,
     .btn-group-vertical > .btn.active,
     .btn-group-vertical > .btn:first-child:not(:last-child).active,
     .btn-group-vertical > .btn:not(:first-child):not(:last-child).active,
@@ -132,13 +132,17 @@ button.list-group-item:hover {
     .btn-group-vertical > .btn:last-child:not(:first-child).active:focus {
         background-image: linear-gradient(to left, orange, hotpink);
        background-color: hotpink;
+       color: white;
+       text-decoration: none;
+       cursor: pointer;
         border: none;
         outline: none;
     }
 .btn-group-vertical > .btn,
 .btn-group-vertical > .btn:first-child:not(:last-child),
 .btn-group-vertical > .btn:not(:first-child):not(:last-child),
-.btn-group-vertical > .btn:last-child:not(:first-child) {
+.btn-group-vertical > .btn:last-child:not(:first-child),
+.smaller-action-buttons {
     border-radius: 15px;
     padding: 3px 6px;
     background-image: none;
@@ -173,6 +177,9 @@ button.list-group-item:hover {
     color: white;
 }
 
+.empty-space2percent{
+    height: 2%;
+}
 
 
 .body-content {
@@ -217,12 +224,14 @@ button.list-group-item:hover {
 
 .alert-info {
     background-image: none;
+    background-color: #c2e6ff;
+   
 }
 .alert {
     text-align: center;
     text-shadow: none;
     box-shadow: none;
-    border-radius: 0px;
+    border-radius: 3px;
     border: none;
    height: 90%;
    max-height: 50px;

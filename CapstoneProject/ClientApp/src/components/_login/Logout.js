@@ -29,8 +29,8 @@ export class Logout extends Component {
                     <Modal.Dialog>
                         <Modal.Body>Are you sure you want to log out?</Modal.Body>
                         <Modal.Footer>
-                            <Button onClick={this.props.cancel}>Back</Button>
-                            <Button bsStyle="primary" onClick={(event) => this.LogOutAction(event)}>Log me out</Button>
+                            <a className="btn normal-buttons" onClick={this.props.cancel}>Back</a>
+                            <a className="btn action-button modal-btn" bsStyle="primary" onClick={(event) => this.LogOutAction(event)}>Log me out</a>
                         </Modal.Footer>
                     </Modal.Dialog>
                 </div>

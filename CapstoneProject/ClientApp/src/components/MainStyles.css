@@ -543,3 +543,7 @@ input, input:focus {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
+
+.modal-btn {
+    width: 30%;
+}

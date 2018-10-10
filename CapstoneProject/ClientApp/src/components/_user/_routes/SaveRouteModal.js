@@ -60,8 +60,8 @@ export class SaveRouteModal extends Component {
                             </Form>
                             </Modal.Body>
                         <Modal.Footer>
-                            <Button onClick={this.props.hiding}>Back</Button>
-                        <Button bsStyle="primary" onClick={() => this.props.submitting(this.state.name, this.state.description, this.state.city, this.state.state)}>Save</Button>
+                            <a className="btn normal-buttons" onClick={this.props.hiding}>Back</a>
+                        <a className="btn action-button modal-btn" bsStyle="primary" onClick={() => this.props.submitting(this.state.name, this.state.description, this.state.city, this.state.state)}>Save</a>
                         </Modal.Footer>
                        
                         </Modal>

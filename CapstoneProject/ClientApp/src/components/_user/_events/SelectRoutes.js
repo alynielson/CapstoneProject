@@ -374,10 +374,10 @@ export class SelectRoutes extends Component {
            
         }
         if (!this.state.hasSelected) {
-            finishButton = <a className="btn action-button under-map" onClick={this.finish}>Next</a>
+            finishButton = <a className="btn action-button under-map2" onClick={this.finish}>Next</a>
         }
         else {
-            finishButton = <a className="btn action-button under-map" onClick={() => this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1Details, this.state.route2Details, this.state.addressCoords)}>Finish</a>
+            finishButton = <a className="btn action-button under-map2" onClick={() => this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1Details, this.state.route2Details, this.state.addressCoords)}>Finish</a>
         }
         return (
             <div>

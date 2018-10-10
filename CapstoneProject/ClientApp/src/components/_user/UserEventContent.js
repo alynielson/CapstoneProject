@@ -24,7 +24,8 @@ export class UserEventContent extends Component {
     }
     backToEventHome() {
         this.setState({
-            createEvent: false
+            createEvent: false,
+            viewingEvent: false
         })
     }
     componentDidMount() {

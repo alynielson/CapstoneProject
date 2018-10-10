@@ -243,7 +243,13 @@ export class ViewEvent extends Component {
                                 viewComments={this.state.viewComments}
                             />
                         </div>
+                        
+                    </Col>
+                    <Col md={2} mdOffset={9}>
+                        <Row>
+                            <a className="btn action-button under-map" onClick={this.props.backToEventHome}>Back</a>
 
+                        </Row>
                     </Col>
                 </Row>
             </div>

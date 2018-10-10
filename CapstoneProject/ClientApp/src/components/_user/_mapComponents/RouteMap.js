@@ -20,7 +20,7 @@ export class RouteMap extends Component {
         var routeMarkers = null;
         var route1Line = null;
         var segments = null;
-        if (this.props.routesViewing > 0) {
+        if (this.props.routesViewing > 0 && this.props.viewComments === true) {
             if (this.props.routeShowing.values === true) {
 
                 routeMarkers = (routeToViewDetails.pointCoordinates.map((coord, index) => {

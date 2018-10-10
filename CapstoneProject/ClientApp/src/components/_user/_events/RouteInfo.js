@@ -60,16 +60,16 @@ render() {
                     </FormGroup>
             }
         }
-        routeShowing = <div>
+        routeShowing = <div style={this.props.style}>
             <h4> {title}: {route.name}</h4>
             <FormGroup>
-                <ControlLabel>Distance:</ControlLabel>  {Number(route.totalDistance).toFixed(2)} miles
+                Distance: {Number(route.totalDistance).toFixed(2)} miles
                 </FormGroup>
             <FormGroup>
-                <ControlLabel>Total Elevation Gain:</ControlLabel> {Number(route.totalElevationGain).toFixed(2)} meters
+                Total Elevation Gain: {Number(route.totalElevationGain).toFixed(2)} meters
                 </FormGroup>
             <FormGroup>
-                <ControlLabel>Total Elevation Loss:</ControlLabel> {Number(route.totalElevationLoss).toFixed(2)} meters
+                Total Elevation Loss: {Number(route.totalElevationLoss).toFixed(2)} meters
                 </FormGroup>
             {detailsToShow}
         </div>

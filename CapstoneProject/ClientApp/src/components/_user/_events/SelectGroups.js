@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ButtonToolbar, ListGroup} from 'react-bootstrap';
+import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ButtonToolbar, ListGroup, Row} from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import { GroupItem } from '../_groups/GroupItem';
@@ -88,11 +88,17 @@ export class SelectGroups extends Component {
         var groups = this.state.groups.map((a, index) => (<GroupItem index={index} existingGroups={this.state.selectedGroups} key={a.id} onClick={() => this.addGroup(index)} value={a.id}display={a.name}></GroupItem>));
         return (
             <div>
-            <Col md={4}>
+                <Row>
+                    <Col md={2} mdOffset={5}>
+                        <ControlLabel>Select Groups To Invite </ControlLabel>
+                        </Col>
+                    </Row>
+                <Col md={4} mdOffset={1}>
+                    
                 <Form>
                     <FormGroup>
-                        <ControlLabel>Event Name</ControlLabel>
-                        <FormControl
+                            <FormControl
+                                placeholder="Event Name"
                             type="text"
                             name="name"
                             value={this.state.name}
@@ -100,24 +106,24 @@ export class SelectGroups extends Component {
                         />
                     </FormGroup>
                     <FormGroup>
-                        <ControlLabel>Description</ControlLabel>
-                        <FormControl
+                            <FormControl
+                                placeholder="Description"
                             componentClass="textarea"
                             name="description"
                             value={this.state.description}
                             onChange={this.handleChange} />
 
                     </FormGroup>
-                    <FormGroup>
-                        <ControlLabel>Date</ControlLabel>
-                        <DatePicker
+                        <FormGroup>
+                            <DatePicker
+                                
                                 selected={this.state.startDate}
                                 name="startDate"
                             onChange={this.handleDateChange}
-                        />
+                                />
+                             
                     </FormGroup>
                     <FormGroup>
-                        <ControlLabel>Time</ControlLabel>
                             <DatePicker
                                 name="startTime"
                             selected={this.state.startTime}
@@ -129,23 +135,31 @@ export class SelectGroups extends Component {
                             timeCaption="Time"
                         />
                         </FormGroup>
+                       
+                            <ControlLabel>
+                                Choose Number of Routes
+                        </ControlLabel>
+                            <ButtonToolbar>
+                                <Button className="smaller-action-buttons" active={this.state.numberOfRoutes === 1} onClick={() => this.chooseButton(1)}>1</Button>
+                                <Button className="smaller-action-buttons" active={this.state.numberOfRoutes === 2} onClick={() => this.chooseButton(2)}>2</Button>
+                            </ButtonToolbar>
+                        
                 </Form>
-                    <Button onClick={() => this.props.goToRoutes(this.state.name,this.state.description,this.state.startDate,this.state.startTime,this.state.groups,this.state.numberOfRoutes)}>Next</Button>
                 
             </Col>
             <Col md={4}>
-                <ControlLabel>Select Groups To Invite </ControlLabel>
+                
                 <ListGroup>{groups} </ListGroup>
                 </Col>
-                <Col md={4}>
-                    <ControlLabel>
-                        Choose Number of Routes
-                        </ControlLabel>
-                    <ButtonToolbar>
-                        <Button active={this.state.numberOfRoutes === 1} onClick={() => this.chooseButton(1)}>1</Button>
-                        <Button active={this.state.numberOfRoutes === 2} onClick={() => this.chooseButton(2)}>2</Button>
-                    </ButtonToolbar>
+                <Row>
+                    <Col md={4} mdOffset={9} >
+                    <Col md={3}>
+                    <a className="btn action-button bottom-buttons" onClick={() => this.props.goToRoutes(this.state.name, this.state.description, this.state.startDate, this.state.startTime, this.state.groups, this.state.numberOfRoutes)}>Next</a>
                     </Col>
+                        <Col md={3} mdOffset={1}>
+                            <a className="btn action-button bottom-buttons" onClick={this.props.backToEventHome}>Back</a> </Col>
+                        </Col>
+                 </Row>   
                 </div>
             );
     }

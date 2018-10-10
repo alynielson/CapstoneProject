@@ -75,32 +75,42 @@ export class CreateEvent extends Component {
 
 
     render() {
-
+        let nextButton = null;
+        let backButton = null;
+        
         var action;
         const onCompleting = ((address, currentRoute1Id, currentRoute2Id, route1details, route2details, addressCoords) => this.finishCreating(address, currentRoute1Id, currentRoute2Id, route1details, route2details, addressCoords));
         const goToRoutes = (name, description, date, time, groups, numberOfRoutes) => this.goToRoutes(name, description, date, time, groups, numberOfRoutes);
         if (!this.state.hasGroups) {
-            action = <SelectGroups goToRoutes={goToRoutes} />
-
+            action = <SelectGroups style={this.props.style} goToRoutes={goToRoutes} backToEventHome={this.props.backToEventHome} />
+            
+               
         }
         else if (!this.state.hasRoutes) {
-            action = <SelectRoutes name={this.state.name} id={this.state.eventId} onCompleting={onCompleting} numberOfRoutes={this.state.numberOfRoutes} />
+            action = <SelectRoutes style={this.props.style} name={this.state.name} id={this.state.eventId} onCompleting={onCompleting} numberOfRoutes={this.state.numberOfRoutes} />
+
         }
 
         return (
-            <div>
-                <h2>Create Event</h2>
+            <div style={this.props.style}>
+                <Row>
+                    <Col md={2} mdOffset={1}>
+                        <h2 className="page-subtitle">Create Event</h2>
+                        </Col>
+                    </Row>
                 <Row>
                     {action}
+                    {nextButton}
+                  
                 </Row>
-                <Row>
-                    <Col md={3}>
-                        <Button onClick={this.props.backToEventHome}>Back</Button>
+               
+                    
+                        
 
 
 
-                    </Col>
-                </Row>
+                 
+               
             </div>
         );
 

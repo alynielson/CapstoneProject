@@ -13,12 +13,15 @@ export class RouteList extends Component {
 
 
     render() {
+        const listStyle = {
+            marginTop: "-30px"
+        }
         const listItems = this.props.routesToAdd.map((route) => {
             return (<RouteListItem onRouteSelect={this.props.onRouteSelect} key={route.value} value={route.value} display={route.display}></RouteListItem>
             )
         });
         return (
-            <ListGroup>
+            <ListGroup style={listStyle}>
                 {listItems}
             </ListGroup>
 

@@ -140,12 +140,15 @@ button.list-group-item:hover {
 .btn-group-vertical > .btn:last-child:not(:first-child).active:focus {
     background-image: linear-gradient(to left, orange, hotpink);
     background-color: hotpink;
+    padding: 6px 9px;
     color: white;
     text-decoration: none;
     cursor: pointer;
     border: none;
     outline: none;
 }
+
+
 .btn-group-vertical > .btn,
 .btn-group-vertical > .btn:first-child:not(:last-child),
 .btn-group-vertical > .btn:not(:first-child):not(:last-child),
@@ -159,19 +162,61 @@ button.list-group-item:hover {
     color: white;
     text-shadow: none;
 }
-
-.app {
-    background-color: white;
-    color: black;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    z-index: 10;
-    overflow-y: auto;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+.btn-default.active{
+    background-image: linear-gradient(to bottom right, orange, hotpink);
+    border: none;
 }
+    .btn-default.active,
+    .btn-default.active:focus {
+        background-color: hotpink;
+        box-shadow: none;
+        color: white;
+        padding: 6px 9px;
+    }
+.btn-default:hover {
+    background-color: hotpink;
+    box-shadow: none;
+    color: white;
+    padding: 4px 7px;
+    border-color: hotpink;
+}
+.btn-default.active:hover {
+    background-color: hotpink;
+    box-shadow: none;
+    color: white;
+    padding: 6px 9px;
+    border-color: hotpink;
+}
+.btn .btn-primary .active{
+    background-image: linear-gradient(to bottom right, orange, hotpink) !important;
+}
+
+.normal-buttons {
+    text-shadow: none;
+    background-color: purple;
+    color: white;
+    border: 2px solid hotpink;
+    padding: 4px 7px;
+}
+
+.distance-buttons:hover, .hill-buttons:hover, .distance-buttons.active, .hill-buttons.active, .distance-buttons.active:focus,
+.hill-buttons.active:focus {
+    padding: 3px 5px;
+}
+
+
+    .app {
+        background-color: white;
+        color: black;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 10;
+        overflow-y: auto;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
 .form-control {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -242,6 +287,7 @@ button.list-group-item:hover {
     .action-button:hover {
         background-image: none;
         background-color: purple;
+        padding: 3px 9px;
         border: 3px solid hotpink;
         color: white;
     }
@@ -306,6 +352,15 @@ button.list-group-item:hover {
 
 }
 
+.comment-icon{
+    font-size: 30px;
+    color: hotpink;
+}
+.comment-icon-active {
+    font-size: 30px;
+    color: orange;
+}
+
 .btn-default {
     box-shadow: none;
     background-image: none;
@@ -330,11 +385,17 @@ button.list-group-item:hover {
     margin-top:20px;
 }
 
+.minus-icon {
+    color: hotpink !important;
+    font-size: 30px;
+    left: 80%;
+}
+.btn-toolbar > .btn{
+    margin-bottom: 3px;
+}
 
-
-.modal{
+.modal {
     height: 600px;
-      
 }
 
 .modal-form-custom {
@@ -350,10 +411,10 @@ button.list-group-item:hover {
     background-color: #c2e6ff;
 }
 .custom-map{
-    height: 35vw;
-    width: 35vw;
-   
-    margin-right: 40px;
+    height: 75vh;
+    margin-top: -30px;
+    margin-bottom: -10px;
+    width: 65%;
 }
 
 .map-back {
@@ -365,6 +426,7 @@ button.list-group-item:hover {
     width: 80%;
 }
 
+
 .comments {
     padding-bottom: 100px;
     margin-left: -30px;
@@ -373,6 +435,19 @@ button.list-group-item:hover {
     text-align: left;
     box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.41);
     color: #555;
+    z-index: 100;
+}
+
+.custom-comment {
+    margin-top: 20px;
+    padding-bottom: 100px;
+    margin-left: -10px;
+    margin-right: -10px;
+    padding-left: 10px;
+    text-align: left;
+    box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.41);
+    color: #555;
+    z-index: 100;
 }
 
 .table {
@@ -384,9 +459,64 @@ tr:hover {
     background-image: none;
     color: #555;
 }
+input, input:focus {
+    border: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.react-datepicker__time-container .react-datepicker__time .react-datepicker__time-box ul.react-datepicker__time-list {
+    padding-left: 5px !important;
+}
 
 .table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
     background-color: #c2e6ff;
     background-image: none;
     color: #555;
+}
+.react-datepicker__day--selected {
+    background-color: purple !important;
+
+}
+.bottom-buttons {
+    position: absolute;
+    top: 20vh;
+}
+
+
+
+
+.react-datepicker {
+    border: 1px solid hotpink !important;
+}
+
+.react-datepicker-wrapper {
+    display: block !important;
+}
+
+.react-datepicker__header {
+    background-image: linear-gradient(to bottom right, orange, hotpink) !important;
+    border-bottom: none !important;
+   
+}
+.react-datepicker__navigation--previous {
+    border-right-color: purple !important;
+}
+.react-datepicker__navigation--next{
+    border-left-color: purple !important;
+}
+
+
+
+.react-datepicker__input-container {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }

@@ -9,8 +9,8 @@ export class RouteChoiceButtons extends Component{
         var finalRoutes = null;
         if (this.props.routesViewing > 1) {
             finalRoutes = <ButtonToolbar>
-                <Button onClick={(routeNumber) => this.props.viewRoute(1)} active={this.isRoute(1)}>Route A</Button>
-                <Button onClick={(routeNumber) => this.props.viewRoute(2)} active={this.isRoute(2)}>Route B</Button>
+                <Button className="normal-buttons btn" onClick={(routeNumber) => this.props.viewRoute(1)} active={this.isRoute(1)}>Route A</Button>
+                <Button className="normal-buttons btn"onClick={(routeNumber) => this.props.viewRoute(2)} active={this.isRoute(2)}>Route B</Button>
             </ButtonToolbar>
         }
         return (finalRoutes);

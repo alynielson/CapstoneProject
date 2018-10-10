@@ -30,16 +30,21 @@ export class SubmitUserInfo extends Component {
     }
 
     async handleSubmit(event) {
-        event.preventDefault();
-        const data = { id: this.props.id, city: this.state.city, state: this.state.state };
-        await fetch('api/Users/EnterLocation', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        }).then(this.handleResponse).catch(error => console.log(error));
+        if (!this.checkIfCanSubmit()) {
+            this.setState({ errorMessage: "You didn't finish filling out the fields!" });
+        }
+        else {
+            event.preventDefault();
+            const data = { id: this.props.id, city: this.state.city, state: this.state.state };
+            await fetch('api/Users/EnterLocation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(this.handleResponse).catch(error => console.log(error));
 
-        if (this.state.errorMessage === '') {
-            this.setState({ finished: true });
+            if (this.state.errorMessage === '') {
+                this.setState({ finished: true });
+            }
         }
     }
 
@@ -79,27 +84,46 @@ export class SubmitUserInfo extends Component {
     }
 
     render() {
+        const stateSeparator = {
+            marginTop: "10px"
+        }
+        const style = {
+            backgroundColor: "purple",
+            height: "85vh",
+
+        };
         if (this.state.finished === false) {
             return (
-                <div>
-                    <h2> Hello, {this.props.first_name}! </h2>
-                    <h4>Tell us a little about yourself. Specifying your location will help us find routes, groups, and events near you.</h4>
+                <div style={style}>
+                    <Row className="empty-space10percent" />
                     <Row>
-                        <Col md={4}>
+                        <Col md={12} className="text-center">
+                            <h2 className="page-title"> Hello, {this.props.first_name}! </h2>
+                            </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12} className="text-center">
+                    <h4 className="page-subtitle">Tell us a little about yourself. Specifying your location will help us find routes, groups, and events near you.</h4>
+                       </Col>
+                    </Row>
+                    <Row className="empty-space2percent" />
+                        <Row>
+                        <Col md={4} mdOffset={4}>
                             <div hidden={!this.shouldShowErrorMessage()}>
                                 <Alert>{this.state.errorMessage}</Alert>
                             </div>
                             <Form>
                                 <FormGroup>
-                                    <ControlLabel>City</ControlLabel>
                                     <FormControl
+                                        placeholder="City"
                                         type="text"
                                         name="city"
                                         value={this.state.city}
                                         onChange={this.handleChange}
                                     />
-                                    <ControlLabel>State</ControlLabel>
+                                    
                                     <FormControl
+                                        style={stateSeparator}
                                         componentClass="select"
                                         name="state"
                                         value={this.state.state}
@@ -110,7 +134,7 @@ export class SubmitUserInfo extends Component {
                                     </FormControl>
 
                                 </FormGroup>
-                                <Button disabled={!this.checkIfCanSubmit()} className="btn btn-primary" onClick={(event) => this.handleSubmit(event)}>Submit</Button>
+                                <a className="btn action-button" onClick={(event) => this.handleSubmit(event)}>Submit</a>
 
                             </Form>
                         </Col>

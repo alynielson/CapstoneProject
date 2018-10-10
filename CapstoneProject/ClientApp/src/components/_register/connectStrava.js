@@ -28,10 +28,18 @@ export class ConnectStrava extends Component {
     }
 
     render() {
+        const style = {
+            backgroundColor: "purple",
+            height: "85vh",
+
+        };
+        const btnSeparator = {
+            marginTop: "10px"
+        }
         if (this.state.shouldRerouteToHome === true) {
             return (
                 <div>
-                    <Redirect to={`/users` } />
+                    <Redirect to={`/routes` } />
                 </div>
             );
         }
@@ -44,18 +52,19 @@ export class ConnectStrava extends Component {
         }
         else {
             return (
-                <div>
+                <div style={style}>
+                    <Row className="empty-space10percent" />
                     <Row>
-                        <Col md={4}>
+                        <Col md={6} mdOffset={3} className="text-center">
                             <Form>
-                                <h2>Awesome!</h2>
-                                <h4>You're almost ready to go. If you connect your Strava account, you'll be able to view your ride/run results for the routes and events you complete all on the same page.</h4>
-                                <h4>Never heard of Strava? You might want to check it out <a href="http://strava.com" target="_blank">here</a>. You can connect your account any time. </h4>
+                                <h2 className="page-title">Awesome!</h2>
+                                <h4 className="page-subtitle">You're almost ready to go. If you connect your Strava account, you'll be able to view your ride/run results for the routes and events you complete all on the same page.</h4>
+                                <h4 className="page-subtitle">Never heard of Strava? You might want to check it out <a href="http://strava.com" target="_blank">here</a>. You can connect your account any time. </h4>
                             </Form>
-                            <ButtonToolbar>
-                                <Button bsStyle="success" onClick={(event) => this.redirectToStrava(event)}>Connect my Strava account</Button>
-                                <Button bsSize="xsmall" bsStyle="primary" onClick={(event) => this.redirectToUserHome(event)}>Skip this, maybe later</Button>
-                            </ButtonToolbar>
+                           
+                                <a className="btn action-button" onClick={(event) => this.redirectToStrava(event)}>Connect my Strava account</a>
+                            <a className="btn normal-buttons" style={btnSeparator}onClick={(event) => this.redirectToUserHome(event)}>Skip this, maybe later</a>
+                            
                         </Col>
                     </Row>
                 </div>

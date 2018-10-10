@@ -134,7 +134,7 @@ export default class App extends Component {
               
                
                     <Route exact path="/" component={Home} />
-                <Route path="/authorize-strava" component={() => window.location = "http://www.strava.com/oauth/authorize?client_id=28837&response_type=code&redirect_uri=https://localhost:44355/users/&approval_prompt=force&scope=view_private"} />
+                <Route path="/authorize-strava" component={() => window.location = "http://www.strava.com/oauth/authorize?client_id=28837&response_type=code&redirect_uri=https://localhost:44355/routes/&approval_prompt=force&scope=view_private"} />
                     <Route exact path='/users' component={UserHome} />
                     <Route exact path='/groups' component={UserGroupContent} />
                     <Route exact path='/routes' component={UserRouteContent} />

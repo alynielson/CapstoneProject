@@ -11,6 +11,13 @@
     background-repeat: no-repeat;
     box-shadow: none;
 }
+a {
+    color: #c2e6ff;
+}
+
+a:hover {
+    color: hotpink;
+}
 .navbar-default .navbar-nav > li > a:hover{
     background-color: white;
     background-image: none;
@@ -198,6 +205,7 @@ button.list-group-item:hover {
     border: 2px solid hotpink;
     padding: 4px 7px;
 }
+
 
 
 

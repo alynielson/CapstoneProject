@@ -321,7 +321,7 @@ export class SelectRoutes extends Component {
         if ((this.state.comments[0].comment !== null || this.state.comments[1].comment !== null) && this.state.viewComments) {
             routeComments =
                 <RouteComments comments={this.state.comments} dismissPointComment={() => this.dismissPointComment()}
-                    dismissPathComment={() => this.dismissPathComment()} style={infoBox}/>
+                    dismissPathComment={() => this.dismissPathComment()} style={infoBox} createEvent={true}/>
         }
         let routeDetails = <RouteInfo style={infoBox} hasSelected={this.state.hasSelected} hasFinished={false} route1={this.state.route1} route2={this.state.route2}
                 route1Details={this.state.route1Details} route2Details={this.state.route2Details} routeShowing={this.state.routeShowing}
@@ -393,13 +393,14 @@ export class SelectRoutes extends Component {
                                 </Col>
                             </Row>
                         {routeDetails}
-                        {routeComments}
+                       
                     </Col>
                     <Col md={2}>
                         <Row>
                             
                         </Row>
                         {list}
+                        {routeComments}
                     </Col>
                     <Col md={5}>
                         <Row>

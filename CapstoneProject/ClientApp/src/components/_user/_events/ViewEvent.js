@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button,Col, Row, ButtonToolbar, Alert } from 'react-bootstrap';
+import { Button,Col, Row, ListGroup, ListGroupItem, Tooltip, Glyphicon, OverlayTrigger } from 'react-bootstrap';
 import { Details } from './Details';
 import {RouteInfo} from './RouteInfo';
 import { StravaData } from './StravaData';
@@ -14,7 +14,8 @@ export class ViewEvent extends Component {
         this.state = {
             comments: [{ position: -1, author: null, comment: null }, { position: -1, author: null, comment: null }],
             routeShowing: {routeSpot: 1, values: true},
-            isViewingTab: 1
+            isViewingTab: 1,
+            viewComments: false
         }
         this.onPathHover = this.onPathHover.bind(this);
         this.onMarkerHover = this.onMarkerHover.bind(this);
@@ -23,7 +24,18 @@ export class ViewEvent extends Component {
         this.viewRoute = this.viewRoute.bind(this);
         this.changeViewingTab = this.changeViewingTab.bind(this);
         this.rsvp = this.rsvp.bind(this);
+        this.hideUnhideComments = this.hideUnhideComments.bind(this);
     }
+
+    hideUnhideComments() {
+        let current = this.state.viewComments;
+        let comments = (current) ? [{ position: -1, author: null, comment: null }, { position: -1, author: null, comment: null }] : this.state.comments;
+        this.setState({
+            viewComments: !current,
+            comments: comments
+        })
+    }
+
     dismissPointComment() {
         let currentComments = this.state.comments;
         currentComments[0] = { position: -1, author: null, comment: null };
@@ -94,7 +106,8 @@ export class ViewEvent extends Component {
 
     changeViewingTab(number) {
         this.setState({
-            isViewingTab: number
+            isViewingTab: number,
+            viewComments: false
         })
     }
     
@@ -109,6 +122,53 @@ export class ViewEvent extends Component {
     }
 
     render() {
+        const infoBox = {
+            paddingTop: "12px",
+            paddingBottom: "10px",
+            backgroundColor: "#c2e6ff",
+            marginTop: "10px",
+            paddingLeft: "15px",
+            paddingRight: "5px",
+            marginRight: "55px",
+            color: "#555",
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            overflow: "auto",
+            marginBottom: "10px",
+            boxShadow: "4px 4px 5px 0px rgba(0,0,0,0.41)",
+            borderRadius: "5px"
+
+        }
+        const listStyle = {
+            marginTop: "10px",
+
+        }
+        const listItemStyle = {
+            backgroundColor: "#c2e6ff",
+            color: "#555"
+        }
+        let commentIcon;
+        if ((this.state.routeShowing.values === true) &&
+            ((this.state.routeShowing.routeSpot === 1 && (this.props.route1.pointComments.length > 0 || this.props.route1.pathComments.length > 0))
+                || (this.state.routeShowing.routeSpot === 2 && (this.props.route2.pointComments.length > 0 || this.props.route2.pathComments.length > 0)))) {
+            let message;
+            if (!this.state.viewComments) {
+                message = <Tooltip id="tooltip">
+                    This route has comments! Click to view.
+            </Tooltip>
+                commentIcon = <a onClick={this.hideUnhideComments}> <OverlayTrigger placement="top" overlay={message}>
+                    <Glyphicon className="comment-icon" glyph="comment" />
+                </OverlayTrigger> </a>
+            }
+            else {
+                message = <Tooltip id="tooltip">
+                    Hover on the map to view comments. Click to stop viewing comments.
+            </Tooltip>
+                commentIcon = <a onClick={this.hideUnhideComments}> <OverlayTrigger placement="top" overlay={message}>
+                    <Glyphicon className="comment-icon-active" glyph="comment" />
+                </OverlayTrigger> </a>
+            }
+
+        }
         let rsvpButton = null;
         const viewPointComment = ((data) => { this.onMarkerHover(data) });
         const viewPathComment = ((data) => { this.onPathHover(data) });
@@ -125,35 +185,52 @@ export class ViewEvent extends Component {
                 time={this.props.time} organizer={this.props.organizer} address={this.props.address} />
                 break;
             case (2): tab = <div>
-                <RouteInfo route1={this.props.route1} route1Details={this.props.route1Details}
+                <RouteInfo style={infoBox} route1={this.props.route1} route1Details={this.props.route1Details}
                     route2={this.props.route2} route2Details={this.props.route2Details} routeShowing={this.state.routeShowing}
                     hasSelected={true} hasFinished={true}
                 />
-                <RouteChoiceButtons routesViewing={routesViewing} viewRoute={(routeNumber) => this.viewRoute(routeNumber)} routeShowing={this.state.routeShowing} />
-            </div>
+                <Row>
+                    <Col md={6}>
+                        <RouteChoiceButtons routesViewing={routesViewing} viewRoute={(routeNumber) => this.viewRoute(routeNumber)} routeShowing={this.state.routeShowing} />
+                    </Col>
+                    <Col md={1}>
+                        {commentIcon}
+                        </Col>
+            </Row>
+                    </div>
                 break;
-            case (3): tab = 
-                this.props.goingNames.map((member, index) => <Alert key={index} bsStyle='success' >{member}</Alert>)
-                rsvpButton = <Button active={this.props.going} onClick={this.rsvp}>I'm going</Button>
+            case (3): tab =
+                <ListGroup style={listStyle}>
+                {this.props.goingNames.map((member, index) => <ListGroupItem style={listItemStyle} key={index} >{member}</ListGroupItem>)}
+                </ListGroup>
+                rsvpButton = <Button className="normal-buttons btn" active={this.props.going} onClick={this.rsvp}>I'm going</Button>
                 break;
             case (4): tab = <StravaData id={this.props.eventId} date={this.props.date} />
         }
+        const style = {
+            backgroundColor: "purple",
+            height: "85vh",
+        };
+   
        
         return (
-            <div>
-                <h3>{this.props.Name}</h3>
+            
+            <div style={style}>
+                <Row className="empty-space5percent" />
+               
                 <Row>
-                    <Col md={4}>
+                    <Col md={4} mdOffset={1}>
+                        <h3 className="page-subtitle">{this.props.name}</h3>
                         <EventNavigation currentTab={this.state.isViewingTab} changeTab={(number) => this.changeViewingTab(number)} />
                         {tab}
                     </Col>
-                    <Col md={2}>
+                    <Col md={1}>
                         {rsvpButton}
                         <Row><RouteComments comments={this.state.comments} dismissPointComment={() => this.dismissPointComment()}
-                            dismissPathComment={() => this.dismissPathComment()} /> </Row>
+                            dismissPathComment={() => this.dismissPathComment()} viewEvent={true}/> </Row>
                     </Col>
-                    <Col md={6}>
-                        <div className="custom-map">
+                    <Col md={5}>
+                        <div className="custom-map2">
                             <RouteMap clickAction={null}
                                 routeShowing={this.state.routeShowing}
                                 startingPointPosition={this.props.addressCoords}
@@ -163,6 +240,7 @@ export class ViewEvent extends Component {
                                 viewPointComment={viewPointComment}
                                 route2={this.props.route2}
                                 viewPathComment={viewPathComment}
+                                viewComments={this.state.viewComments}
                             />
                         </div>
 

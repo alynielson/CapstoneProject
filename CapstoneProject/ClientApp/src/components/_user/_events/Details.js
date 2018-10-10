@@ -5,25 +5,41 @@ import moment from 'moment';
 
 export class Details extends Component{
 
-    render(){
+    render() {
+        const infoBox = {
+            backgroundColor: "#c2e6ff",
+            marginTop: "10px",
+            paddingLeft: "15px",
+            paddingTop: "20px",
+            paddingBottom: "10px",
+            paddingRight: "15px",
+            color: "#555",
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            overflow: "auto",
+            marginBottom: "10px",
+            boxShadow: "4px 4px 5px 0px rgba(0,0,0,0.41)",
+            borderRadius: "5px"
+        }
         return (
+            <div style={infoBox}>
             <Form>
             <FormGroup>
-                <ControlLabel>Date</ControlLabel> {moment(this.props.date).format('dddd, MMMM Do YYYY')}
+                Date: {moment(this.props.date).format('dddd, MMMM Do YYYY')}
             </FormGroup>
             <FormGroup>
-                <ControlLabel>Time</ControlLabel> {moment(this.props.time).format('HH:mm a')}
+                Time: {moment(this.props.time).format('HH:mm a')}
             </FormGroup>
             <FormGroup>
-                <ControlLabel>Description</ControlLabel> {this.props.description}
+               Description: {this.props.description}
             </FormGroup>
             <FormGroup>
-                <ControlLabel>Organizer</ControlLabel> {this.props.organizer}
+                Organizer: {this.props.organizer}
             </FormGroup>
             <FormGroup>
-                <ControlLabel>Starting Address</ControlLabel>{this.props.address}
+                Starting Address: {this.props.address}
                 </FormGroup>
                 </Form>
+                </div>
             );
     }
 }

@@ -41,22 +41,19 @@ render() {
         }
         if (this.props.hasFinished) {
             detailsToShow = <FormGroup>
-                <ControlLabel>Event Details for this Route</ControlLabel>
-                {details}
+                Event Details for this Route: {` ${details}`}
             </FormGroup>
         }
         else if (this.props.hasSelected){
             switch (this.props.routeShowing.routeSpot) {
                 case (1):
                     detailsToShow = <FormGroup>
-                        Event Details for this Route:
-                        <FormControl type='textarea' value={this.state.route1Details} name="route1Details" onChange={(event, number) => this.handleChange(event, 1)} />
+                        <FormControl placeholder="Event Details for this Route"type='textarea' value={this.state.route1Details} name="route1Details" onChange={(event, number) => this.handleChange(event, 1)} />
                     </FormGroup>
                     break;
                 case (2):
                     detailsToShow = <FormGroup>
-                        Event Details for this Route:
-                        <FormControl type='textarea' value={this.state.route2Details} name="route2Details" onChange={(event, number) => this.handleChange(event, 2)} />
+                        <FormControl placeholder="Event Details for this Route"type='textarea' value={this.state.route2Details} name="route2Details" onChange={(event, number) => this.handleChange(event, 2)} />
                     </FormGroup>
             }
         }

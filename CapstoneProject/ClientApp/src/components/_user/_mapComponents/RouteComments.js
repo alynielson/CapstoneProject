@@ -10,11 +10,21 @@ export class RouteComments extends Component{
         if (this.props.createEvent) {
             style = {
                 marginTop: "-30px",
-            paddingBottom: "100px",
-            paddingTop: "5px",
+                paddingBottom: "100px",
+                paddingTop: "5px",
                 marginLeft: "-10px",
                 marginRight: "5px",
-            marginBottom: "40px"
+                marginBottom: "40px"
+            }
+        }
+        else if (this.props.viewEvent) {
+            style = {
+                marginTop: "40px",
+                paddingBottom: "100px",
+                paddingTop: "5px",
+                marginLeft: "-55px",
+                marginRight: "3px",
+                marginBottom: "25px"
             }
         }
         if (this.props.comments[0].comment != null) {

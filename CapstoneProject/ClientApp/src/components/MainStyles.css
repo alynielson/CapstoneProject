@@ -199,6 +199,8 @@ button.list-group-item:hover {
     padding: 4px 7px;
 }
 
+
+
 .distance-buttons:hover, .hill-buttons:hover, .distance-buttons.active, .hill-buttons.active, .distance-buttons.active:focus,
 .hill-buttons.active:focus {
     padding: 3px 5px;
@@ -413,6 +415,13 @@ button.list-group-item:hover {
 .custom-map{
     height: 75vh;
     margin-top: -30px;
+    margin-bottom: -10px;
+    width: 65%;
+}
+
+.custom-map2{
+    height: 75vh;
+    margin-top: 0px;
     margin-bottom: -10px;
     width: 65%;
 }

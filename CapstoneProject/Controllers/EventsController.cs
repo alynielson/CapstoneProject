@@ -10,6 +10,7 @@ using CapstoneProject.ViewModels;
 using IntegrationProject.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace CapstoneProject.Controllers
@@ -69,6 +70,7 @@ namespace CapstoneProject.Controllers
             List<StravaViewModel> results = new List<StravaViewModel>();
             for (int i = 0; i < athletes.Count(); i++)
             {
+                
                 string token = PasswordConverter.Decrypt(athletes[i].b.StravaAccessTokenHashed);
                 string url = $"https://www.strava.com/api/v3/athlete/activities?before={before}&after={after}&page=1&per_page=1";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);

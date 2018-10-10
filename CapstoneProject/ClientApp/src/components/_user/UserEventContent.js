@@ -39,7 +39,6 @@ export class UserEventContent extends Component {
     }
     async goToEventPage(id, date, name, time, organizer, going) {
         let eventId = id;
-
         await fetch(`api/Events/GetAllEventInfo?id=${id}`).then(response => response.json()).then(data => {
             data.route1.coordinates = data.route1.coordinates.map(a => { return { lat: parseFloat(a.lat), lng: parseFloat(a.lng) } });
             data.route1.pointCoordinates = data.route1.pointCoordinates.map(a => { return { lat: parseFloat(a.lat), lng: parseFloat(a.lng) } });
@@ -49,14 +48,17 @@ export class UserEventContent extends Component {
                     { lat: parseFloat(a[1].lat), lng: parseFloat(a[1].lng) }
                 ]
             });
-            data.route2.coordinates = data.route2.coordinates.map(a => { return { lat: parseFloat(a.lat), lng: parseFloat(a.lng) } });
-            data.route2.pointCoordinates = data.route2.pointCoordinates.map(a => { return { lat: parseFloat(a.lat), lng: parseFloat(a.lng) } });
-            data.route2.pathCoordinates = data.route2.pathCoordinates.map(a => {
-                return [
-                    { lat: parseFloat(a[0].lat), lng: parseFloat(a[0].lng) },
-                    { lat: parseFloat(a[1].lat), lng: parseFloat(a[1].lng) }
-                ]
-            });
+            if (data.route2 !== null) {
+                data.route2.coordinates = data.route2.coordinates.map(a => { return { lat: parseFloat(a.lat), lng: parseFloat(a.lng) } });
+                data.route2.pointCoordinates = data.route2.pointCoordinates.map(a => { return { lat: parseFloat(a.lat), lng: parseFloat(a.lng) } });
+                data.route2.pathCoordinates = data.route2.pathCoordinates.map(a => {
+                    return [
+                        { lat: parseFloat(a[0].lat), lng: parseFloat(a[0].lng) },
+                        { lat: parseFloat(a[1].lat), lng: parseFloat(a[1].lng) }
+                    ]
+                })
+            }
+            ;
             let ventId = eventId;
             this.setState({
                 eventId: ventId,

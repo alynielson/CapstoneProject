@@ -309,12 +309,11 @@ export class SelectRoutes extends Component {
            
             list = <RouteList routesToAdd={this.state.routeToAdd} onRouteSelect={selectRoute} />
         }
-        var finishButton = <a className="btn action-button" onClick={() => this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1Details, this.state.route2Details, this.state.addressCoords)}>Finish</a>
+        let finishButton = null;
         var finish = null;
         if (this.state.hasSelected) {
             finish = <div>
                 <SelectStartingPoint changeAddress={this.changeAddress} automaticAddress={this.state.automaticAddress}/>
-                {finishButton}
             </div>
         }
         let routeComments = null;
@@ -372,6 +371,13 @@ export class SelectRoutes extends Component {
                     <Glyphicon className="comment-icon-active" glyph="comment" />
                 </OverlayTrigger> </a>
             }
+           
+        }
+        if (!this.state.hasSelected) {
+            finishButton = <a className="btn action-button under-map" onClick={this.finish}>Next</a>
+        }
+        else {
+            finishButton = <a className="btn action-button under-map" onClick={() => this.props.onCompleting(this.state.address, this.state.route1.currentRouteId, this.state.route2.currentRouteId, this.state.route1Details, this.state.route2Details, this.state.addressCoords)}>Finish</a>
         }
         return (
             <div>
@@ -424,7 +430,7 @@ export class SelectRoutes extends Component {
                     </Col>
                     <Col md={2} mdOffset={9}>
                     <Row>
-                        <a className="btn action-button under-map" onClick={this.finish}>Finish</a>
+                            {finishButton}
 
                     </Row>
                     </Col>

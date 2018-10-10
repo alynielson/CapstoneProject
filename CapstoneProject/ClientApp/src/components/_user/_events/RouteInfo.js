@@ -49,13 +49,13 @@ render() {
             switch (this.props.routeShowing.routeSpot) {
                 case (1):
                     detailsToShow = <FormGroup>
-                        <ControlLabel>Event Details for this Route</ControlLabel>
+                        Event Details for this Route:
                         <FormControl type='textarea' value={this.state.route1Details} name="route1Details" onChange={(event, number) => this.handleChange(event, 1)} />
                     </FormGroup>
                     break;
                 case (2):
                     detailsToShow = <FormGroup>
-                        <ControlLabel>Event Details for this Route</ControlLabel>
+                        Event Details for this Route:
                         <FormControl type='textarea' value={this.state.route2Details} name="route2Details" onChange={(event, number) => this.handleChange(event, 2)} />
                     </FormGroup>
             }

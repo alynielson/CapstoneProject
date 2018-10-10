@@ -88,7 +88,7 @@ export class Login extends Component {
             
         };
         if (this.state.id != null) {
-            return <Redirect to="/users" />
+            return <Redirect to="/routes" />
         }
             return (
                 <div style={style}>

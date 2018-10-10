@@ -72,7 +72,7 @@ namespace CapstoneProject.Controllers
             {
                 
                 string token = PasswordConverter.Decrypt(athletes[i].b.StravaAccessTokenHashed);
-                string url = $"https://www.strava.com/api/v3/athlete/activities?before={before}&after={after}&page=1&per_page=1";
+                string url = $"https://www.strava.com/api/v3/athlete/activities?access_token={token}&before={before}&after={after}&page=1&per_page=1";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
                
 

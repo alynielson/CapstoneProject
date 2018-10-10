@@ -60,8 +60,8 @@ namespace CapstoneProject.Controllers
                 groupMember.GroupId = id;
                 groupMember.UserId = memberId;
                 _context.GroupMembers.Add(groupMember);
+                _context.SaveChanges();
             }
-            _context.SaveChangesAsync();
         }
 
         private int FindGroupIdByName(string name)

@@ -6,6 +6,11 @@ export class StravaData extends Component {
         super(props);
     }
 
+    componentWillMount() {
+        fetch(`/api/Events/GetStravaData?eventId=${this.props.id}&date=${this.props.date}`).then(response => response.json())
+            .then(data => console.log(data)).catch(error => console.log(error));
+    }
+
    
     render() {
         return (

@@ -21,19 +21,7 @@ export class UserHome extends Component {
 
 
 
-    componentDidMount() {
-        if (this.props.location.search) {
-            var stravaParams = this.props.location.search.split('&');
-            let code = stravaParams[1].slice(5);
-            let id = localStorage.getItem('userId');
-            let data = { auth_code: code, id: id };
-            fetch('api/Users/SendCodeToStrava', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-        }
-    }
+   
 
     
 

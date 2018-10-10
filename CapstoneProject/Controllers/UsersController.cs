@@ -114,7 +114,7 @@ namespace CapstoneProject.Controllers
                         string responseString = streamReader.ReadToEnd();
                         StravaAthlete stravaAthlete = JsonConvert.DeserializeObject<StravaAthlete>(responseString);
                         var user = _context.Users.Find(code.id);
-                        user.StravaAccessTokenHashed = PasswordConverter.Encrypt(code.auth_code);
+                        user.StravaAccessTokenHashed = PasswordConverter.Encrypt(stravaAthlete.access_token);
                         _context.Users.Update(user);
                         _context.SaveChanges();
                         return Ok();

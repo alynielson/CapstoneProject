@@ -41,5 +41,19 @@ namespace CapstoneProject.ViewModels
         public string created_at { get; set; }
 
         public string updated_at { get; set; }
+
+        public bool summit { get; set;}
+
+        public int badge_type_id { get; set; }
+
+        public string profile_medium { get; set; }
+
+        public string profile { get; set; }
+
+        public string friend { get; set; }
+        public string follower { get; set; }
+
+        public string email { get; set; }
+
     }
 }

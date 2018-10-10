@@ -29,16 +29,16 @@ namespace CapstoneProject.ViewModels
 
         public string name { get; set; }
 
-        public string distance { get; set; }
+        public decimal distance { get; set; }
 
         public int moving_time { get; set; }
         public int elapsed_time { get; set; }
 
-        public int total_elevation_gain { get; set; }
+        public decimal total_elevation_gain { get; set; }
 
         public string type { get; set; }
 
-        public string workout_type { get; set; }
+        public int workout_type { get; set; }
 
         public int id { get; set; }
         public string external_id { get; set; }
@@ -46,14 +46,14 @@ namespace CapstoneProject.ViewModels
         public DateTime start_date { get; set; }
         public DateTime start_date_local { get; set; }
         public string timezone { get; set; }
-        public int utc_offset { get; set; }
-        public string start_latlng { get; set; }
-        public string end_latlng { get; set; }
+        public decimal utc_offset { get; set; }
+        public decimal[] start_latlng { get; set; }
+        public decimal[] end_latlng { get; set; }
         public string location_city { get; set; }
         public string location_state { get; set; }
         public string location_country { get; set; }
-        public string start_latitude { get; set; }
-        public string start_longitude { get; set; }
+        public decimal start_latitude { get; set; }
+        public decimal start_longitude { get; set; }
         public int achievement_count { get; set; }
         public int kudos_count { get; set; }
         public int comment_count { get; set; }
@@ -64,17 +64,21 @@ namespace CapstoneProject.ViewModels
         public bool commute { get; set; }
         public bool manual { get; set; }
         public bool Private { get; set; }
+        public string visibility { get; set; }
         public bool flagged { get; set; }
         public string gear_id { get; set; }
         public bool from_accepted_tag {get; set;}
         public decimal average_speed { get; set; }
         public decimal max_speed { get; set; }
+        public bool has_heartrate { get; set; }
         public decimal average_cadence { get; set; }
         public decimal average_watts { get; set; }
         public decimal weighted_average_watts { get; set; }
         public decimal kilojoules { get; set; }
         public bool device_watts { get; set; }
-        public bool has_heartrate { get; set; }
+        public bool display_hid_heartrate_option { get; set; }
+        public decimal elev_high { get; set; }
+        public decimal elev_low { get; set; }
         public decimal average_heartrate { get; set; }
         public decimal max_heartrate { get; set; }
         public decimal max_watts { get; set; }

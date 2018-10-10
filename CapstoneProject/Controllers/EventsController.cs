@@ -63,8 +63,8 @@ namespace CapstoneProject.Controllers
         public string GetStravaData(int eventId, DateTime date)
 
         {
-            string before = DateTimeToUnixTimestamp(date.AddHours(-12)).ToString();
-            string after = DateTimeToUnixTimestamp(date.AddHours(12)).ToString();
+            string before = DateTimeToUnixTimestamp(date.AddHours(12)).ToString();
+            string after = DateTimeToUnixTimestamp(date.AddHours(-12)).ToString();
             var athletes = _context.Invites.Where(a => a.EventId == eventId && a.Going == true).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).ToList();
             List<string> requests = new List<string> { };
             List<StravaViewModel> results = new List<StravaViewModel>();
@@ -83,8 +83,9 @@ namespace CapstoneProject.Controllers
                 Stream stream = response.GetResponseStream();
                 StreamReader streamReader = new StreamReader(stream);
                 responseString = streamReader.ReadToEnd();
-                StravaViewModel athResults = JsonConvert.DeserializeObject<StravaViewModel>(responseString);
-                results.Add(athResults);
+                List<Activity> activities = new List<Activity>();
+                activities = JsonConvert.DeserializeObject<List<Activity>>(responseString);
+               
             }
             return "blah";    
             

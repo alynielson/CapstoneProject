@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button,Col, Row, ListGroup, ListGroupItem, Tooltip, Glyphicon, OverlayTrigger } from 'react-bootstrap';
+import { Button,Col, Row, ListGroup, ListGroupItem, Tooltip, Glyphicon, OverlayTrigger, ButtonGroup } from 'react-bootstrap';
 import { Details } from './Details';
 import {RouteInfo} from './RouteInfo';
 import { StravaData } from './StravaData';
@@ -7,6 +7,7 @@ import { RouteChoiceButtons } from '../_mapComponents/RouteChoiceButtons';
 import { RouteMap } from '../_mapComponents/RouteMap';
 import { RouteComments } from '../_mapComponents/RouteComments';
 import { EventNavigation } from '../_events/EventNavigation';
+import stravalogo from './icons/stravalogo.png';
 
 export class ViewEvent extends Component {
     constructor(props) {
@@ -15,7 +16,9 @@ export class ViewEvent extends Component {
             comments: [{ position: -1, author: null, comment: null }, { position: -1, author: null, comment: null }],
             routeShowing: {routeSpot: 1, values: true},
             isViewingTab: 1,
-            viewComments: false
+            viewComments: false,
+            resultsView: 1,
+            routeResultsView: 1
         }
         this.onPathHover = this.onPathHover.bind(this);
         this.onMarkerHover = this.onMarkerHover.bind(this);
@@ -25,6 +28,20 @@ export class ViewEvent extends Component {
         this.changeViewingTab = this.changeViewingTab.bind(this);
         this.rsvp = this.rsvp.bind(this);
         this.hideUnhideComments = this.hideUnhideComments.bind(this);
+        this.changeResultsView = this.changeResultsView.bind(this);
+        this.changeRouteView = this.changeRouteView.bind(this);
+    }
+
+    changeResultsView(number) {
+        this.setState({
+            resultsView: number
+        })
+    }
+
+    changeRouteView(number) {
+        this.setState({
+            routeResultsView: number
+        });
     }
 
     hideUnhideComments() {
@@ -146,6 +163,13 @@ export class ViewEvent extends Component {
             backgroundColor: "#c2e6ff",
             color: "#555"
         }
+        const resultBtn = {
+            marginTop: "120px",
+            marginLeft: "20px"
+        }
+        const resultBtn2 = {
+            padding: "1.5px 3px"
+        }
         let commentIcon;
         if ((this.state.routeShowing.values === true) &&
             ((this.state.routeShowing.routeSpot === 1 && (this.props.route1.pointComments.length > 0 || this.props.route1.pathComments.length > 0))
@@ -180,6 +204,9 @@ export class ViewEvent extends Component {
             routesViewing = 1;
         }
         let tab = null;
+        let logo = null;
+        let resultButtons = null;
+        let routeButtons = null;
         switch (this.state.isViewingTab) {
             case (1): tab = <Details description={this.props.description} date={this.props.date}
                 time={this.props.time} organizer={this.props.organizer} address={this.props.address} />
@@ -205,7 +232,18 @@ export class ViewEvent extends Component {
                 </ListGroup>
                 rsvpButton = <Button className="normal-buttons btn" active={this.props.going} onClick={this.rsvp}>I'm going</Button>
                 break;
-            case (4): tab = <StravaData id={this.props.eventId} date={this.props.date} time={this.props.time} route1={this.props.route1} route2={this.props.route2}/>
+            case (4): tab = <StravaData id={this.props.eventId} date={this.props.date} time={this.props.time} route1={this.props.route1} route2={this.props.route2} view={this.state.resultsView} routeResultsView={this.state.routeResultsView} />
+                logo = <img src={stravalogo} />
+                resultButtons = <ButtonGroup style={resultBtn} vertical className="map-action-buttons">
+                    <Button style={resultBtn2} onClick={() => this.changeResultsView(1)} active={this.state.resultsView === 1}>Overall</Button>
+                    <Button style={resultBtn2} onClick={() => this.changeResultsView(2)} active={this.state.resultsView === 2}>Results</Button>
+                </ButtonGroup>
+                if (this.props.route2 !== null) {
+                    routeButtons = <ButtonGroup style={resultBtn} vertical className="map-action-buttons">
+                        <Button style={resultBtn2} onClick={() => this.changeRouteView(1)} active={this.state.routeResultsView === 1}>Route A</Button>
+                        <Button style={resultBtn2} onClick={() => this.changeRouteView(2)} active={this.state.routeResultsView === 2}>Route B</Button>
+                    </ButtonGroup>
+                }
         }
         const style = {
             backgroundColor: "purple",
@@ -219,13 +257,17 @@ export class ViewEvent extends Component {
                 <Row className="empty-space5percent" />
                
                 <Row>
-                    <Col md={4} mdOffset={1}>
+                    <Col md={1}>
+                        {resultButtons}
+                        </Col>
+                    <Col md={4}>
                         <h3 className="page-subtitle">{this.props.name}</h3>
                         <EventNavigation currentTab={this.state.isViewingTab} changeTab={(number) => this.changeViewingTab(number)} />
                         {tab}
                     </Col>
                     <Col md={1}>
                         {rsvpButton}
+                        {routeButtons}
                         <Row><RouteComments comments={this.state.comments} dismissPointComment={() => this.dismissPointComment()}
                             dismissPathComment={() => this.dismissPathComment()} viewEvent={true}/> </Row>
                     </Col>
@@ -243,14 +285,17 @@ export class ViewEvent extends Component {
                                 viewComments={this.state.viewComments}
                             />
                         </div>
-                        
                     </Col>
-                    <Col md={2} mdOffset={9}>
-                        <Row>
-                            <a className="btn action-button under-map" onClick={this.props.backToEventHome}>Back</a>
 
-                        </Row>
+                </Row>
+                <Row>
+                    <Col md={2} mdOffset={1}>
+                        {logo}
                     </Col>
+                    <Col md={2} mdOffset={6}>
+                        <a className="btn action-button under-map" onClick={this.props.backToEventHome}>Back</a>
+
+                        </Col>
                 </Row>
             </div>
 

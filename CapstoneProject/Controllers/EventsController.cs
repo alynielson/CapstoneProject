@@ -96,6 +96,7 @@ namespace CapstoneProject.Controllers
             }
             results = CheckIfActivityTimeValid(results, time);
             results = CheckIfActivityLocationValid(results, lat1, lng1, lat2, lng2);
+            results = results.OrderBy(a => a.activity.moving_time).ToList();
             return results;    
         }
 

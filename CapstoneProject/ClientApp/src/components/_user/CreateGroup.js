@@ -24,7 +24,7 @@ export class CreateGroup extends Component {
 
     }
 
-    submitGroup(event) {
+    async submitGroup(event) {
         event.preventDefault();
         if (!this.canSubmit()) {
             this.setState({ errorMessage: "Can't create without a name and description!" });
@@ -36,7 +36,7 @@ export class CreateGroup extends Component {
                 name: this.state.name, city: this.state.city, state: this.state.state, description: this.state.description,
                 members: members, userId: userId
             };
-            fetch('api/Groups/Create', {
+            await fetch('api/Groups/Create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)

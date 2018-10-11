@@ -87,11 +87,11 @@ export class UserGroupContent extends Component {
         })
     }
 
-    backToAllGroups() {
-        var groupsIn;
-        var groupsOwn;
+   async backToAllGroups() {
+        let groupsIn;
+        let groupsOwn;
         var id = localStorage.getItem('userId');
-        fetch(`/api/Groups/GetGroups?id=${id}`).then(response => response.json())
+        await fetch(`/api/Groups/GetGroups?id=${id}`).then(response => response.json())
             .then(data => {
 
                 groupsIn = data.groupsIn;
@@ -99,11 +99,14 @@ export class UserGroupContent extends Component {
                 this.setState({
                     groupsIn: groupsIn,
                     groupsOwn: groupsOwn,
-                    createGroup: false,
-                    editingGroupId: null,
-                    viewingGroupId: null
+                    
                 })
-            }).catch(a => console.log(a));
+           }).catch(a => console.log(a));
+       this.setState({
+           createGroup: false,
+           editingGroupId: null,
+           viewingGroupId: null
+       })
 
     }
 
@@ -203,7 +206,7 @@ export class UserGroupContent extends Component {
                         <Col md={4} mdOffset={1}>
                             <h3 className="page-subtitle">Your Groups</h3>
                             <ListGroup>
-                                {groupsOwn.map((a, index) =>
+                                {this.state.groupsOwn.map((a, index) =>
                                     (<ListGroupItem key={index} onClick={() => this.goViewGroup(index, "own")} active={this.state.viewingGroupId === a.id} value={a.id}>
                                         {a.name}
                                         <span className="pull-right">
@@ -213,7 +216,7 @@ export class UserGroupContent extends Component {
                                         </span>
                                     </ListGroupItem>)
                                 )}
-                                {groupsIn.map((a, i) =>
+                                {this.state.groupsIn.map((a, i) =>
 
                                     (<ListGroupItem onClick={() => this.goViewGroup(i,"in")} key={i} value={a.id} active={this.state.viewingGroupId === a.id}>{a.name}</ListGroupItem>)
                                 )}

@@ -165,9 +165,10 @@ namespace CapstoneProject.Controllers
                 {
                     CreateNewInvite(memberId, ventId);
                 }
-                CreateNewInvite(data.userId, ventId);
+               
                 _context.SaveChanges();
             }
+            CreateNewInvite(data.userId, ventId);
             EventSnapshotVM result = new EventSnapshotVM();
             result.id = ventId;
             return Ok(result);

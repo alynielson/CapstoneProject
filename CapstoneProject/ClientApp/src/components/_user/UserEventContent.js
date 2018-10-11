@@ -23,6 +23,7 @@ export class UserEventContent extends Component {
         })
     }
     backToEventHome() {
+        this.componentDidMount();
         this.setState({
             createEvent: false,
             viewingEvent: false

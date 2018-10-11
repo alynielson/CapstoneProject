@@ -11,6 +11,8 @@ export class StravaData extends Component {
         this.calculations = this.calculations.bind(this);
     }
 
+   
+
      async componentWillMount() {
          let url;
          let routeAResults = [];
@@ -24,6 +26,7 @@ export class StravaData extends Component {
         await fetch(url).then(response => response.json()).then(data => {
             let results = data.map(a => {
                 return {
+                    link: this.createLink(a.activity.id),
                     name: a.username,
                     movingTime: this.convertSecondsToTime(a.activity.moving_time),
                     elapsedTime: this.convertSecondsToTime(a.activity.elapsed_time),
@@ -49,6 +52,10 @@ export class StravaData extends Component {
              this.calculations(routeBResults, 2);
          }
       
+    }
+    createLink(id) {
+        let userId = id.toString();
+        return "https://www.strava.com/activities/".concat(userId);
     }
 
    calculations(results, route) {
@@ -161,6 +168,9 @@ export class StravaData extends Component {
 
 
         }
+        const linkStyle = {
+            color: "#FC4C02"
+        }
         const infoBox = {
             paddingTop: "12px",
             paddingBottom: "10px",
@@ -198,11 +208,11 @@ export class StravaData extends Component {
         }
         if (this.state.routeAResults.length === 0) {
             return (
-                <div> No results yet! </div>
+                <div className="page-subtitle text-center"> No results yet! </div>
             );
         }
         else if (this.state.routeAnalysis.length === 0) {
-            return (<div>Loading</div>);
+            return (<div className="page-subtitle text-center">Loading...</div>);
         }
         else {
             let routeViewing = (this.props.routeResultsView === 1) ? this.state.routeAResults : this.state.routeBResults;
@@ -228,7 +238,7 @@ export class StravaData extends Component {
                                     <td>{a.name}</td>
                                     <td>{a.movingTime}</td>
                                     <td>{a.averageSpeed} mph</td>
-                                    <td>link</td>
+                                    <td><a style={linkStyle}href={a.link} target="_blank">View on Strava</a></td>
                                 </tr>
                             )
                         } );

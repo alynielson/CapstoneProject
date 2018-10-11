@@ -16,7 +16,7 @@ export class NavMenu extends Component {
                 <Navbar fixedTop fluid collapseOnSelect>
                     <Navbar.Header>
                         <Navbar.Brand>
-                            <div className="brand" onClick={this.props.onClickingTab}>NAME</div>
+                            <div className="brand" onClick={this.props.onClickingTab}>ONWARD</div>
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>
@@ -43,7 +43,7 @@ export class NavMenu extends Component {
                 <Navbar fixedTop fluid collapseOnSelect>
                     <Navbar.Header>
                         <Navbar.Brand >
-                            NAME
+                            ONWARD
                         </Navbar.Brand>
                         <Navbar.Toggle />
                     </Navbar.Header>

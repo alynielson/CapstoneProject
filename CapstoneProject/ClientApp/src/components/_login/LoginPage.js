@@ -1,7 +1,7 @@
 ﻿import React, { Component } from 'react';
 import {Form, FormGroup, FormControl, Col, Row, Alert } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
-import Background from './images/grey-race.jpg';
+
 
 export class Login extends Component {
     constructor(props) {

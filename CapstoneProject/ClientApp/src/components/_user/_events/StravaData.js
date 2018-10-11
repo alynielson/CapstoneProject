@@ -1,18 +1,12 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar, Alert } from 'react-bootstrap';
+import { Table, Form, FormGroup, FormControl, ControlLabel, Col, ColProps, Row, ButtonToolbar, Alert } from 'react-bootstrap';
 
 export class StravaData extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            aTotalMiles: 0,
-            aTotalMinutes:0 ,
-            aTotalResults:0,
-            aMaxSpeed: 0,
-            aMaxUser: '',
-            aFastestTime: '',
-            aFastestUser: '',
-            routeAResults: []
+            routeAResults: [],
+            routeAnalysis: []
         }
         this.calculations = this.calculations.bind(this);
     }
@@ -20,6 +14,7 @@ export class StravaData extends Component {
      async componentWillMount() {
          let url;
          let routeAResults = [];
+         let routeBResults = [];
         if (this.props.route2 !== null) {
             url = `/api/Events/GetStravaData?eventId=${this.props.id}&date=${this.props.date}&time=${this.props.time}&lat1=${this.props.route1.coordinates[0].lat}&lng1=${this.props.route1.coordinates[0].lng}&lat2=${this.props.route2.coordinates[0].lat}&lng2=${this.props.route2.coordinates[0].lng}`;
         }
@@ -38,36 +33,50 @@ export class StravaData extends Component {
                 }
             });
             routeAResults = results.filter(a => { return Math.abs(Number(a.distance) - this.props.route1.totalDistance) < 1 });
-            let routeBresults = null;
             if (this.props.route2 !== null) {
-                routeBresults = results.filter(a => { return (Math.abs(Number(a.distance) - this.props.route2.totalDistance) < 1) });
+                routeBResults = results.filter(a => { return (Math.abs(Number(a.distance) - this.props.route2.totalDistance) < 1) });
             }
             this.setState({
                 results: results,
                 routeAResults: routeAResults,
-                routeBResults: routeBresults
+                routeBResults: routeBResults
             })
          }).catch(error => console.log(error));
-         this.calculations(routeAResults);
+         if (routeAResults.length > 0) {
+             this.calculations(routeAResults, 1);
+         }
+         if (routeBResults.length > 0) {
+             this.calculations(routeBResults, 2);
+         }
       
     }
 
-   calculations(results) {
-        let aTotalMiles = this.calculateTotalMiles(results);
-       let aTotalMinutes = this.calculateTotalMinutes(results);
-       let aTotalResults = this.calculateTotalResults(results);
-       let aMaxSpeed = this.calculateMaxSpeed(results).maxSpeed;
-       let aMaxUser = this.calculateMaxSpeed(results).username;
-       let aFastestTime = this.calculateFastestTime(results).movingTime;
-       let aFastestUser = this.calculateFastestTime(results).name;
-        this.setState({
-            aTotalMiles: aTotalMiles,
-            aTotalMinutes: aTotalMinutes,
-            aTotalResults: aTotalResults,
-            aMaxSpeed: aMaxSpeed,
-            aMaxUser: aMaxUser,
-            aFastestTime: aFastestTime,
-            aFastestUser: aFastestUser
+   calculations(results, route) {
+        let totalMiles = this.calculateTotalMiles(results);
+       let totalMinutes = this.calculateTotalMinutes(results);
+       let totalResults = this.calculateTotalResults(results);
+       let maxSpeed = this.calculateMaxSpeed(results).maxSpeed;
+       let maxUser = this.calculateMaxSpeed(results).username;
+       let fastestTime = this.calculateFastestTime(results).movingTime;
+       let fastestUser = this.calculateFastestTime(results).name;
+       let data = {
+           totalMiles: totalMiles,
+           totalMinutes: totalMinutes,
+           totalResults: totalResults,
+           maxSpeed: maxSpeed,
+           maxUser: maxUser,
+           fastestTime: fastestTime,
+           fastestUser: fastestUser
+       }
+       let routeAnalysis = this.state.routeAnalysis;
+       if (route === 1) {
+           routeAnalysis[0] = data;
+       }
+       else if (route === 2) {
+           routeAnalysis[1] = data;
+       }
+       this.setState({
+          routeAnalysis: routeAnalysis
         });
     }
     convertSecondsToTime(seconds) {
@@ -125,15 +134,12 @@ export class StravaData extends Component {
         return (results.reduce((total, num) => total + num) / 60).toFixed(2);
     }
     calculateTotalResults(results) {
-        //let results = (letter === "a") ? this.state.routeAResults : this.state.routeBResults;
         return results.length;
     }
     calculateFastestTime(results) {
-        //let results = (letter === "a") ? this.state.routeAResults : this.state.routeBResults;
         return results[0];
     }
     calculateMaxSpeed(results) {
-        //let results = (letter === "a") ? this.state.routeAResults : this.state.routeBResults;
         let speeds = results.map(a => {
             return {
                 username: a.name,
@@ -149,17 +155,7 @@ export class StravaData extends Component {
 
    
     render() {
-        //let routeViewing = (this.props.routeResultsView === 1) ? "a" : "b";
-        ////let totalMiles = this.calculateTotalMiles(routeViewing);
-        //let resultsView = null;
-        //switch (this.props.view) {
-        //    case (1):
-        //       resultsView =  
-        //        break;
-        //    case (2):
-        //        resultsView = <div> results </div>
-        //        break;
-        //}
+        
         
         const infoContainer = {
 
@@ -181,19 +177,77 @@ export class StravaData extends Component {
             borderRadius: "5px"
 
         }
-        if (this.state.routeAResults.length > 0) {
+        const box2 = {
+            paddingTop: "6px",
+            paddingBottom: "10px",
+            backgroundColor: "white",
+            marginTop: "10px",
+            paddingLeft: "15px",
+            paddingRight: "5px",
+            marginRight: "-25px",
+            color: "#555",
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+            overflow: "auto",
+            marginBottom: "10px",
+            boxShadow: "4px 4px 5px 0px rgba(0,0,0,0.41)",
+            borderRadius: "5px",
+            color: "#555"
+        }
+        const tableStyle = {
+            color: "#555"
+        }
+        if (this.state.routeAResults.length === 0) {
             return (
-                <div style={infoContainer}>
-                    <div style={infoBox}>Total miles logged: {this.state.aTotalMiles}</div>
-                    <div style={infoBox}>Total minutes logged: {this.state.aTotalMinutes}</div>
-                    <div style={infoBox}>Total results logged: {this.state.aTotalResults}</div>
-                    <div style={infoBox}>Fastest time: {this.state.aFastestTime}, by {this.state.aFastestUser}</div>
-                    <div style={infoBox}>Highest max speed: {this.state.aMaxSpeed} miles per hour, by {this.state.aMaxUser} </div>
-                </div>
+                <div> No results yet! </div>
             );
         }
-        else {
+        else if (this.state.routeAnalysis.length === 0) {
             return (<div>Loading</div>);
+        }
+        else {
+            let routeViewing = (this.props.routeResultsView === 1) ? this.state.routeAResults : this.state.routeBResults;
+            let dataAnalysis = (this.props.routeResultsView === 1) ? this.state.routeAnalysis[0] : this.state.routeAnalysis[1];
+            let resultsView = null;
+            switch (this.props.view) {
+                case (1):
+                    resultsView = <div style={infoContainer}>
+                        <div style={infoBox}>Total miles logged: {dataAnalysis.totalMiles}</div>
+                        <div style={infoBox}>Total minutes logged: {dataAnalysis.totalMinutes}</div>
+                        <div style={infoBox}>Total results logged: {dataAnalysis.totalResults}</div>
+                        <div style={infoBox}>Fastest time: {dataAnalysis.fastestTime}, by {dataAnalysis.fastestUser}</div>
+                        <div style={infoBox}>Highest max speed: {dataAnalysis.maxSpeed} miles per hour, by {dataAnalysis.maxUser} </div>
+                    </div>
+                    break;
+                case (2):
+                    let rows = null;
+                    if (routeViewing.length > 0) {
+                        rows = routeViewing.map((a, i) => {
+                            return (
+                                <tr>
+                                    <td>{i + 1}</td>
+                                    <td>{a.name}</td>
+                                    <td>{a.movingTime}</td>
+                                    <td>{a.averageSpeed} mph</td>
+                                    <td>link</td>
+                                </tr>
+                            )
+                        } );
+                    
+                    }
+                    resultsView = <div style={box2}>
+                        <Table hover style={tableStyle}>
+                            
+                            <tbody>
+                                {rows}
+                                </tbody>
+                            </Table>
+                    </div>
+                    break;
+            }
+            return (
+                resultsView
+                );
+            
         }
     }
 

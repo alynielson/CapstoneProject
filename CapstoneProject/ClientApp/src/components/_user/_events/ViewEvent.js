@@ -205,7 +205,7 @@ export class ViewEvent extends Component {
                 </ListGroup>
                 rsvpButton = <Button className="normal-buttons btn" active={this.props.going} onClick={this.rsvp}>I'm going</Button>
                 break;
-            case (4): tab = <StravaData id={this.props.eventId} date={this.props.date} />
+            case (4): tab = <StravaData id={this.props.eventId} date={this.props.date} time={this.props.time} route1={this.props.route1} route2={this.props.route2}/>
         }
         const style = {
             backgroundColor: "purple",

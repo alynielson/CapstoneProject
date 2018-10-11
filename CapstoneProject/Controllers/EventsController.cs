@@ -60,40 +60,96 @@ namespace CapstoneProject.Controllers
         }
 
         [HttpGet("[action]")]
-        public string GetStravaData(int eventId, DateTime date)
-
+        public List<StravaViewModel> GetStravaData(int eventId, DateTime date, DateTime time, string lat1, string lng1, string lat2, string lng2)
         {
             string before = DateTimeToUnixTimestamp(date.AddHours(12)).ToString();
             string after = DateTimeToUnixTimestamp(date.AddHours(-12)).ToString();
             var athletes = _context.Invites.Where(a => a.EventId == eventId && a.Going == true).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).ToList();
             List<string> requests = new List<string> { };
             List<StravaViewModel> results = new List<StravaViewModel>();
-            for (int i = 0; i < athletes.Count(); i++)
+            int i = 0;
+            while (i < athletes.Count())
             {
-                
-                string token = PasswordConverter.Decrypt(athletes[i].b.StravaAccessTokenHashed);
-                string url = $"https://www.strava.com/api/v3/athlete/activities?access_token={token}&before={before}&after={after}&page=1&per_page=1";
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-               
-
-                request.Method = "GET";
-                WebResponse response = request.GetResponse();
-
-                string responseString = null;
-                Stream stream = response.GetResponseStream();
-                StreamReader streamReader = new StreamReader(stream);
-                responseString = streamReader.ReadToEnd();
-                List<Activity> activities = new List<Activity>();
-                activities = JsonConvert.DeserializeObject<List<Activity>>(responseString);
-               
+                if (athletes[i].b.StravaAccessTokenHashed != null)
+                {
+                    string username = $"{athletes[i].b.FirstName} {athletes[i].b.LastName}";
+                    string token = PasswordConverter.Decrypt(athletes[i].b.StravaAccessTokenHashed);
+                    string url = $"https://www.strava.com/api/v3/athlete/activities?access_token={token}&before={before}&after={after}&page=1&per_page=1";
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                    request.Method = "GET";
+                    WebResponse response = request.GetResponse();
+                    string responseString = null;
+                    Stream stream = response.GetResponseStream();
+                    StreamReader streamReader = new StreamReader(stream);
+                    responseString = streamReader.ReadToEnd();
+                    List<Activity> activities = new List<Activity>();
+                    activities = JsonConvert.DeserializeObject<List<Activity>>(responseString);
+                    foreach(Activity activity in activities)
+                    {
+                        StravaViewModel vm = new StravaViewModel();
+                        vm.username = username;
+                        vm.activity = activity;
+                        results.Add(vm);
+                    }
+                }
+                i++;
             }
-            return "blah";    
-            
-
-
-
+            results = CheckIfActivityTimeValid(results, time);
+            results = CheckIfActivityLocationValid(results, lat1, lng1, lat2, lng2);
+            return results;    
         }
 
+
+
+        private List<StravaViewModel> CheckIfActivityTimeValid(List<StravaViewModel> results,  DateTime time)
+        {
+            TimeSpan eventTime = time.TimeOfDay;
+            TimeSpan duration = new TimeSpan(0, 30, 0);
+            TimeSpan beforeEvent = eventTime.Subtract(duration);
+            TimeSpan afterEvent = eventTime.Add(duration);
+            foreach (StravaViewModel vm in results)
+            {
+                if (beforeEvent >= vm.activity.start_date_local.TimeOfDay && afterEvent <= vm.activity.start_date_local.TimeOfDay)
+                {
+                    results.Remove(vm);
+                }
+            }
+            return results;
+        }
+
+        private List<StravaViewModel> CheckIfActivityLocationValid(List<StravaViewModel> results, string lat1, string lng1, string lat2, string lng2)
+        {
+            foreach (StravaViewModel vm in results)
+            {
+                if (Math.Abs(vm.activity.start_latlng[0] - decimal.Parse(lat1)) < Convert.ToDecimal(0.01) && Math.Abs(vm.activity.start_latlng[1] - decimal.Parse(lng1)) < Convert.ToDecimal(0.01))
+                {
+                    continue;
+                }
+                else if (Math.Abs(vm.activity.end_latlng[0] - decimal.Parse(lat1)) < Convert.ToDecimal(0.01) && Math.Abs(vm.activity.end_latlng[1] - decimal.Parse(lng1)) < Convert.ToDecimal(0.01))
+                {
+                    continue;
+                }
+                else if (lat2 != null)
+                {
+                    if (Math.Abs(vm.activity.start_latlng[0] - decimal.Parse(lat2)) < Convert.ToDecimal(0.01) && Math.Abs(vm.activity.start_latlng[1] - decimal.Parse(lng2)) < Convert.ToDecimal(0.01))
+                    {
+                        continue;
+                    }
+                    else if (Math.Abs(vm.activity.end_latlng[0] - decimal.Parse(lat2)) < Convert.ToDecimal(0.01) && Math.Abs(vm.activity.end_latlng[2] - decimal.Parse(lng2)) < Convert.ToDecimal(0.01))
+                    {
+                        continue;
+                    }
+
+                }
+                else
+                {
+                    results.Remove(vm);
+                }
+                
+            }
+
+            return results;
+        }
 
         // POST: api/Events
         [HttpPost("[action]")]

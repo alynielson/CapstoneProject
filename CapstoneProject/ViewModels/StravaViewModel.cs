@@ -7,7 +7,9 @@ namespace CapstoneProject.ViewModels
 {
     public class StravaViewModel
     {
-        List<Activity> activities { get; set; }
+        public Activity activity { get; set; }
+        public string username { get; set; }
+
     }
 
     public class BaseInfo

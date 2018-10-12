@@ -350,6 +350,8 @@ export class EditRoute extends Component {
                             <Button onClick={this.allowComment} active={this.state.allowComment}>Point</Button>
                             <Button onClick={this.allowPathComment} active={this.state.allowPathComment}>Segment</Button>
                             <Glyphicon glyph="comment" className="comment-icon" style={commentIcon} />
+                            <Glyphicon glyph="info-sign" className="comment-icon" style={commentIcon} />
+
                         </ButtonGroup>
                     </Col>
                     <Col md={3}>

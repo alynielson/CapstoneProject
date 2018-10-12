@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, Alert, Col, ButtonGroup, Row, ButtonToolbar } from 'react-bootstrap';
+import { Button, Form, FormGroup, FormControl, Alert, Col, ButtonGroup, Row, Glyphicon } from 'react-bootstrap';
 import { GoogleApiWrapper, Map, Polyline, Marker } from 'google-maps-react';
 import { CommentModal } from './CommentModal';
 import img1 from './icons/not_clicked_marker.png';
@@ -261,6 +261,10 @@ export class EditRoute extends Component {
   
 
     render() {
+        const commentIcon = {
+            marginLeft: "15px",
+            fontSize: "40px"
+        }
         const submitComment = ((comment) => { this.handleCommentSubmit(comment) });
         const submitPathComment = ((pathComment) => { this.handlePathCommentSubmit(pathComment) });
         var alert = null;
@@ -345,6 +349,7 @@ export class EditRoute extends Component {
                         <ButtonGroup vertical className="map-action-buttons">
                             <Button onClick={this.allowComment} active={this.state.allowComment}>Point</Button>
                             <Button onClick={this.allowPathComment} active={this.state.allowPathComment}>Segment</Button>
+                            <Glyphicon glyph="comment" className="comment-icon" style={commentIcon} />
                         </ButtonGroup>
                     </Col>
                     <Col md={3}>

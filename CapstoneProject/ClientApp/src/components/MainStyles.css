@@ -15,6 +15,10 @@ a {
     color: #c2e6ff;
 }
 
+.gm-style:first-of-type > div:nth-child(1) {
+    cursor: crosshair !important;
+}
+
 a:hover {
     color: hotpink;
 }

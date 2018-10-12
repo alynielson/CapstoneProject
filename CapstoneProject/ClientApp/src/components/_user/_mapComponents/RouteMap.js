@@ -69,6 +69,8 @@ export class RouteMap extends Component {
                 initialCenter={{ lat: 43.0435794, lng: -88.0138458 }}
                 zoom={12}
                 onClick={this.props.clickAction}
+                
+               
             >
                 {startingPoint}
                 {routeMarkers}

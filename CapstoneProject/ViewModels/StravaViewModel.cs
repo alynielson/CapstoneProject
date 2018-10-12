@@ -40,7 +40,7 @@ namespace CapstoneProject.ViewModels
 
         public string type { get; set; }
 
-        public int workout_type { get; set; }
+        public int? workout_type { get; set; }
 
         public int id { get; set; }
         public string external_id { get; set; }

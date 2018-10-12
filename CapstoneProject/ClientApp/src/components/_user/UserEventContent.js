@@ -144,7 +144,7 @@ export class UserEventContent extends Component {
                     </Row>
                     <Row>
                         <Col md={10} mdOffset={1}>
-                            <h3 className="page-subtitle">Upcoming Events</h3>
+                            <h3 className="page-subtitle">Events</h3>
                 <Table hover>
                     <thead>
                         <tr>

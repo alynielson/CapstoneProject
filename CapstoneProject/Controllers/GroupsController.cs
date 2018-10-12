@@ -39,6 +39,7 @@ namespace CapstoneProject.Controllers
                     await _context.SaveChangesAsync();
                     int thisGroupId = FindGroupIdByName(data.name);
                     CreateNewGroupMembers(thisGroupId, data.members);
+                    AddOrganizerAsMember(thisGroupId, data.userId);
                     return Ok();
                 }
                 catch
@@ -50,6 +51,15 @@ namespace CapstoneProject.Controllers
             {
                 return NoContent();
             }
+        }
+
+        private void AddOrganizerAsMember(int groupId, int memberId)
+        {
+            GroupMember groupMember = new GroupMember();
+            groupMember.GroupId = groupId;
+            groupMember.UserId = memberId;
+            _context.GroupMembers.Add(groupMember);
+            _context.SaveChanges();
         }
 
         private void CreateNewGroupMembers(int id, int[] memberIds)

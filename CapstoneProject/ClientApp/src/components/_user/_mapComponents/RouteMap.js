@@ -59,8 +59,10 @@ export class RouteMap extends Component {
         if ((this.props.routeShowing.routeSpot === 2 && this.props.routeShowing.values === true) || this.props.routesViewing === 2 ||
             (this.props.routesViewing === 1 && this.props.routeShowing.values == false && this.props.routeShowing.routeSpot === 1)) {
             route2Line = <Polyline
+                
                 strokeWeight={6}
-                path={this.props.route2.coordinates} />
+                path={this.props.route2.coordinates}
+                strokeColor="#f442d9"/>
         }
         return (
             <Map google={window.google}

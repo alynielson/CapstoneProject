@@ -93,9 +93,10 @@ export class UserGroupContent extends Component {
         var id = localStorage.getItem('userId');
         await fetch(`/api/Groups/GetGroups?id=${id}`).then(response => response.json())
             .then(data => {
-
-                groupsIn = data.groupsIn;
+                
                 groupsOwn = data.groupsOwn;
+                let groupsOwnIds = groupsOwn.map(a => a.id);
+                groupsIn = data.groupsIn.filter(a => { return (groupsOwnIds.includes(a.id) === false) });
                 this.setState({
                     groupsIn: groupsIn,
                     groupsOwn: groupsOwn,
@@ -117,8 +118,9 @@ export class UserGroupContent extends Component {
         fetch(`/api/Groups/GetGroups?id=${id}`).then(response => response.json())
             .then(data => {
 
-                groupsIn = data.groupsIn;
                 groupsOwn = data.groupsOwn;
+                let groupsOwnIds = groupsOwn.map(a => a.id);
+                groupsIn = data.groupsIn.filter(a => { return (groupsOwnIds.includes(a.id) === false) });
                 this.setState({
                     groupsIn: groupsIn,
                     groupsOwn: groupsOwn

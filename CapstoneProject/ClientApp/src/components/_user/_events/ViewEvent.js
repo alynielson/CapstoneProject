@@ -128,10 +128,10 @@ export class ViewEvent extends Component {
         })
     }
     
-    rsvp() {
+    async rsvp() {
         var userId = localStorage.getItem('userId');
         var ventId = this.props.eventId;
-        fetch(`api/Events/Rsvp?user=${userId}&vent=${ventId}`, {
+        await fetch(`api/Events/Rsvp?user=${userId}&vent=${ventId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' }
         }

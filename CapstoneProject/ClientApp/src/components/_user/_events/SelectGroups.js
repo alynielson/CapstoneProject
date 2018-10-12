@@ -27,7 +27,10 @@ export class SelectGroups extends Component {
     componentDidMount() {
         let userId = localStorage.getItem('userId');
         fetch(`api/Groups/GetGroups?id=${userId}`).then(response => response.json()).then(data => {
-            let groups = data.groupsIn.concat(data.groupsOwn).map(a => { return ({ id: a.id, name: a.name }); });
+            let groupsOwn = data.groupsOwn;
+            let groupsOwnIds = groupsOwn.map(a => a.id);
+            let groupsIn = data.groupsIn.filter(a => { return (groupsOwnIds.includes(a.id) === false) });
+            let groups = groupsIn.concat(groupsOwn).map(a => { return ({ id: a.id, name: a.name }); });
             this.setState({
                 groups: groups
             });

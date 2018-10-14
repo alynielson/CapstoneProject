@@ -1,5 +1,5 @@
 ﻿import React, { Component } from 'react';
-import { Button, Form, FormGroup, FormControl, Alert, Col, ButtonGroup, Row, Glyphicon } from 'react-bootstrap';
+import { Button, Tooltip,OverlayTrigger, Alert, Col, ButtonGroup, Row, Glyphicon } from 'react-bootstrap';
 import { GoogleApiWrapper, Map, Polyline, Marker } from 'google-maps-react';
 import { CommentModal } from './CommentModal';
 import img1 from './icons/not_clicked_marker.png';
@@ -13,6 +13,7 @@ export class EditRoute extends Component {
             allowComment: false,
             commentCoords: [{}],
             hasComments: false,
+            isViewingRouteInfo: true,
             showCommentModal: false,
             pointComments: [],
             commentShowing: null,
@@ -38,6 +39,14 @@ export class EditRoute extends Component {
         this.dismissPathComment = this.dismissPathComment.bind(this);
         this.onPathHover = this.onPathHover.bind(this);
         this.onMarkerHover = this.onMarkerHover.bind(this);
+        this.hideUnhideComments = this.hideUnhideComments.bind(this);
+    }
+
+    hideUnhideComments() {
+        let result = this.state.isViewingRouteInfo;
+        this.setState({
+            isViewingRouteInfo: !result
+        })
     }
 
     componentWillMount() {
@@ -246,6 +255,7 @@ export class EditRoute extends Component {
 
     allowComment() {
         this.setState({
+            isViewingRouteInfo: false,
             allowComment: true,
             allowPathComment: false
         })
@@ -253,6 +263,7 @@ export class EditRoute extends Component {
 
     allowPathComment() {
         this.setState({
+            isViewingRouteInfo: false,
             allowPathComment: true,
             allowComment: false
         });
@@ -267,21 +278,45 @@ export class EditRoute extends Component {
         }
         const submitComment = ((comment) => { this.handleCommentSubmit(comment) });
         const submitPathComment = ((pathComment) => { this.handlePathCommentSubmit(pathComment) });
+        let infoIcon = <Glyphicon glyph="info-sign" className="comment-icon" style={commentIcon} /> 
+        let message = <Tooltip id="tooltip">
+            Viewing route info.
+            </Tooltip>
+        
+        if (this.state.isViewingRouteInfo && this.state.hasComments) {
+            message = <Tooltip id="tooltip">
+               This route has comments! Click to view.
+            </Tooltip>
+            infoIcon = <a onClick={this.hideUnhideComments}> <OverlayTrigger placement="bottom" overlay={message}>
+                <Glyphicon className="comment-icon" glyph="comment" style={commentIcon}/>
+            </OverlayTrigger> </a>
+        }
+        else if (!this.state.isViewingRouteInfo && this.state.hasComments) {
+            message = <Tooltip id="tooltip">
+                Back to route info.
+            </Tooltip>
+            infoIcon = <a onClick={this.hideUnhideComments}> <OverlayTrigger placement="bottom" overlay={message}>
+                <Glyphicon className="comment-icon" glyph="info-sign" style={commentIcon} />
+            </OverlayTrigger> </a>
+        }
+
         var alert = null;
         var alert2 = null;
-        if (this.state.commentShowing != null) {
+        if (this.state.commentShowing != null && !this.state.isViewingRouteInfo) {
             alert = <Alert onDismiss={this.dismissComment} className="comments"> 
                 <h5>{this.state.commentUserNames[this.state.commentPosition]}</h5>
                 <p> {this.state.commentShowing} </p> </Alert>
         }
-        if (this.state.pathCommentShowing != null) {
+        if (this.state.pathCommentShowing != null && !this.state.isViewingRouteInfo) {
             alert2 = <Alert onDismiss={this.dismissPathComment} className="comments">
                 <h5>{this.state.pathUserNames[this.state.pathCommentPosition]}</h5>
 
                 <p> {this.state.pathCommentShowing} </p> </Alert>
         }
-        var segments = 
-            this.state.pathCommentCoords.map((path, index) => {
+        var segments = null;
+        var markers = null;
+        if (!this.state.isViewingRouteInfo) {
+            segments = this.state.pathCommentCoords.map((path, index) => {
                 if (this.state.hasPathComments) {
                     return (
                         <Polyline strokeWeight={6}
@@ -291,11 +326,37 @@ export class EditRoute extends Component {
                             onMouseover={(data) => this.onPathHover(data)}
                         />
                     );
-                   
+
                 }
 
             }
-            )
+            );
+            markers =
+                this.state.commentCoords.map((coord, index) => {
+                    if (this.state.commentPosition === index) {
+                        return (
+                            <Marker key={index}
+                                icon={img2}
+                                onMouseover={(data) => this.onMarkerHover(data)}
+                                google={window.google}
+                                position={coord}
+                            />
+                        );
+                    }
+                    else {
+                        return (
+                            <Marker key={index}
+                                icon={img1}
+                                onMouseover={(data) => this.onMarkerHover(data)}
+                                google={window.google}
+                                position={coord}
+                            />
+
+                        );
+                    }
+                });
+
+        }
         
         return (
             <div>
@@ -309,29 +370,7 @@ export class EditRoute extends Component {
                             initialCenter={{ lat: this.props.lat, lng: this.props.lng }}
                                 zoom={12}
                             >
-                                {this.state.commentCoords.map((coord, index) => {
-                                    if (this.state.commentPosition === index) {
-                                        return (
-                                            <Marker key={index}
-                                                icon={img2}
-                                                onMouseover={(data) => this.onMarkerHover(data)}
-                                                google={window.google}
-                                                position={coord}
-                                            />
-                                        );
-                                    }
-                                    else {
-                                        return (
-                                            <Marker key={index}
-                                                icon={img1}
-                                                onMouseover={(data) => this.onMarkerHover(data)}
-                                                google={window.google}
-                                                position={coord}
-                                            />
-
-                                        );
-                                    }
-                                })}
+                                {markers}
 
                                 <Polyline
                                     strokeWeight={6}
@@ -349,8 +388,7 @@ export class EditRoute extends Component {
                         <ButtonGroup vertical className="map-action-buttons">
                             <Button onClick={this.allowComment} active={this.state.allowComment}>Point</Button>
                             <Button onClick={this.allowPathComment} active={this.state.allowPathComment}>Segment</Button>
-                            <Glyphicon glyph="comment" className="comment-icon" style={commentIcon} />
-                            <Glyphicon glyph="info-sign" className="comment-icon" style={commentIcon} />
+                            {infoIcon}
 
                         </ButtonGroup>
                     </Col>

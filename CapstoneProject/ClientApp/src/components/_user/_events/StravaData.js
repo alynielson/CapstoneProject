@@ -14,44 +14,46 @@ export class StravaData extends Component {
    
 
      async componentWillMount() {
-         let url;
-         let routeAResults = [];
-         let routeBResults = [];
-        if (this.props.route2 !== null) {
-            url = `/api/Events/GetStravaData?eventId=${this.props.id}&date=${this.props.date}&time=${this.props.time}&lat1=${this.props.route1.coordinates[0].lat}&lng1=${this.props.route1.coordinates[0].lng}&lat2=${this.props.route2.coordinates[0].lat}&lng2=${this.props.route2.coordinates[0].lng}`;
-        }
-        else {
-            url = `/api/Events/GetStravaData?eventId=${this.props.id}&date=${this.props.date}&time=${this.props.time}&lat1=${this.props.route1.coordinates[0].lat}&lng1=${this.props.route1.coordinates[0].lng}`;
-        }
-        await fetch(url).then(response => response.json()).then(data => {
-            let results = data.map(a => {
-                return {
-                    link: this.createLink(a.activity.id),
-                    name: a.username,
-                    movingTime: this.convertSecondsToTime(a.activity.moving_time),
-                    elapsedTime: this.convertSecondsToTime(a.activity.elapsed_time),
-                    distance: this.convertDistanceToMiles(a.activity.distance),
-                    averageSpeed: this.convertSpeedToMph(a.activity.average_speed),
-                    maxSpeed: this.convertSpeedToMph(a.activity.max_speed)
-                }
-            });
-            routeAResults = results.filter(a => { return Math.abs(Number(a.distance) - this.props.route1.totalDistance) < 1 });
-            if (this.props.route2 !== null) {
-                routeBResults = results.filter(a => { return (Math.abs(Number(a.distance) - this.props.route2.totalDistance) < 1) });
-            }
-            this.setState({
-                results: results,
-                routeAResults: routeAResults,
-                routeBResults: routeBResults
-            })
-         }).catch(error => console.log(error));
-         if (routeAResults.length > 0) {
-             this.calculations(routeAResults, 1);
+         let now = new Date();
+         if (now >= this.props.date) {
+             let url;
+             let routeAResults = [];
+             let routeBResults = [];
+             if (this.props.route2 !== null) {
+                 url = `/api/Events/GetStravaData?eventId=${this.props.id}&date=${this.props.date}&time=${this.props.time}&lat1=${this.props.route1.coordinates[0].lat}&lng1=${this.props.route1.coordinates[0].lng}&lat2=${this.props.route2.coordinates[0].lat}&lng2=${this.props.route2.coordinates[0].lng}`;
+             }
+             else {
+                 url = `/api/Events/GetStravaData?eventId=${this.props.id}&date=${this.props.date}&time=${this.props.time}&lat1=${this.props.route1.coordinates[0].lat}&lng1=${this.props.route1.coordinates[0].lng}`;
+             }
+             await fetch(url).then(response => response.json()).then(data => {
+                 let results = data.map(a => {
+                     return {
+                         link: this.createLink(a.activity.id),
+                         name: a.username,
+                         movingTime: this.convertSecondsToTime(a.activity.moving_time),
+                         elapsedTime: this.convertSecondsToTime(a.activity.elapsed_time),
+                         distance: this.convertDistanceToMiles(a.activity.distance),
+                         averageSpeed: this.convertSpeedToMph(a.activity.average_speed),
+                         maxSpeed: this.convertSpeedToMph(a.activity.max_speed)
+                     }
+                 });
+                 routeAResults = results.filter(a => { return Math.abs(Number(a.distance) - this.props.route1.totalDistance) < 1 });
+                 if (this.props.route2 !== null) {
+                     routeBResults = results.filter(a => { return (Math.abs(Number(a.distance) - this.props.route2.totalDistance) < 1) });
+                 }
+                 this.setState({
+                     results: results,
+                     routeAResults: routeAResults,
+                     routeBResults: routeBResults
+                 })
+             }).catch(error => console.log(error));
+             if (routeAResults.length > 0) {
+                 this.calculations(routeAResults, 1);
+             }
+             if (routeBResults.length > 0) {
+                 this.calculations(routeBResults, 2);
+             }
          }
-         if (routeBResults.length > 0) {
-             this.calculations(routeBResults, 2);
-         }
-      
     }
     createLink(id) {
         let userId = id.toString();

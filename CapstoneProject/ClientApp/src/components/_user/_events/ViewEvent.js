@@ -135,16 +135,18 @@ export class ViewEvent extends Component {
     }
     
     async rsvp() {
-        var userId = localStorage.getItem('userId');
-        var ventId = this.props.eventId;
-        await fetch(`api/Events/Rsvp?user=${userId}&vent=${ventId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+        if (!this.state.going) {
+            var userId = localStorage.getItem('userId');
+            var ventId = this.props.eventId;
+            await fetch(`api/Events/Rsvp?user=${userId}&vent=${ventId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            }
+            ).then(error => console.log(error));
+            this.setState({
+                going: true
+            });
         }
-        ).then(error => console.log(error));
-        this.setState({
-            going: true
-        })
     }
 
     render() {

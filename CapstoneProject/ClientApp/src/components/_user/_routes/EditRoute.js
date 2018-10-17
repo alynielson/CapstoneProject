@@ -5,6 +5,7 @@ import { CommentModal } from './CommentModal';
 import img1 from './icons/not_clicked_marker.png';
 import img2 from './icons/_clicked_marker.png';
 import { PathCommentModal } from './PathCommentModal';
+import { RouteInfo } from './RouteInfo';
 
 export class EditRoute extends Component {
     constructor(props) {
@@ -282,7 +283,7 @@ export class EditRoute extends Component {
         const submitPathComment = ((pathComment) => { this.handlePathCommentSubmit(pathComment) });
         let routeInfo = null;
         if (this.state.isViewingRouteInfo) {
-
+            routeInfo = <RouteInfo totalDistance={this.props.totalDistance} totalElevationGain={this.props.totalElevationGain} totalElevationLoss={this.props.totalElevationLoss}/>
         }
         let infoIcon = <Glyphicon glyph="info-sign" className="comment-icon" style={commentIcon} /> 
         let message = <Tooltip id="tooltip">
@@ -407,6 +408,7 @@ export class EditRoute extends Component {
                         </Row>
                         {alert}
                             {alert2}
+                            {routeInfo}
                         </Col>
                         
                     </Col>

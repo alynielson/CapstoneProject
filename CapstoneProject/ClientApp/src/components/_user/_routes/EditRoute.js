@@ -45,7 +45,9 @@ export class EditRoute extends Component {
     hideUnhideComments() {
         let result = this.state.isViewingRouteInfo;
         this.setState({
-            isViewingRouteInfo: !result
+            isViewingRouteInfo: !result,
+            allowComment: false,
+            allowPathComment: false
         })
     }
 
@@ -278,6 +280,10 @@ export class EditRoute extends Component {
         }
         const submitComment = ((comment) => { this.handleCommentSubmit(comment) });
         const submitPathComment = ((pathComment) => { this.handlePathCommentSubmit(pathComment) });
+        let routeInfo = null;
+        if (this.state.isViewingRouteInfo) {
+
+        }
         let infoIcon = <Glyphicon glyph="info-sign" className="comment-icon" style={commentIcon} /> 
         let message = <Tooltip id="tooltip">
             Viewing route info.

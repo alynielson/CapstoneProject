@@ -34,7 +34,8 @@ export class ViewEvent extends Component {
 
     componentWillMount() {
         this.setState({
-            going: this.props.going
+            going: this.props.going,
+            goingNames: this.props.goingNames
         })
     }
 
@@ -143,8 +144,11 @@ export class ViewEvent extends Component {
                 headers: { 'Content-Type': 'application/json' }
             }
             ).then(error => console.log(error));
+            let names = this.state.goingNames;
+            names.push(`${localStorage.getItem("firstname")} ${localStorage.getItem("lastname")}`);
             this.setState({
-                going: true
+                going: true,
+                goingNames: names
             });
         }
     }

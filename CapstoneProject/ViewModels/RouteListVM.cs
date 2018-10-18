@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject.ViewModels
 {
-    public class RouteListVM
+    public class RouteListVM : RouteVM
     {
-        public int id { get; set; }
 
         public string name { get; set; }
 

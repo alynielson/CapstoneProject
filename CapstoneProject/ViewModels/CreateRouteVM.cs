@@ -11,8 +11,6 @@ namespace CapstoneProject.ViewModels
 
         public string description { get; set; }
 
-       
-
         public string  totalDistance { get; set; }
 
         public string totalElevationGain { get; set; }

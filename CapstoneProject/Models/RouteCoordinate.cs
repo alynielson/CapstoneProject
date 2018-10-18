@@ -7,14 +7,11 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject.Models
 {
-    public class RouteCoordinate
+    public class RouteCoordinate : Coordinate <RouteCoordinate>
     {
         [Key]
         public int Id { get; set; }
-        public string Latitude { get; set; }
-
-        public string Longitude { get; set; }
-
+        
         public int SortOrder { get; set; }
 
         [ForeignKey("Route")]

@@ -28,7 +28,10 @@ export class Login extends Component {
 
 
     async handleSubmit(event) {
-        const data = { email: this.state.email, password: this.state.password};
+        const data = {
+            email: this.state.email,
+            password: this.state.password
+        };
         event.preventDefault();
         var resultData = null;
         await fetch('api/Users/Login', {

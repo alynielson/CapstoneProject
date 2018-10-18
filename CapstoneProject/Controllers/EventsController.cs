@@ -294,8 +294,8 @@ namespace CapstoneProject.Controllers
             for (int i = 0; i < coords.Length; i++)
             {
                 RouteCoords routeCoord = new RouteCoords();
-                routeCoord.lat = points[i].Latitude;
-                routeCoord.lng = points[i].Longitude;
+                routeCoord.lat = points[i].Latitude1;
+                routeCoord.lng = points[i].Longitude1;
                 coords[i] = routeCoord;
             }
             return coords;
@@ -306,8 +306,8 @@ namespace CapstoneProject.Controllers
             for (int i = 0; i < pointCoords.Length; i++)
             {
                 RouteCoords coord = new RouteCoords();
-                coord.lat = pointComments[i].Latitude;
-                coord.lng = pointComments[i].Longitude;
+                coord.lat = pointComments[i].Latitude1;
+                coord.lng = pointComments[i].Longitude1;
                 pointCoords[i] = coord;
             }
             return pointCoords;

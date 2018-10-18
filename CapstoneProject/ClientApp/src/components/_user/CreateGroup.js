@@ -40,7 +40,7 @@ export class CreateGroup extends Component {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
-            }).catch(function (error) { console.log(error); });
+            }).catch(error => console.log(error));
             this.props.returnToEventHome();
         }
     }

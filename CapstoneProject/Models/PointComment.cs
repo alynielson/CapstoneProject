@@ -10,10 +10,9 @@ namespace CapstoneProject.Models
     public class PointComment : Comment
     {
      
+    
 
-        public string Latitude { get; set; }
-
-        public string Longitude { get; set; }
+       
         
 
     }

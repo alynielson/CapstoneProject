@@ -35,23 +35,23 @@ namespace CapstoneProject.Controllers
             for (int i = 0; i < coords.Length; i++)
             {
                 RouteCoords routeCoord = new RouteCoords();
-                routeCoord.lat = points[i].Latitude;
-                routeCoord.lng = points[i].Longitude;
+                routeCoord.lat = points[i].Latitude1;
+                routeCoord.lng = points[i].Longitude1;
                 coords[i] = routeCoord;
             }
             return coords;
         }
 
-       
+
 
         private RouteCoords[] GetCoordinatesOfPointComments(List<PointComment> pointComments)
         {
             RouteCoords[] pointCoords = new RouteCoords[pointComments.Count()];
-            for(int i=0; i< pointCoords.Length; i++)
+            for (int i = 0; i < pointCoords.Length; i++)
             {
                 RouteCoords coord = new RouteCoords();
-                coord.lat = pointComments[i].Latitude;
-                coord.lng = pointComments[i].Longitude;
+                coord.lat = pointComments[i].Latitude1;
+                coord.lng = pointComments[i].Longitude1;
                 pointCoords[i] = coord;
             }
             return pointCoords;
@@ -173,8 +173,8 @@ namespace CapstoneProject.Controllers
             for (int i = 0; i < coordinates.Length; i++)
             {
                 RouteCoordinate coord = new RouteCoordinate();
-                coord.Latitude = coordinates[i].lat;
-                coord.Longitude = coordinates[i].lng;
+                coord.Latitude1 = coordinates[i].lat;
+                coord.Longitude1 = coordinates[i].lng;
                 coord.RouteId = id;
                 coord.SortOrder = i;
                 _context.Add(coord);
@@ -321,8 +321,8 @@ namespace CapstoneProject.Controllers
                 {
                     PointComment comment = new PointComment();
                     comment.Note = data.notes;
-                    comment.Latitude = data.pointCoordinates.lat;
-                    comment.Longitude = data.pointCoordinates.lng;
+                    comment.Latitude1 = data.pointCoordinates.lat;
+                    comment.Longitude1 = data.pointCoordinates.lng;
                     comment.Writer = data.author;
                     comment.RouteId = data.routeId;
                     comment.UserId = data.userId;

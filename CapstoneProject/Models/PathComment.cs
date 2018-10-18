@@ -10,9 +10,7 @@ namespace CapstoneProject.Models
     public class PathComment : Comment
     {
 
-        public string Latitude1 { get; set; }
-
-        public string Longitude1 { get; set; }
+    
 
         public string Latitude2 { get; set; }
 

@@ -160,7 +160,7 @@ namespace CapstoneProject.Controllers
             int ventId = _context.Events.OrderByDescending(a => a.Id).FirstOrDefault(a => a.Name == data.name).Id;
             foreach(GroupSnapshotVM group in data.groups)
             {
-                var members = _context.GroupMembers.Where(a => a.GroupId == group.Id).Join(_context.Users, a => a.UserId, b => b.Id, (a,b) => new { a,b}).Select(c => c.b.Id).ToList();
+                var members = _context.GroupMembers.Where(a => a.GroupId == group.Id).Join(_context.Users, a => a.UserId, b => b.Id, (a,b) => new { a,b}).Select(c => c.b.Id).Distinct().ToList();
                 foreach(int memberId in members)
                 {
                     CreateNewInvite(memberId, ventId);

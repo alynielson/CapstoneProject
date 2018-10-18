@@ -32,6 +32,13 @@ export class ViewEvent extends Component {
         this.changeRouteView = this.changeRouteView.bind(this);
     }
 
+    componentWillMount() {
+        this.setState({
+            going: this.props.going,
+            goingNames: this.props.goingNames
+        })
+    }
+
     changeResultsView(number) {
         this.setState({
             resultsView: number
@@ -129,13 +136,21 @@ export class ViewEvent extends Component {
     }
     
     async rsvp() {
-        var userId = localStorage.getItem('userId');
-        var ventId = this.props.eventId;
-        await fetch(`api/Events/Rsvp?user=${userId}&vent=${ventId}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
+        if (!this.state.going) {
+            var userId = localStorage.getItem('userId');
+            var ventId = this.props.eventId;
+            await fetch(`api/Events/Rsvp?user=${userId}&vent=${ventId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            }
+            ).then(error => console.log(error));
+            let names = this.state.goingNames;
+            names.push(`${localStorage.getItem("firstname")} ${localStorage.getItem("lastname")}`);
+            this.setState({
+                going: true,
+                goingNames: names
+            });
         }
-        ).then(error => console.log(error));
     }
 
     render() {
@@ -230,7 +245,7 @@ export class ViewEvent extends Component {
                 <ListGroup style={listStyle}>
                 {this.props.goingNames.map((member, index) => <ListGroupItem style={listItemStyle} key={index} >{member}</ListGroupItem>)}
                 </ListGroup>
-                rsvpButton = <Button className="normal-buttons btn" active={this.props.going} onClick={this.rsvp}>I'm going</Button>
+                rsvpButton = <Button className="normal-buttons btn" active={this.state.going} onClick={this.rsvp}>I'm going</Button>
                 break;
             case (4): tab = <StravaData id={this.props.eventId} date={this.props.date} time={this.props.time} route1={this.props.route1} route2={this.props.route2} view={this.state.resultsView} routeResultsView={this.state.routeResultsView} />
                 logo = <img src={stravalogo} />

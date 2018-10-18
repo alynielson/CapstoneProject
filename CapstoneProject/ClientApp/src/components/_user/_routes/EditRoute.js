@@ -154,7 +154,7 @@ export class EditRoute extends Component {
         let routeId = this.props.routeId;
         let userId = localStorage.getItem('userId');
         var data = {
-            note: comment,
+            notes: comment,
             pointCoordinates: this.state.commentCoords[this.state.commentCoords.length - 1],
             author: author,
             routeId: routeId,

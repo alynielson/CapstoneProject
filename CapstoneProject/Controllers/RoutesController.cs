@@ -42,6 +42,7 @@ namespace CapstoneProject.Controllers
             return coords;
         }
 
+       
 
         private RouteCoords[] GetCoordinatesOfPointComments(List<PointComment> pointComments)
         {
@@ -319,7 +320,7 @@ namespace CapstoneProject.Controllers
                 else
                 {
                     PointComment comment = new PointComment();
-                    comment.Note = data.note;
+                    comment.Note = data.notes;
                     comment.Latitude = data.pointCoordinates.lat;
                     comment.Longitude = data.pointCoordinates.lng;
                     comment.Writer = data.author;

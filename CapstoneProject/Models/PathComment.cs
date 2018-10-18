@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject.Models
 {
-    public class PathComment
+    public class PathComment : Comment
     {
-        [Key]
-        public int Id { get; set; }
-
-        public string Note { get; set; }
 
         public string Latitude1 { get; set; }
 
@@ -21,18 +17,5 @@ namespace CapstoneProject.Models
         public string Latitude2 { get; set; }
 
         public string Longitude2 { get; set; }
-
-        public string Writer { get; set; }
-
-        [ForeignKey("Route")]
-
-        public int RouteId { get; set; }
-
-        public Route Route { get; set; }
-
-        [ForeignKey("User")]
-        public int UserId { get; set; }
-
-        public User User { get; set; }
     }
 }

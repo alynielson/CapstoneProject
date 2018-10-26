@@ -55,9 +55,11 @@ namespace CapstoneProject.Controllers
 
         private void AddOrganizerAsMember(int groupId, int memberId)
         {
-            GroupMember groupMember = new GroupMember();
-            groupMember.GroupId = groupId;
-            groupMember.UserId = memberId;
+            GroupMember groupMember = new GroupMember()
+            {
+                GroupId = groupId,
+                UserId = memberId
+            };
             _context.GroupMembers.Add(groupMember);
             _context.SaveChanges();
         }

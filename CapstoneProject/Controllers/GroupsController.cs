@@ -154,14 +154,7 @@ namespace CapstoneProject.Controllers
         public List<GroupSnapshotVM> GetGroupsOwned(int id)
         {
             var groups = _context.Groups.Where(a => a.UserId == id).ToList();
-            List<GroupSnapshotVM> snapshots = new List<GroupSnapshotVM>();
-            foreach (Group group in groups)
-            {
-                GroupSnapshotVM snapshot = new GroupSnapshotVM();
-                snapshot.Id = group.Id;
-                snapshot.Name = group.Name;
-                snapshots.Add(snapshot);
-            }
+            List<GroupSnapshotVM> snapshots = CreateGroupsInSnapshotForClient(groups);
             return snapshots;
         }
 

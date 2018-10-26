@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using CapstoneProject.Operations;
 using IntegrationProject.Data;
 using System.IO;
+using CapstoneProject.Helpers;
 
 namespace CapstoneProject.Controllers
 {
@@ -132,10 +133,7 @@ namespace CapstoneProject.Controllers
             return GetUserInfoFromUser(user);
         }
 
-
-        // POST: api/Users
         [HttpPost("[action]")]
-        
         public async Task<IActionResult> Create([FromBody] UserVM data)
         {
            if (data != null)
@@ -170,33 +168,6 @@ namespace CapstoneProject.Controllers
             }
         }
 
-        private IEnumerable<User> SearchByName(string first_name = null, string last_name = null)
-        {
-            IEnumerable<User> firstNameMatches;
-            IEnumerable<User> matches;
-            if (first_name != null)
-            {
-                firstNameMatches = _context.Users.Where(a => a.FirstName.ToLower().Trim() == first_name.ToLower().Trim());
-                if (last_name != null)
-                {
-                    matches = firstNameMatches.Where(a => a.LastName.ToLower().Trim() == last_name.ToLower().Trim());
-                }
-                else
-                {
-                    matches = firstNameMatches;
-                }
-            }
-            else if (last_name != null)
-            {
-                matches = _context.Users.Where(a => a.LastName.ToLower().Trim() == last_name.ToLower().Trim());
-            }
-            else
-            {
-                return null;
-            }
-            return matches;
-        }
-
         private List<UserSearchVM> GetSearchMatches(IEnumerable<User> matches)
         {
             List<UserSearchVM> searchResults = new List<UserSearchVM> { };
@@ -220,7 +191,7 @@ namespace CapstoneProject.Controllers
             }
             string[] terms = term1.Split(' ');
             List<User> matches = new List<User> { };
-            foreach (String item in terms)
+            foreach (string item in terms)
             {
                 var nameMatches = _context.Users.Where(a => 
                     $"{a.FirstName.ToLower()} {a.LastName.ToLower()}".Contains(item));
@@ -230,19 +201,18 @@ namespace CapstoneProject.Controllers
                 matches.AddRange(cityMatches);
             }
             matches = matches.Distinct().ToList();
-
             return GetSearchMatches(matches);
         }
 
         [HttpGet("[action]")]
-        public UserLatLong GetDefaultMapCoordinates(int userId)
+        public IMappableVM GetDefaultMapCoordinates(int userId)
         {
             var user = _context.Users.Find(userId);
-            UserLatLong location = new UserLatLong();
             if (user.Latitude == null)
             {
                 return null;
             }
+            IMappableVM location = null;
             location.lat = user.Latitude;
             location.lng = user.Longitude;
             return location;

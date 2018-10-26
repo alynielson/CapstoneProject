@@ -209,7 +209,7 @@ namespace CapstoneProject.Controllers
             {
                 return null;
             }
-            IMappableVM location = null;
+            PointVM location = new PointVM();
             location.lat = user.Latitude;
             location.lng = user.Longitude;
             return location;

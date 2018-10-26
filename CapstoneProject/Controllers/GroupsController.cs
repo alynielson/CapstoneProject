@@ -131,19 +131,19 @@ namespace CapstoneProject.Controllers
             data.description = group.Description;
             data.state = group.State;
             data.userId = group.UserId;
-            string ownerFirstName = _context.Users.Find(group.UserId).FirstName;
-            string ownerLastName = _context.Users.Find(group.UserId).LastName;
-            data.owner = $"{ownerFirstName} {ownerLastName}";
-            data.members = _context.GroupMembers.Where(a => a.GroupId == id).Select(a => a.UserId).ToArray();
-            data.memberNames = GetMemberNames(id);
+            User groupOwner = _context.Users.Find(group.UserId);
+            data.owner = $"{groupOwner.FirstName} {groupOwner.LastName}";
+            var members = _context.GroupMembers.Where(a => a.GroupId == id);
+            data.members = members.Select(a => a.UserId).ToArray();
+            data.memberNames = GetMemberNames(id, members);
             return data;
         }
 
-        private string[] GetMemberNames(int groupId)
+        private string[] GetMemberNames(int groupId, IQueryable<GroupMember> members)
         {
-            var members = _context.GroupMembers.Where(a => a.GroupId == groupId).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Select(c => c.b).ToList();
+            var membersWithUsers = members.Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Select(c => c.b).ToList();
             List<string> memberNames = new List<string>();
-            foreach (User member in members)
+            foreach (User member in membersWithUsers)
             {
                 string name = $"{member.FirstName} {member.LastName}";
                 memberNames.Add(name);
@@ -181,7 +181,6 @@ namespace CapstoneProject.Controllers
             _context.Update(group);
             _context.SaveChanges();
             CreateNewGroupMembers(data.groupId, data.members);
-            
             return Ok();
         }
     }

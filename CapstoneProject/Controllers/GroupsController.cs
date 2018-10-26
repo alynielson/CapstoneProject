@@ -19,9 +19,7 @@ namespace CapstoneProject.Controllers
         {
             _context = context;
         }
-        
 
-        // POST: api/Groups
         [HttpPost("[action]")]
         public async Task<IActionResult> Create([FromBody] GroupVM data)
         {
@@ -29,12 +27,14 @@ namespace CapstoneProject.Controllers
             {
                 try
                 {
-                    Group group = new Group();
-                    group.Name = data.name;
-                    group.City = data.city;
-                    group.State = data.state;
-                    group.Description = data.description;
-                    group.UserId = data.userId;
+                    Group group = new Group()
+                    {
+                        Name = data.name,
+                        City = data.city,
+                        State = data.state,
+                        Description = data.description,
+                        UserId = data.userId
+                    };
                     _context.Groups.Add(group);
                     await _context.SaveChangesAsync();
                     int thisGroupId = FindGroupIdByName(data.name);

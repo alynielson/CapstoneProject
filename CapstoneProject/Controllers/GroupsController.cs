@@ -70,7 +70,7 @@ namespace CapstoneProject.Controllers
             _context.SaveChanges();
         }
 
-        private void CreateNewGroupMembers(int groupId, int[] memberIds)
+        private void CreateNewGroupMembers(int groupId, IEnumerable<int> memberIds)
         {
             foreach (int memberId in memberIds)
             {

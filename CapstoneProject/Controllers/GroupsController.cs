@@ -85,7 +85,7 @@ namespace CapstoneProject.Controllers
             {
                 thisGroup = thisGroup.OrderByDescending(a => a.Id);
             }
-            int thisGroupId = thisGroup.ToList()[0].Id;
+            int thisGroupId = thisGroup.First().Id;
             return thisGroupId;
         }
 

@@ -139,7 +139,7 @@ namespace CapstoneProject.Controllers
             return data;
         }
 
-        private string[] GetMemberNames(int groupId, IQueryable<GroupMember> members)
+        private List<string> GetMemberNames(int groupId, IQueryable<GroupMember> members)
         {
             var membersWithUsers = members.Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Select(c => c.b).ToList();
             List<string> memberNames = new List<string>();
@@ -148,7 +148,7 @@ namespace CapstoneProject.Controllers
                 string name = $"{member.FirstName} {member.LastName}";
                 memberNames.Add(name);
             }
-            return memberNames.ToArray();
+            return memberNames;
         }
 
         public List<GroupSnapshotVM> GetGroupsOwned(int id)

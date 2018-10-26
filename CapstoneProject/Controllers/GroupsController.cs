@@ -80,12 +80,12 @@ namespace CapstoneProject.Controllers
 
         private int FindGroupIdByName(string name)
         {
-            var thisGroup = _context.Groups.Where(a => a.Name == name).ToList();
+            var thisGroup = _context.Groups.Where(a => a.Name == name);
             if (thisGroup.Count() > 1)
             {
-                thisGroup = thisGroup.OrderByDescending(a => a.Id).ToList();
+                thisGroup = thisGroup.OrderByDescending(a => a.Id);
             }
-            int thisGroupId = thisGroup[0].Id;
+            int thisGroupId = thisGroup.ToList()[0].Id;
             return thisGroupId;
         }
 

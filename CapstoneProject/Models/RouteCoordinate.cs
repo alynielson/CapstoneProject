@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject.Models
 {
-    public class RouteCoordinate : Coordinate <RouteCoordinate>
+    public class RouteCoordinate : Coordinate
     {
         [Key]
         public int Id { get; set; }

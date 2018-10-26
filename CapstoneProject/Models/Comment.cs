@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject.Models
 {
-    public class Comment : Coordinate<Comment>
+    public class Comment : Coordinate
     {
         [Key]
         public int Id { get; set; }

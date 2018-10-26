@@ -14,9 +14,9 @@ namespace CapstoneProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class RoutesController : ControllerBase
+    public class RoutesController : ControllerBase 
     { private readonly ApplicationDbContext _context;
-        public RoutesController(ApplicationDbContext context)
+        public RoutesController (ApplicationDbContext context)
         {
             _context = context;
         }
@@ -32,6 +32,7 @@ namespace CapstoneProject.Controllers
         {
             var points = _context.RouteCoordinates.Where(a => a.RouteId == routeId).OrderBy(a => a.SortOrder).ToList();
             RouteCoords[] coords = new RouteCoords[points.Count()];
+            
             for (int i = 0; i < coords.Length; i++)
             {
                 RouteCoords routeCoord = new RouteCoords();
@@ -42,7 +43,18 @@ namespace CapstoneProject.Controllers
             return coords;
         }
 
-
+        private RouteCoords[] GetPoints(List<Coordinate> coordinateList)
+        {
+            RouteCoords[] coords = new RouteCoords[coordinateList.Count()];
+            for (int i = 0; i < coords.Length; i++)
+            {
+                RouteCoords routeCoord = new RouteCoords();
+                routeCoord.lat = coordinateList[i].Latitude1;
+                routeCoord.lng = coordinateList[i].Longitude1;
+                coords[i] = routeCoord;
+            }
+            return coords;
+        }
 
         private RouteCoords[] GetCoordinatesOfPointComments(List<PointComment> pointComments)
         {

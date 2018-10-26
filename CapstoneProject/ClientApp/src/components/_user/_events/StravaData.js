@@ -14,8 +14,7 @@ export class StravaData extends Component {
    
 
      async componentWillMount() {
-         let now = new Date();
-         if (now >= this.props.date) {
+        
              let url;
              let routeAResults = [];
              let routeBResults = [];
@@ -53,7 +52,7 @@ export class StravaData extends Component {
              if (routeBResults.length > 0) {
                  this.calculations(routeBResults, 2);
              }
-         }
+         
     }
     createLink(id) {
         let userId = id.toString();

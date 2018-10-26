@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject.Models
 {
-    public abstract class Coordinate <T>
+    public abstract class Coordinate 
     {
         public string Latitude1 { get; set; }
 

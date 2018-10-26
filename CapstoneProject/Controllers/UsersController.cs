@@ -93,7 +93,6 @@ namespace CapstoneProject.Controllers
             catch
             {
                 throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.InternalServerError);
-
             }
         }
 
@@ -118,7 +117,6 @@ namespace CapstoneProject.Controllers
             }
         }
 
-
        private LoggedInUserVM GetUserInfoFromUser(User user)
         {
             LoggedInUserVM viewModel = new LoggedInUserVM();
@@ -141,9 +139,9 @@ namespace CapstoneProject.Controllers
         public async Task<IActionResult> Create([FromBody] UserVM data)
         {
            if (data != null)
-            {
-             try   
-                {
+           {
+                 try   
+                 {
                     if (_context.Users.FirstOrDefault(e => data.email == e.Email) != null)
                     {
                         return Conflict();
@@ -158,17 +156,14 @@ namespace CapstoneProject.Controllers
                         _context.Users.Add(user);
                         await _context.SaveChangesAsync();
                         LoggedInUserVM viewModel = GetUserInfoFromEmail(data.email);
-
                         return Ok(viewModel);
                     }
-                    
-                }
+                 }
                 catch
                 {
                     throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.InternalServerError);
                 }
-              
-            }
+           }
             else
             {
                 return NoContent();
@@ -178,10 +173,7 @@ namespace CapstoneProject.Controllers
         private IEnumerable<User> SearchByName(string first_name = null, string last_name = null)
         {
             IEnumerable<User> firstNameMatches;
-
             IEnumerable<User> matches;
-            
-
             if (first_name != null)
             {
                 firstNameMatches = _context.Users.Where(a => a.FirstName.ToLower().Trim() == first_name.ToLower().Trim());
@@ -218,23 +210,6 @@ namespace CapstoneProject.Controllers
             }
             return searchResults;
         }
-
-        [HttpGet("[action]")]
-        public IEnumerable<UserSearchVM> SearchUsersByName(string first_name = null, string last_name = null)
-        {
-            IEnumerable<User> matches = SearchByName(first_name, last_name);
-            return GetSearchMatches(matches);
-        }
-
-        [HttpGet("[action]")]
-        public IEnumerable<UserSearchVM> SearchUsersByLocation(string city, string state)
-        {
-           
-            var matches = _context.Users.Where(a => a.City == city && a.State == state);
-            return GetSearchMatches(matches);
-            
-        }
-
 
         [HttpGet("[action]")]
         public IEnumerable<UserSearchVM> UniversalUserSearch(string term1)

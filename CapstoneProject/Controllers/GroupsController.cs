@@ -27,14 +27,7 @@ namespace CapstoneProject.Controllers
             {
                 try
                 {
-                    Group group = new Group()
-                    {
-                        Name = data.name,
-                        City = data.city,
-                        State = data.state,
-                        Description = data.description,
-                        UserId = data.userId
-                    };
+                    Group group = CreateNewGroup(data);
                     _context.Groups.Add(group);
                     await _context.SaveChangesAsync();
                     int thisGroupId = FindGroupIdByName(data.name);
@@ -51,6 +44,19 @@ namespace CapstoneProject.Controllers
             {
                 return NoContent();
             }
+        }
+
+        private Group CreateNewGroup(GroupVM data)
+        {
+            Group group = new Group()
+            {
+                Name = data.name,
+                City = data.city,
+                State = data.state,
+                Description = data.description,
+                UserId = data.userId
+            };
+            return group;
         }
 
         private void CreateGroupMember(int groupId, int memberId)

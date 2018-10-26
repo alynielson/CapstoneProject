@@ -32,8 +32,7 @@ namespace CapstoneProject.Controllers
                 .Where(c => c.a.Going == true || c.b.Date >= DateTime.Now).ToList();
             List<Event> events = eventsInvites.Select(c => c.b).ToList();
             List<User> eventsOrganizers = events.Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Select(c => c.b).ToList();
-            List<string> eventsOrgsFirstName = eventsOrganizers.Select(f => f.FirstName).ToList();
-            List<string> eventsOrgsLastName = eventsOrganizers.Select(f => f.LastName).ToList();
+            List<string> eventsOrgsName = eventsOrganizers.Select(f => $"{f.FirstName} {f.LastName}").ToList();
             for (int i = 0; i < eventsInvites.Count(); i++)
             {
                 UserEventVM vent = new UserEventVM();
@@ -41,14 +40,12 @@ namespace CapstoneProject.Controllers
                 vent.eventId = events[i].Id;
                 vent.going = eventsInvites[i].a.Going;
                 vent.name = events[i].Name;
-                vent.organizer = $"{eventsOrgsFirstName[i]} {eventsOrgsLastName[i]}";
+                vent.organizer = eventsOrgsName[i];
                 vent.time = events[i].Time;
                 results.Add(vent);
             }
             var resultsToSend = results.OrderByDescending(a => a.date).ToList();
             return resultsToSend;
-
-
         }
 
        

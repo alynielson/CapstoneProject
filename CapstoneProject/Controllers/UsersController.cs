@@ -102,29 +102,15 @@ namespace CapstoneProject.Controllers
         {
             if (code.auth_code != null)
             {
-                string url = $"https://www.strava.com/oauth/token?client_id={Credentials.StravaClientId.ToString()}&client_secret={Credentials.StravaClientSecret}&code={code.auth_code}";
-                System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
-                request.Method = "POST";
-                System.Net.WebResponse response = request.GetResponse();
-               
-                    try
-                    {
-                        Stream stream = response.GetResponseStream();
-                        StreamReader streamReader = new StreamReader(stream);
-                        string responseString = streamReader.ReadToEnd();
-                        StravaAthlete stravaAthlete = JsonConvert.DeserializeObject<StravaAthlete>(responseString);
-                        var user = _context.Users.Find(code.id);
-                        user.StravaAccessTokenHashed = PasswordConverter.Encrypt(stravaAthlete.access_token);
-                        _context.Users.Update(user);
-                        _context.SaveChanges();
-                        return Ok();
-                    }
-                    catch
-                    {
-                        return BadRequest();
-                    }
-                
-                
+                StravaAthlete stravaAthlete = Strava.GetAthleteDataFromAuthCode(code.auth_code);
+                if (stravaAthlete != null)
+                {
+                    var user = _context.Users.Find(code.id);
+                    user.StravaAccessTokenHashed = PasswordConverter.Encrypt(stravaAthlete.access_token);
+                    _context.Users.Update(user);
+                    _context.SaveChanges();
+                }
+                return Ok();
             }
             else
             {

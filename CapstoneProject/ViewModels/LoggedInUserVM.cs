@@ -13,7 +13,7 @@ namespace CapstoneProject.ViewModels
 
         public string location { get; set; }
 
-      public int id { get; set; }
+        public int id { get; set; }
     }
 
     public class LogInAttempt

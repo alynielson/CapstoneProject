@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CapstoneProject.ViewModels;
-using Newtonsoft.Json;
 using CapstoneProject.Models;
 using Microsoft.AspNetCore.Routing;
 using CapstoneProject.Operations;
 using IntegrationProject.Data;
-using System.IO;
 using CapstoneProject.Helpers;
 
 namespace CapstoneProject.Controllers

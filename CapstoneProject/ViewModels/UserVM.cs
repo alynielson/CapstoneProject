@@ -32,12 +32,5 @@ namespace CapstoneProject.ViewModels
         public string location { get; set; }
 
         public int id { get; set; }
-    }
-
-    public  class UserLatLong
-    {
-        public string lat { get; set; }
-        public string lng { get; set; }
-    }
-    
+    }    
 }

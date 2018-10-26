@@ -7,7 +7,7 @@ namespace CapstoneProject.ViewModels
 {
     public class PathCommentVM : CommentVM
     {
-        public RouteCoords[] pathCoordinates { get; set; }
+        public PointVM[] pathCoordinates { get; set; }
 
     }  
 

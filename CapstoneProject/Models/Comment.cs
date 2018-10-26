@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CapstoneProject.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CapstoneProject.Models
 {
-    public class Comment : Coordinate
+    public class Comment 
     {
         [Key]
         public int Id { get; set; }
@@ -16,6 +17,7 @@ namespace CapstoneProject.Models
 
         public string Writer { get; set; }
        
+        
 
         [ForeignKey("Route")]
 

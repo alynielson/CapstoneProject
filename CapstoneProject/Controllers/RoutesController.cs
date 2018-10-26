@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CapstoneProject.Helpers;
 using CapstoneProject.Models;
 using CapstoneProject.Operations;
 using CapstoneProject.ViewModels;
 using IntegrationProject.Data;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+
 
 namespace CapstoneProject.Controllers
 {
@@ -23,50 +23,27 @@ namespace CapstoneProject.Controllers
 
         private string GetOwnerName(Route route)
         {
-            var ownerId = route.UserId;
-            User user = _context.Users.Find(ownerId);
+            User user = _context.Users.Find(route.UserId);
             return $"{user.FirstName} {user.LastName}";
         }
 
-        private RouteCoords[] GetRouteCoordinates(int routeId)
+        private PointVM[] GetRouteCoordinates(int routeId)
         {
-            var points = _context.RouteCoordinates.Where(a => a.RouteId == routeId).OrderBy(a => a.SortOrder).ToList();
-            RouteCoords[] coords = new RouteCoords[points.Count()];
-            
-            for (int i = 0; i < coords.Length; i++)
-            {
-                RouteCoords routeCoord = new RouteCoords();
-                routeCoord.lat = points[i].Latitude1;
-                routeCoord.lng = points[i].Longitude1;
-                coords[i] = routeCoord;
-            }
-            return coords;
+            var points = _context.RouteCoordinates.Where(a => a.RouteId == routeId).OrderBy(a => a.SortOrder).Cast<IMappable>().ToList();
+            return GetPoints(points);
         }
 
-        private RouteCoords[] GetPoints(List<Coordinate> coordinateList)
+        private PointVM[] GetPoints(List<IMappable> coordinateList)
         {
-            RouteCoords[] coords = new RouteCoords[coordinateList.Count()];
+            PointVM[] coords = new PointVM[coordinateList.Count()];
             for (int i = 0; i < coords.Length; i++)
             {
-                RouteCoords routeCoord = new RouteCoords();
+                PointVM routeCoord = new PointVM();
                 routeCoord.lat = coordinateList[i].Latitude1;
                 routeCoord.lng = coordinateList[i].Longitude1;
                 coords[i] = routeCoord;
             }
             return coords;
-        }
-
-        private RouteCoords[] GetCoordinatesOfPointComments(List<PointComment> pointComments)
-        {
-            RouteCoords[] pointCoords = new RouteCoords[pointComments.Count()];
-            for (int i = 0; i < pointCoords.Length; i++)
-            {
-                RouteCoords coord = new RouteCoords();
-                coord.lat = pointComments[i].Latitude1;
-                coord.lng = pointComments[i].Longitude1;
-                pointCoords[i] = coord;
-            }
-            return pointCoords;
         }
 
         [HttpGet("[action]")]
@@ -86,7 +63,7 @@ namespace CapstoneProject.Controllers
             List<PointComment> pointComments = getPointComments(id);
             data.pointCommentAuthors = pointComments.Select(a => a.Writer).ToList();
             data.pointComments = pointComments.Select(a => a.Note).ToList();
-            data.pointCoordinates = GetCoordinatesOfPointComments(pointComments);
+            data.pointCoordinates = GetPoints(pointComments.Cast<IMappable>().ToList());
             List<PathComment> pathComments = _context.PathComments.Where(a => a.RouteId == id).ToList();
             data.pathCommentAuthors = pathComments.Select(a => a.Writer).ToList();
             data.pathComments = pathComments.Select(a => a.Note).ToList();
@@ -94,16 +71,16 @@ namespace CapstoneProject.Controllers
             return data;
         }
 
-        private List<RouteCoords[]> GetPathCommentsCoordinates(List<PathComment> pathComments)
+        private List<PointVM[]> GetPathCommentsCoordinates(List<PathComment> pathComments)
         {
-            List<RouteCoords[]> pathCoords = new List<RouteCoords[]> { };
+            List<PointVM[]> pathCoords = new List<PointVM[]> { };
             foreach (PathComment comment in pathComments)
             {
-                RouteCoords[] arr = new RouteCoords[2];
-                RouteCoords coord1 = new RouteCoords();
+                PointVM[] arr = new PointVM[2];
+                PointVM coord1 = new PointVM();
                 coord1.lat = comment.Latitude1;
                 coord1.lng = comment.Longitude1;
-                RouteCoords coord2 = new RouteCoords();
+                PointVM coord2 = new PointVM();
                 coord2.lat = comment.Latitude2;
                 coord2.lng = comment.Longitude2;
                 arr[0] = coord1;
@@ -118,10 +95,7 @@ namespace CapstoneProject.Controllers
             var pointComments = _context.PointComments.Where(a => a.RouteId == id).ToList();
             return pointComments;
         }
-
-        
-      
-        // POST: api/Routes
+   
         [HttpPost("[action]")]
         public async Task<IActionResult> Create([FromBody] CreateRouteVM data)
         {
@@ -147,13 +121,11 @@ namespace CapstoneProject.Controllers
                     CreateElevationsRows(data.elevations, routeId);
                     RouteVM routeVM = new RouteVM();
                     routeVM.id = routeId;
-                    return Ok(routeVM
-                    );
+                    return Ok(routeVM);
                 }
                 catch
                 {
                     throw new System.Web.Http.HttpResponseException(System.Net.HttpStatusCode.InternalServerError);
-
                 }
             }
             else
@@ -167,20 +139,18 @@ namespace CapstoneProject.Controllers
         {
             int routeId;
             var routesFound = _context.Routes.Where(a => name == a.Name).ToList();
-            
-                if (routesFound.Count() > 1)
-                {
-                    var routesOrdered = _context.Routes.OrderByDescending(a => a.Id).ToList();
-                    return routeId = routesOrdered[0].Id;
-                }
-                else 
-                {
-                    return routesFound[0].Id;
-                }
-           
+            if (routesFound.Count() > 1)
+            {
+                var routesOrdered = _context.Routes.OrderByDescending(a => a.Id).ToList();
+                return routeId = routesOrdered[0].Id;
+            }
+            else 
+            {
+                return routesFound[0].Id;
+            }
         }
 
-        private void CreateCoordinatesRows(RouteCoords[] coordinates, int id)
+        private void CreateCoordinatesRows(PointVM[] coordinates, int id)
         {
             for (int i = 0; i < coordinates.Length; i++)
             {
@@ -217,12 +187,11 @@ namespace CapstoneProject.Controllers
                 routeElevation.RouteId = id;
                 routeElevation.SortOrder = i;
                 _context.Add(routeElevation);
-
             }
             _context.SaveChanges();
         }
 
-        private string[] ReverseGeocodeCoordinates(RouteCoords latLngVals)
+        private string[] ReverseGeocodeCoordinates(PointVM latLngVals)
         {
             string lat = latLngVals.lat;
             string lng = latLngVals.lng;
@@ -291,7 +260,6 @@ namespace CapstoneProject.Controllers
                 var distanceMatches = matches.Where(a => decimal.Parse(a.TotalDistance) >= filter[0] && decimal.Parse(a.TotalDistance) <= filter[1]).ToList();
                 return distanceMatches;
             }
-           
         }
 
         private List<Route> FilterByHills(List<Route> matches, string hillFilter)
@@ -332,12 +300,9 @@ namespace CapstoneProject.Controllers
                 else
                 {
                     PointComment comment = new PointComment();
-                    comment.Note = data.notes;
+                    comment = (PointComment)SaveCommentDetails(comment, data);
                     comment.Latitude1 = data.pointCoordinates.lat;
                     comment.Longitude1 = data.pointCoordinates.lng;
-                    comment.Writer = data.author;
-                    comment.RouteId = data.routeId;
-                    comment.UserId = data.userId;
                     _context.PointComments.Add(comment);
                     _context.SaveChanges();
                     return Ok();
@@ -348,8 +313,15 @@ namespace CapstoneProject.Controllers
                 throw new Exception("Unable to save to database");
             }
         }
-       
 
+        private Comment SaveCommentDetails(Comment comment, CommentVM data)
+        {
+            comment.Note = data.notes;
+            comment.Writer = data.author;
+            comment.RouteId = data.routeId;
+            comment.UserId = data.userId;
+            return comment;
+        }
 
         [HttpPost("[action]")]
         public IActionResult SavePathComment([FromBody] PathCommentVM data)
@@ -359,21 +331,17 @@ namespace CapstoneProject.Controllers
                 if (data != null)
                 {
                     PathComment comment = new PathComment();
-                    comment.Note = data.notes;
+                    comment = (PathComment)SaveCommentDetails(comment, data);
                     comment.Latitude1 = data.pathCoordinates[0].lat;
                     comment.Latitude2 = data.pathCoordinates[1].lat;
                     comment.Longitude1 = data.pathCoordinates[0].lng;
                     comment.Longitude2 = data.pathCoordinates[1].lng;
-                    comment.Writer = data.author;
-                    comment.RouteId = data.routeId;
-                    comment.UserId = data.userId;
                     _context.PathComments.Add(comment);
                     _context.SaveChanges();
                     return Ok();
                 }
                 else
                 {
-
                     return NoContent();
                 }
             }

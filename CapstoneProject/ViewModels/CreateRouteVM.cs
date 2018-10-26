@@ -19,7 +19,7 @@ namespace CapstoneProject.ViewModels
 
         public string userId { get; set; }
 
-        public RouteCoords[] coordinates { get; set; }
+        public PointVM[] coordinates { get; set; }
         public string[] distances { get; set; }
         public ElevationVals[] elevations { get; set; }
 

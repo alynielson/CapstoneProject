@@ -39,7 +39,7 @@ namespace CapstoneProject.Controllers
                     await _context.SaveChangesAsync();
                     int thisGroupId = FindGroupIdByName(data.name);
                     CreateNewGroupMembers(thisGroupId, data.members);
-                    AddOrganizerAsMember(thisGroupId, data.userId);
+                    CreateGroupMember(thisGroupId, data.userId);
                     return Ok();
                 }
                 catch
@@ -53,7 +53,7 @@ namespace CapstoneProject.Controllers
             }
         }
 
-        private void AddOrganizerAsMember(int groupId, int memberId)
+        private void CreateGroupMember(int groupId, int memberId)
         {
             GroupMember groupMember = new GroupMember()
             {
@@ -64,15 +64,11 @@ namespace CapstoneProject.Controllers
             _context.SaveChanges();
         }
 
-        private void CreateNewGroupMembers(int id, int[] memberIds)
+        private void CreateNewGroupMembers(int groupId, int[] memberIds)
         {
             foreach (int memberId in memberIds)
             {
-                GroupMember groupMember = new GroupMember();
-                groupMember.GroupId = id;
-                groupMember.UserId = memberId;
-                _context.GroupMembers.Add(groupMember);
-                _context.SaveChanges();
+                CreateGroupMember(groupId, memberId);
             }
         }
 

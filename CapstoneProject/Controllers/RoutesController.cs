@@ -38,17 +38,19 @@ namespace CapstoneProject.Controllers
         public EditRouteVM GetRoute(int id)
         {
             var route = _context.Routes.Find(id);
-            EditRouteVM data = new EditRouteVM();
-            data.city = route.City;
-            data.state = route.State;
-            data.name = route.Name;
-            data.description = route.Description;
-            data.totalDistance = route.TotalDistance;
-            data.totalElevationGain = route.TotalElevationGain;
-            data.totalElevationLoss = route.TotalElevationLoss;
+            EditRouteVM data = new EditRouteVM()
+            {
+                city = route.City,
+                state = route.State,
+                name = route.Name,
+                description = route.Description,
+                totalDistance = route.TotalDistance,
+                totalElevationGain = route.TotalElevationGain,
+                totalElevationLoss = route.TotalElevationLoss
+            };
             data.ownerName = GetOwnerName(route);
             data.coordinates = GetRouteCoordinates(id);
-            List<PointComment> pointComments = getPointComments(id);
+            List<PointComment> pointComments = GetPointComments(id);
             data.pointCommentAuthors = pointComments.Select(a => a.Writer).ToList();
             data.pointComments = pointComments.Select(a => a.Note).ToList();
             data.pointCoordinates = Mapper.GetPoints(pointComments.Cast<IMappable>().ToList());
@@ -74,7 +76,7 @@ namespace CapstoneProject.Controllers
             return pathCoords;
         }
 
-        private List<PointComment> getPointComments(int id)
+        private List<PointComment> GetPointComments(int id)
         {
             var pointComments = _context.PointComments.Where(a => a.RouteId == id).ToList();
             return pointComments;
@@ -87,12 +89,14 @@ namespace CapstoneProject.Controllers
             {
                 try
                 {
-                    Route route = new Route();
-                    route.Name = data.name;
-                    route.Description = data.description;
-                    route.TotalDistance = data.totalDistance;
-                    route.TotalElevationGain = data.totalElevationGain;
-                    route.TotalElevationLoss = data.totalElevationLoss;
+                    Route route = new Route()
+                    {
+                        Name = data.name,
+                        Description = data.description,
+                        TotalDistance = data.totalDistance,
+                        TotalElevationGain = data.totalElevationGain,
+                        TotalElevationLoss = data.totalElevationLoss
+                    };
                     string[] cityState = ReverseGeocodeCoordinates(data.coordinates[0]);
                     route.City = cityState[0];
                     route.State = cityState[1];
@@ -103,8 +107,10 @@ namespace CapstoneProject.Controllers
                     CreateCoordinatesRows(data.coordinates, routeId);
                     CreateDistancesRows(data.distances, routeId);
                     CreateElevationsRows(data.elevations, routeId);
-                    RouteVM routeVM = new RouteVM();
-                    routeVM.id = routeId;
+                    RouteVM routeVM = new RouteVM()
+                    {
+                        id = routeId
+                    };
                     return Ok(routeVM);
                 }
                 catch
@@ -138,11 +144,13 @@ namespace CapstoneProject.Controllers
         {
             for (int i = 0; i < coordinates.Length; i++)
             {
-                RouteCoordinate coord = new RouteCoordinate();
-                coord.Latitude1 = coordinates[i].lat;
-                coord.Longitude1 = coordinates[i].lng;
-                coord.RouteId = id;
-                coord.SortOrder = i;
+                RouteCoordinate coord = new RouteCoordinate()
+                {
+                    Latitude1 = coordinates[i].lat,
+                    Longitude1 = coordinates[i].lng,
+                    RouteId = id,
+                    SortOrder = i
+                };
                 _context.Add(coord);
             }
             _context.SaveChanges();
@@ -152,10 +160,12 @@ namespace CapstoneProject.Controllers
         {
             for (int i = 0; i < distances.Length; i++)
             {
-                RouteDistance routeDistance = new RouteDistance();
-                routeDistance.Distance = distances[i];
-                routeDistance.RouteId = id;
-                routeDistance.SortOrder = i;
+                RouteDistance routeDistance = new RouteDistance()
+                {
+                    Distance = distances[i],
+                    RouteId = id,
+                    SortOrder = i
+                };
                 _context.Add(routeDistance);
             }
             _context.SaveChanges();
@@ -165,11 +175,13 @@ namespace CapstoneProject.Controllers
         {
             for (int i = 0; i < elevations.Length; i++)
             {
-                RouteElevation routeElevation = new RouteElevation();
-                routeElevation.Up = elevations[i].up;
-                routeElevation.Down = elevations[i].down;
-                routeElevation.RouteId = id;
-                routeElevation.SortOrder = i;
+                RouteElevation routeElevation = new RouteElevation()
+                {
+                    Up = elevations[i].up,
+                    Down = elevations[i].down,
+                    RouteId = id,
+                    SortOrder = i
+                };
                 _context.Add(routeElevation);
             }
             _context.SaveChanges();
@@ -215,10 +227,12 @@ namespace CapstoneProject.Controllers
             List<RouteListVM> results = new List<RouteListVM>();
             foreach (Route match in allLocationMatches)
             {
-                RouteListVM vm = new RouteListVM();
-                vm.name = match.Name;
-                vm.description = match.Description;
-                vm.id = match.Id;
+                RouteListVM vm = new RouteListVM()
+                {
+                    name = match.Name,
+                    description = match.Description,
+                    id = match.Id
+                };
                 results.Add(vm);
             }
             return results;

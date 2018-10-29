@@ -18,7 +18,7 @@ namespace CapstoneProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventsController<T> : ControllerBase
+    public class EventsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         public EventsController(ApplicationDbContext context)
@@ -234,9 +234,9 @@ namespace CapstoneProject.Controllers
             return Ok();
         }
 
-        private List<PointComment> getPointComments(int id)
+        private IEnumerable<PointComment> getPointComments(int id)
         {
-            var pointComments = _context.PointComments.Where(a => a.RouteId == id).ToList();
+            var pointComments = _context.PointComments.Where(a => a.RouteId == id);
             return pointComments;
         }
 
@@ -270,43 +270,14 @@ namespace CapstoneProject.Controllers
             return (results);
         }
 
-        private RouteCoords[] CreateRouteCoordsArrayForClient(List<RouteCoordinate> points)
+        private List<PointVM[]> CreateRouteCoordsArrayForClient(List<PathComment> pathComments)
         {
-            RouteCoords[] coords = new RouteCoords[points.Count()];
-            for (int i = 0; i < coords.Length; i++)
-            {
-                RouteCoords routeCoord = new RouteCoords();
-                routeCoord.lat = points[i].Latitude1;
-                routeCoord.lng = points[i].Longitude1;
-                coords[i] = routeCoord;
-            }
-            return coords;
-        }
-       private RouteCoords[] CreateRouteCoordsArrayForClient(List<PointComment> pointComments)
-        {
-            RouteCoords[] pointCoords = new RouteCoords[pointComments.Count()];
-            for (int i = 0; i < pointCoords.Length; i++)
-            {
-                RouteCoords coord = new RouteCoords();
-                coord.lat = pointComments[i].Latitude1;
-                coord.lng = pointComments[i].Longitude1;
-                pointCoords[i] = coord;
-            }
-            return pointCoords;
-        }
-
-        private List<RouteCoords[]> CreateRouteCoordsArrayForClient(List<PathComment> pathComments)
-        {
-            List<RouteCoords[]> pathCoords = new List<RouteCoords[]>(pathComments.Count());
+            List<PointVM[]> pathCoords = new List<PointVM[]>(pathComments.Count());
             foreach (PathComment comment in pathComments)
             {
-                RouteCoords[] arr = new RouteCoords[2];
-                RouteCoords coord1 = new RouteCoords();
-                coord1.lat = comment.Latitude1;
-                coord1.lng = comment.Longitude1;
-                RouteCoords coord2 = new RouteCoords();
-                coord2.lat = comment.Latitude2;
-                coord2.lng = comment.Longitude2;
+                PointVM[] arr = new PointVM[2];
+                PointVM coord1 = Mapper.CreatePointVM(comment.Latitude1, comment.Longitude2);
+                PointVM coord2 = Mapper.CreatePointVM(comment.Latitude2, comment.Longitude2);
                 arr[0] = coord1;
                 arr[1] = coord2;
                 pathCoords.Add(arr);
@@ -327,12 +298,12 @@ namespace CapstoneProject.Controllers
             data.totalElevationLoss = route.TotalElevationLoss;
             var owner = _context.Users.Find(route.UserId);
             data.ownerName = $"{owner.FirstName} {owner.LastName}";
-            var points = _context.RouteCoordinates.Where(a => a.RouteId == id).OrderBy(a => a.SortOrder).ToList();
-            data.coordinates = CreateRouteCoordsArrayForClient(points);
-            List<PointComment> pointComments = getPointComments(id);
+            var points = _context.RouteCoordinates.Where(a => a.RouteId == id).OrderBy(a => a.SortOrder);
+            data.coordinates = Mapper.GetPoints(points.Cast<IMappable>().ToList());
+            IEnumerable<PointComment> pointComments = getPointComments(id);
             data.pointCommentAuthors = pointComments.Select(a => a.Writer).ToList();
             data.pointComments = pointComments.Select(a => a.Note).ToList();
-            data.pointCoordinates = CreateRouteCoordsArrayForClient(pointComments);
+            data.pointCoordinates = Mapper.GetPoints(pointComments.Cast<IMappable>().ToList());
             List<PathComment> pathComments = _context.PathComments.Where(a => a.RouteId == id).ToList();
             data.pathCommentAuthors = pathComments.Select(a => a.Writer).ToList();
             data.pathComments = pathComments.Select(a => a.Note).ToList();

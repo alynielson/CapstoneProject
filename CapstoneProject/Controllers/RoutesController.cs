@@ -38,10 +38,7 @@ namespace CapstoneProject.Controllers
             PointVM[] coords = new PointVM[coordinateList.Count()];
             for (int i = 0; i < coords.Length; i++)
             {
-                PointVM routeCoord = new PointVM();
-                routeCoord.lat = coordinateList[i].Latitude1;
-                routeCoord.lng = coordinateList[i].Longitude1;
-                coords[i] = routeCoord;
+                coords[i] = Mapper.CreatePointVM(coordinateList[i].Latitude1, coordinateList[i].Longitude1);
             }
             return coords;
         }
@@ -77,12 +74,8 @@ namespace CapstoneProject.Controllers
             foreach (PathComment comment in pathComments)
             {
                 PointVM[] arr = new PointVM[2];
-                PointVM coord1 = new PointVM();
-                coord1.lat = comment.Latitude1;
-                coord1.lng = comment.Longitude1;
-                PointVM coord2 = new PointVM();
-                coord2.lat = comment.Latitude2;
-                coord2.lng = comment.Longitude2;
+                PointVM coord1 = Mapper.CreatePointVM(comment.Latitude1, comment.Longitude1);
+                PointVM coord2 = Mapper.CreatePointVM(comment.Latitude2, comment.Longitude2);
                 arr[0] = coord1;
                 arr[1] = coord2;
                 pathCoords.Add(arr);

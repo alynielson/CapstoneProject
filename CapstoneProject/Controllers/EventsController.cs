@@ -17,7 +17,7 @@ namespace CapstoneProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EventsController : ControllerBase
+    public class EventsController<T> : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         public EventsController(ApplicationDbContext context)
@@ -35,56 +35,42 @@ namespace CapstoneProject.Controllers
             List<string> eventsOrgsName = eventsOrganizers.Select(f => $"{f.FirstName} {f.LastName}").ToList();
             for (int i = 0; i < eventsInvites.Count(); i++)
             {
-                UserEventVM vent = new UserEventVM();
-                vent.date = events[i].Date;
-                vent.eventId = events[i].Id;
-                vent.going = eventsInvites[i].a.Going;
-                vent.name = events[i].Name;
-                vent.organizer = eventsOrgsName[i];
-                vent.time = events[i].Time;
+                UserEventVM vent = CreateUserEventVM(events[i], eventsInvites[i].a.Going, eventsOrgsName[i]);
                 results.Add(vent);
             }
             var resultsToSend = results.OrderByDescending(a => a.date).ToList();
             return resultsToSend;
-        }
+        }      
 
-       
-        public static double DateTimeToUnixTimestamp(DateTime dateTime)
+        private UserEventVM CreateUserEventVM(Event @event, bool going, string eventOrganizer)
         {
-            DateTime unixStart = new DateTime(1970, 1, 1, 0, 0, 0, 0, System.DateTimeKind.Utc);
-            long unixTimeStampInTicks = (dateTime.ToUniversalTime() - unixStart).Ticks;
-            return (double)unixTimeStampInTicks / TimeSpan.TicksPerSecond;
+            UserEventVM vent = new UserEventVM();
+            vent.date = @event.Date;
+            vent.eventId = @event.Id;
+            vent.going = going;
+            vent.name = @event.Name;
+            vent.organizer = eventOrganizer;
+            vent.time = @event.Time;
+            return vent;
         }
 
         [HttpGet("[action]")]
         public List<StravaViewModel> GetStravaData(int eventId, DateTime date, DateTime time, string lat1, string lng1, string lat2, string lng2)
         {
-            string before = DateTimeToUnixTimestamp(date.AddHours(12)).ToString();
-            string after = DateTimeToUnixTimestamp(date.AddHours(-12)).ToString();
-            var athletes = _context.Invites.Where(a => a.EventId == eventId && a.Going == true).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).ToList();
-            List<string> requests = new List<string> { };
+            string before = Strava.DateTimeToUnixTimestamp(date.AddHours(12)).ToString();
+            string after = Strava.DateTimeToUnixTimestamp(date.AddHours(-12)).ToString();
+            var athletes = _context.Invites.Where(a => a.EventId == eventId && a.Going == true).Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Select((c) => c.b).ToList();
             List<StravaViewModel> results = new List<StravaViewModel>();
             int i = 0;
             while (i < athletes.Count())
             {
-                if (athletes[i].b.StravaAccessTokenHashed != null)
+                if (athletes[i].StravaAccessTokenHashed != null)
                 {
-                    string username = $"{athletes[i].b.FirstName} {athletes[i].b.LastName}";
-                    string token = PasswordConverter.Decrypt(athletes[i].b.StravaAccessTokenHashed);
-                    string url = $"https://www.strava.com/api/v3/athlete/activities?access_token={token}&before={before}&after={after}&page=1&per_page=1";
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Method = "GET";
-                    WebResponse response = request.GetResponse();
-                    string responseString = null;
-                    Stream stream = response.GetResponseStream();
-                    StreamReader streamReader = new StreamReader(stream);
-                    responseString = streamReader.ReadToEnd();
-                    List<Activity> activities = new List<Activity>();
-                    activities = JsonConvert.DeserializeObject<List<Activity>>(responseString);
+                    List<Activity> activities = Strava.ConvertStravaResponseToAthleteActivity(before, after, athletes[i].StravaAccessTokenHashed);
                     foreach(Activity activity in activities)
                     {
                         StravaViewModel vm = new StravaViewModel();
-                        vm.username = username;
+                        vm.username = $"{athletes[i].FirstName} {athletes[i].LastName}"; ;
                         vm.activity = activity;
                         results.Add(vm);
                     }
@@ -226,7 +212,7 @@ namespace CapstoneProject.Controllers
             return Ok();
         }
 
-        private void ReverseGeocodeStartingPoint(RouteCoords addressCoords, Event vent)
+        private void ReverseGeocodeStartingPoint(PointVM addressCoords, Event vent)
         {
             string addressEst = Geocoder.FullAddressReverseGeocoder(addressCoords.lat, addressCoords.lng);
             vent.Address = addressEst;
@@ -259,12 +245,11 @@ namespace CapstoneProject.Controllers
             results.address = vent.Address;
             results.description = vent.Description;
             var joinedPeopleInvites = _context.Invites.Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Where(c => c.a.Going == true && c.a.EventId == id).ToList();
-            List<string> firstNames = joinedPeopleInvites.Select(d => d.b.FirstName).ToList();
-            List<string> lastNames = joinedPeopleInvites.Select(d => d.b.LastName).ToList();
+            List<string> names = joinedPeopleInvites.Select(d => $"{d.b.FirstName} {d.b.LastName}").ToList();
             List<string> goingMembers = new List<string>();
-            for (int i = 0; i < firstNames.Count(); i++)
+            for (int i = 0; i < names.Count(); i++)
             {
-                goingMembers.Add($"{firstNames[i]} {lastNames[i]}");
+                goingMembers.Add(names[i]);
             }
             results.goingNames = goingMembers;
             var routeId = _context.EventRoutes.Where(a => a.EventId == id).Select(a => a.RouteId).ToList();
@@ -278,7 +263,7 @@ namespace CapstoneProject.Controllers
                 results.route2 = GetEventRoute(routeId[1]);
                 results.route2Details = _context.EventRoutes.FirstOrDefault(a => a.RouteId == routeId[1]).Details;
             }
-            RouteCoords vm = new RouteCoords();
+            PointVM vm = new PointVM();
             vm.lat = vent.LatitudeStart;
             vm.lng = vent.LongitudeStart;
             results.startPoint = vm;

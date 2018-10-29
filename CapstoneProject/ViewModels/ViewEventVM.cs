@@ -10,7 +10,7 @@ namespace CapstoneProject.ViewModels
         public string description { get; set; }
         public string address { get; set; }
 
-        public RouteCoords startPoint { get; set; }
+        public PointVM startPoint { get; set; }
 
         public EditRouteVM route1 { get; set; }
 

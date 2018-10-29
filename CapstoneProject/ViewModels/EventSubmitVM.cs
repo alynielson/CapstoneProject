@@ -16,7 +16,7 @@ namespace CapstoneProject.ViewModels
         public string routeDetails1 { get; set; }
 
         public string routeDetails2 { get; set; }
-        public RouteCoords addressCoords { get; set;}
+        public PointVM addressCoords { get; set;}
         public int eventId { get; set; }
     }
 }

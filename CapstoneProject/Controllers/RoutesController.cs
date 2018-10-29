@@ -30,18 +30,9 @@ namespace CapstoneProject.Controllers
         private PointVM[] GetRouteCoordinates(int routeId)
         {
             var points = _context.RouteCoordinates.Where(a => a.RouteId == routeId).OrderBy(a => a.SortOrder).Cast<IMappable>().ToList();
-            return GetPoints(points);
+            return Mapper.GetPoints(points);
         }
 
-        private PointVM[] GetPoints(List<IMappable> coordinateList)
-        {
-            PointVM[] coords = new PointVM[coordinateList.Count()];
-            for (int i = 0; i < coords.Length; i++)
-            {
-                coords[i] = Mapper.CreatePointVM(coordinateList[i].Latitude1, coordinateList[i].Longitude1);
-            }
-            return coords;
-        }
 
         [HttpGet("[action]")]
         public EditRouteVM GetRoute(int id)
@@ -60,7 +51,7 @@ namespace CapstoneProject.Controllers
             List<PointComment> pointComments = getPointComments(id);
             data.pointCommentAuthors = pointComments.Select(a => a.Writer).ToList();
             data.pointComments = pointComments.Select(a => a.Note).ToList();
-            data.pointCoordinates = GetPoints(pointComments.Cast<IMappable>().ToList());
+            data.pointCoordinates = Mapper.GetPoints(pointComments.Cast<IMappable>().ToList());
             List<PathComment> pathComments = _context.PathComments.Where(a => a.RouteId == id).ToList();
             data.pathCommentAuthors = pathComments.Select(a => a.Writer).ToList();
             data.pathComments = pathComments.Select(a => a.Note).ToList();

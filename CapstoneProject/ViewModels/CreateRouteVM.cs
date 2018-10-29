@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CapstoneProject.ViewModels
+﻿namespace CapstoneProject.ViewModels
 {
     public class CreateRouteVM
     {
@@ -22,15 +17,6 @@ namespace CapstoneProject.ViewModels
         public PointVM[] coordinates { get; set; }
         public string[] distances { get; set; }
         public ElevationVals[] elevations { get; set; }
-
-
-    }
-
-    public class RouteCoords
-    {
-        public string lat { get; set; }
-
-        public string lng { get; set; }
     }
 
     public class ElevationVals

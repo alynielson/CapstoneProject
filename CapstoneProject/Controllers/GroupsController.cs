@@ -95,9 +95,11 @@ namespace CapstoneProject.Controllers
             var groups = GetGroupsByUserId(id);
             List<GroupSnapshotVM> groupsIn = CreateGroupsInSnapshotForClient(groups);
             List<GroupSnapshotVM> ownGroups = GetGroupsOwned(id);
-            GroupSnapshotVMs all = new GroupSnapshotVMs();
-            all.groupsIn = groupsIn;
-            all.groupsOwn = ownGroups;
+            GroupSnapshotVMs all = new GroupSnapshotVMs()
+            {
+                groupsIn = groupsIn,
+                groupsOwn = ownGroups
+            };
             return all;
         }
 
@@ -106,9 +108,11 @@ namespace CapstoneProject.Controllers
             List<GroupSnapshotVM> snapshots = new List<GroupSnapshotVM>();
             foreach (Group group in groups)
             {
-                GroupSnapshotVM snapshot = new GroupSnapshotVM();
-                snapshot.Id = group.Id;
-                snapshot.Name = group.Name;
+                GroupSnapshotVM snapshot = new GroupSnapshotVM()
+                {
+                    Id = group.Id,
+                    Name = group.Name
+                };
                 snapshots.Add(snapshot);
             }
             return snapshots;
@@ -125,12 +129,14 @@ namespace CapstoneProject.Controllers
         public GroupVM GetGroupDetails(int id)
         {
             var group = _context.Groups.Find(id);
-            GroupVM data = new GroupVM();
-            data.name = group.Name;
-            data.city = group.City;
-            data.description = group.Description;
-            data.state = group.State;
-            data.userId = group.UserId;
+            GroupVM data = new GroupVM()
+            {
+                name = group.Name,
+                city = group.City,
+                description = group.Description,
+                state = group.State,
+                userId = group.UserId
+            };
             User groupOwner = _context.Users.Find(group.UserId);
             data.owner = $"{groupOwner.FirstName} {groupOwner.LastName}";
             var members = _context.GroupMembers.Where(a => a.GroupId == id);

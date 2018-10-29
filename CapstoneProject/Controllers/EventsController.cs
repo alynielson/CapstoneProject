@@ -39,13 +39,15 @@ namespace CapstoneProject.Controllers
 
         private UserEventVM CreateUserEventVM(Event @event, bool going, string eventOrganizer)
         {
-            UserEventVM vent = new UserEventVM();
-            vent.date = @event.Date;
-            vent.eventId = @event.Id;
-            vent.going = going;
-            vent.name = @event.Name;
-            vent.organizer = eventOrganizer;
-            vent.time = @event.Time;
+            UserEventVM vent = new UserEventVM()
+            {
+                date = @event.Date,
+                eventId = @event.Id,
+                going = going,
+                name = @event.Name,
+                organizer = eventOrganizer,
+                time = @event.Time
+            };
             return vent;
         }
 
@@ -78,9 +80,11 @@ namespace CapstoneProject.Controllers
 
         private StravaViewModel CreateStravaViewModel(string firstName, string lastName, Activity activity)
         {
-            StravaViewModel vm = new StravaViewModel();
-            vm.username = $"{firstName} {lastName}"; ;
-            vm.activity = activity;
+            StravaViewModel vm = new StravaViewModel()
+            {
+                username = $"{firstName} {lastName}",
+                activity = activity
+            };
             return vm;
         }
 
@@ -149,16 +153,20 @@ namespace CapstoneProject.Controllers
                
                 _context.SaveChanges();
             }
-            EventSnapshotVM result = new EventSnapshotVM();
-            result.id = ventId;
+            EventSnapshotVM result = new EventSnapshotVM()
+            {
+                id = ventId
+            };
             return Ok(result);
         }
 
         private void CreateNewInvite(int memberId, int ventId)
         {
-            Invite invite = new Invite();
-            invite.EventId = ventId;
-            invite.UserId = memberId;
+            Invite invite = new Invite()
+            {
+                EventId = ventId,
+                UserId = memberId
+            };
             _context.Invites.Add(invite);
         }
 
@@ -178,10 +186,12 @@ namespace CapstoneProject.Controllers
 
         private void CreateNewEventRoute(int routeId, int eventId, string routeDetails)
         {
-            EventRoute route = new EventRoute();
-            route.RouteId = routeId;
-            route.EventId = eventId;
-            route.Details = routeDetails;
+            EventRoute route = new EventRoute()
+            {
+                RouteId = routeId,
+                EventId = eventId,
+                Details = routeDetails
+            };
             _context.EventRoutes.Add(route);
             _context.SaveChanges();
         }
@@ -228,7 +238,7 @@ namespace CapstoneProject.Controllers
             return Ok();
         }
 
-        private IEnumerable<PointComment> getPointComments(int id)
+        private IEnumerable<PointComment> GetPointComments(int id)
         {
             var pointComments = _context.PointComments.Where(a => a.RouteId == id);
             return pointComments;
@@ -238,9 +248,11 @@ namespace CapstoneProject.Controllers
         public ViewEventVM GetAllEventInfo(int id)
         {
             var vent = _context.Events.Find(id);
-            ViewEventVM results = new ViewEventVM();
-            results.address = vent.Address;
-            results.description = vent.Description;
+            ViewEventVM results = new ViewEventVM()
+            {
+                address = vent.Address,
+                description = vent.Description
+            };
             var joinedPeopleInvites = _context.Invites.Join(_context.Users, a => a.UserId, b => b.Id, (a, b) => new { a, b }).Where(c => c.a.Going == true && c.a.EventId == id).ToList();
             List<string> names = joinedPeopleInvites.Select(d => $"{d.b.FirstName} {d.b.LastName}").ToList();
             List<string> goingMembers = new List<string>();
@@ -282,19 +294,21 @@ namespace CapstoneProject.Controllers
         public EditRouteVM GetEventRoute(int id)
         {
             var route = _context.Routes.Find(id);
-            EditRouteVM data = new EditRouteVM();
-            data.city = route.City;
-            data.state = route.State;
-            data.name = route.Name;
-            data.description = route.Description;
-            data.totalDistance = route.TotalDistance;
-            data.totalElevationGain = route.TotalElevationGain;
-            data.totalElevationLoss = route.TotalElevationLoss;
+            EditRouteVM data = new EditRouteVM()
+            {
+                city = route.City,
+                state = route.State,
+                name = route.Name,
+                description = route.Description,
+                totalDistance = route.TotalDistance,
+                totalElevationGain = route.TotalElevationGain,
+                totalElevationLoss = route.TotalElevationLoss
+            };
             var owner = _context.Users.Find(route.UserId);
             data.ownerName = $"{owner.FirstName} {owner.LastName}";
             var points = _context.RouteCoordinates.Where(a => a.RouteId == id).OrderBy(a => a.SortOrder);
             data.coordinates = Mapper.GetPoints(points.Cast<IMappable>().ToList());
-            IEnumerable<PointComment> pointComments = getPointComments(id);
+            IEnumerable<PointComment> pointComments = GetPointComments(id);
             data.pointCommentAuthors = pointComments.Select(a => a.Writer).ToList();
             data.pointComments = pointComments.Select(a => a.Note).ToList();
             data.pointCoordinates = Mapper.GetPoints(pointComments.Cast<IMappable>().ToList());

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using CapstoneProject.Helpers;
 using CapstoneProject.Models;
 using CapstoneProject.Operations;
 using CapstoneProject.ViewModels;
@@ -69,9 +70,7 @@ namespace CapstoneProject.Controllers
                     List<Activity> activities = Strava.ConvertStravaResponseToAthleteActivity(before, after, athletes[i].StravaAccessTokenHashed);
                     foreach(Activity activity in activities)
                     {
-                        StravaViewModel vm = new StravaViewModel();
-                        vm.username = $"{athletes[i].FirstName} {athletes[i].LastName}"; ;
-                        vm.activity = activity;
+                        StravaViewModel vm = CreateStravaViewModel(athletes[i].FirstName, athletes[i].LastName, activity);
                         results.Add(vm);
                     }
                 }
@@ -81,6 +80,14 @@ namespace CapstoneProject.Controllers
             results = CheckIfActivityLocationValid(results, lat1, lng1, lat2, lng2);
             results = results.OrderBy(a => a.activity.moving_time).ToList();
             return results;    
+        }
+
+        private StravaViewModel CreateStravaViewModel(string firstName, string lastName, Activity activity)
+        {
+            StravaViewModel vm = new StravaViewModel();
+            vm.username = $"{firstName} {lastName}"; ;
+            vm.activity = activity;
+            return vm;
         }
 
 
@@ -123,15 +130,12 @@ namespace CapstoneProject.Controllers
                     {
                         continue;
                     }
-
                 }
                 else
                 {
                     results.Remove(vm);
                 }
-                
             }
-
             return results;
         }
 
@@ -151,7 +155,6 @@ namespace CapstoneProject.Controllers
                
                 _context.SaveChanges();
             }
-           
             EventSnapshotVM result = new EventSnapshotVM();
             result.id = ventId;
             return Ok(result);
@@ -263,10 +266,7 @@ namespace CapstoneProject.Controllers
                 results.route2 = GetEventRoute(routeId[1]);
                 results.route2Details = _context.EventRoutes.FirstOrDefault(a => a.RouteId == routeId[1]).Details;
             }
-            PointVM vm = new PointVM();
-            vm.lat = vent.LatitudeStart;
-            vm.lng = vent.LongitudeStart;
-            results.startPoint = vm;
+            results.startPoint = Mapper.CreatePointVM(vent.LatitudeStart, vent.LongitudeStart);
             return (results);
         }
 

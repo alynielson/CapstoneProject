@@ -117,10 +117,12 @@ namespace CapstoneProject.Controllers
 
        private LoggedInUserVM GetUserInfoFromUser(User user)
         {
-            LoggedInUserVM viewModel = new LoggedInUserVM();
-            viewModel.first_name = user.FirstName;
-            viewModel.last_name = user.LastName;
-            viewModel.id = user.Id;
+            LoggedInUserVM viewModel = new LoggedInUserVM()
+            {
+                first_name = user.FirstName,
+                last_name = user.LastName,
+                id = user.Id
+            };
             return viewModel;
         }
 
@@ -143,11 +145,13 @@ namespace CapstoneProject.Controllers
                     }
                     else
                     {
-                        User user = new User();
-                        user.FirstName = data.first_name.Trim();
-                        user.LastName = data.last_name.Trim();
-                        user.HashedPassword = PasswordConverter.Encrypt(data.password);
-                        user.Email = data.email.Trim();
+                        User user = new User()
+                        {
+                            FirstName = data.first_name.Trim(),
+                            LastName = data.last_name.Trim(),
+                            HashedPassword = PasswordConverter.Encrypt(data.password),
+                            Email = data.email.Trim()
+                        };
                         _context.Users.Add(user);
                         await _context.SaveChangesAsync();
                         LoggedInUserVM viewModel = GetUserInfoFromEmail(data.email);
@@ -170,10 +174,12 @@ namespace CapstoneProject.Controllers
             List<UserSearchVM> searchResults = new List<UserSearchVM> { };
             foreach (User match in matches)
             {
-                UserSearchVM searchResult = new UserSearchVM();
-                searchResult.name = $"{match.FirstName} {match.LastName}";
-                searchResult.location = $"{match.City}, {match.State}";
-                searchResult.id = match.Id;
+                UserSearchVM searchResult = new UserSearchVM()
+                {
+                    name = $"{match.FirstName} {match.LastName}",
+                    location = $"{match.City}, {match.State}",
+                    id = match.Id
+                };
                 searchResults.Add(searchResult);
             }
             return searchResults;
@@ -209,9 +215,7 @@ namespace CapstoneProject.Controllers
             {
                 return null;
             }
-            PointVM location = new PointVM();
-            location.lat = user.Latitude;
-            location.lng = user.Longitude;
+            PointVM location = Mapper.CreatePointVM(user.Latitude, user.Longitude);
             return location;
         }
 

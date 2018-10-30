@@ -106,7 +106,7 @@ export class CreateGroup extends Component {
         const addMember = ((selectedMember) => { this.addSelectedMember(selectedMember) });
         const style = {
             backgroundColor: "purple",
-            height: "85vh",
+            minHeight: "89vh",
         };
         const membersBox = {
             backgroundColor: "#c2e6ff",

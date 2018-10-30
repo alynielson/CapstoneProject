@@ -87,7 +87,8 @@ export class UserEventContent extends Component {
     render() {
         const style = {
             backgroundColor: "purple",
-            height: "85vh",
+            minHeight: "85vh",
+            paddingTop: "10px",
             overflowY: "auto",
             overflowX: "hidden"
             

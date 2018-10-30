@@ -184,7 +184,8 @@ export class UserRouteContent extends Component {
     render() {
         const style = {
             backgroundColor: "purple",
-            height: "85vh",
+            minHeight: "85vh",
+            paddingTop: "10px"
         };
         const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 500);
         const addRoute = ((selectedRoute) => { this.addSelectedRoute(selectedRoute) });

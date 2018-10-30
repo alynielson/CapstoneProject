@@ -134,7 +134,8 @@ export class UserGroupContent extends Component {
     render() {
         const style = {
             backgroundColor: "purple",
-            height: "85vh",
+            minHeight: "89vh",
+            paddingTop: "10px"
         };
         const tooltip = (
             <Tooltip id="tooltip">

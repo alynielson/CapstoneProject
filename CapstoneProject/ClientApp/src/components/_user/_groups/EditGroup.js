@@ -137,7 +137,7 @@ export class EditGroup extends Component {
     render() {
         const style = {
             backgroundColor: "purple",
-            height: "85vh",
+            minHeight: "89vh",
         };
         const membersBox = {
             backgroundColor: "#c2e6ff",

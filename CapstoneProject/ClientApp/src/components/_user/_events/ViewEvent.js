@@ -245,7 +245,7 @@ export class ViewEvent extends Component {
                 <ListGroup style={listStyle}>
                 {this.props.goingNames.map((member, index) => <ListGroupItem style={listItemStyle} key={index} >{member}</ListGroupItem>)}
                 </ListGroup>
-                rsvpButton = <Button className="normal-buttons btn" active={this.state.going} onClick={this.rsvp}>I'm going</Button>
+                rsvpButton = <Button style={{marginTop:"15px"}}className="normal-buttons btn" active={this.state.going} onClick={this.rsvp}>I'm going</Button>
                 break;
             case (4): tab = <StravaData id={this.props.eventId} date={this.props.date} time={this.props.time} route1={this.props.route1} route2={this.props.route2} view={this.state.resultsView} routeResultsView={this.state.routeResultsView} />
                 logo = <img src={stravalogo} />
@@ -262,7 +262,7 @@ export class ViewEvent extends Component {
         }
         const style = {
             backgroundColor: "purple",
-            height: "85vh",
+            minHeight: "89vh",
         };
    
        

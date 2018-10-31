@@ -157,7 +157,7 @@ export class SelectGroups extends Component {
                 <Row>
                     <Col md={4} mdOffset={9} >
                     <Col md={3}>
-                    <a className="btn action-button bottom-buttons" onClick={() => this.props.goToRoutes(this.state.name, this.state.description, this.state.startDate, this.state.startTime, this.state.groups, this.state.numberOfRoutes)}>Next</a>
+                    <a className="btn action-button bottom-buttons" onClick={() => this.props.goToRoutes(this.state.name, this.state.description, this.state.startDate, this.state.startTime, this.state.selectedGroups, this.state.numberOfRoutes)}>Next</a>
                     </Col>
                         <Col md={3} mdOffset={1}>
                             <a className="btn action-button bottom-buttons" onClick={this.props.backToEventHome}>Back</a> </Col>

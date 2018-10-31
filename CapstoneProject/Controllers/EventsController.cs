@@ -150,8 +150,6 @@ namespace CapstoneProject.Controllers
                 {
                     CreateNewInvite(memberId, ventId);
                 }
-               
-                _context.SaveChanges();
             }
             EventSnapshotVM result = new EventSnapshotVM()
             {
@@ -168,6 +166,7 @@ namespace CapstoneProject.Controllers
                 UserId = memberId
             };
             _context.Invites.Add(invite);
+            _context.SaveChanges();
         }
 
         private void AddNewEventToDb(InitialEventVM data)

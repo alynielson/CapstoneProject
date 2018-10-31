@@ -433,12 +433,12 @@ button.list-group-item:hover {
 
 .custom-map2{
     height: 68vh;
-    margin-top: 0px;
+    margin-top: 20px;
     margin-bottom: 30px;
     width: 65%;
 }
 .under-map {
-    margin-top: 8px;
+    margin-top: 35px;
 }
 .under-map2{
     margin-top: -20px;
@@ -551,3 +551,4 @@ input, input:focus {
 .modal-btn {
     width: 30%;
 }
+

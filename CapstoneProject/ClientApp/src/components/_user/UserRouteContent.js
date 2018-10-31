@@ -184,7 +184,7 @@ export class UserRouteContent extends Component {
     render() {
         const style = {
             backgroundColor: "purple",
-            minHeight: "85vh",
+            minHeight: "89vh",
             paddingTop: "10px"
         };
         const routeSearch = _.debounce((term2) => { this.searchTest(term2) }, 500);
@@ -230,7 +230,7 @@ export class UserRouteContent extends Component {
             return (
                 <div style={style}>
                     <Row className="empty-space10percent" />
-                    <Row>
+                    <Row style={{ paddingBottom: "10px" }}>
                         <Col md={2} mdOffset={1}>
                                 <a className="btn action-button" onClick={(event) => this.addNewRoute(event)}>Create a Route</a>
                         </Col>
